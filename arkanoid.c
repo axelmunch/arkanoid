@@ -103,6 +103,15 @@ int main(int argc, char** argv)
         if (keys[SDL_SCANCODE_RIGHT])
             x_vault += 10 * get_delta_time_target();
 
+        SDL_Event event;
+        while (SDL_PollEvent(&event)) {
+            switch (event.type) {
+                case SDL_QUIT:
+                    quit = true;
+                    break;
+            }
+        }
+
 		draw();
 		SDL_UpdateWindowSurface(pWindow);
 		
