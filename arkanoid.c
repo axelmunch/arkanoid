@@ -2,8 +2,8 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <stdbool.h>
+#include "delta_time.h"
 
-const int FPS=60.0;
 //struct { double x; double y; } ball_speed;
 struct { double x; double y;  double vx; double vy;} ball;
 
@@ -54,9 +54,9 @@ void draw()
 	SDL_Rect dstBall = {ball.x, ball.y, 0, 0};
 	SDL_BlitSurface(plancheSprites, &srcBall, win_surf, &dstBall);
 
-	// dedplacement
-	ball.x += ball.vx;// / delta_t;
-	ball.y += ball.vy;// / delta_t;
+	// deplacement
+	ball.x += ball.vx * get_delta_time_target();
+	ball.y += ball.vy * get_delta_time_target();
 
 	// collision bord
 	if ((ball.x < 1) || (ball.x > (win_surf->w - 25)))
@@ -87,28 +87,25 @@ int main(int argc, char** argv)
     }
 
 	init();
+    init_delta_time();
     
 	bool quit = false;
 	while (!quit)
-	{	
+    {
+        update_delta_time();
+        printf("FPS: %f\n", get_current_fps());
+
 		SDL_PumpEvents();
         const Uint8* keys = SDL_GetKeyboardState(NULL);
         if (keys[SDL_SCANCODE_LEFT])
-            x_vault -= 10;
+            x_vault -= 10 * get_delta_time_target();
         if (keys[SDL_SCANCODE_RIGHT])
-            x_vault += 10;
-        if (keys[SDL_SCANCODE_ESCAPE])
-            quit=true;
+            x_vault += 10 * get_delta_time_target();
 
 		draw();
 		SDL_UpdateWindowSurface(pWindow);
-		now = SDL_GetPerformanceCounter();
-		delta_t = 1.0/FPS - (double)(now - prev) / (double)SDL_GetPerformanceFrequency();
-		prev = now;
-		if (delta_t > 0)
-             SDL_Delay((Uint32)(delta_t*1000));
-		printf("dt = %lf\n",delta_t*1000);
-		prev = SDL_GetPerformanceCounter();
+		
+        SDL_Delay((Uint32)(1000/60));
 	}
 
     SDL_Quit();

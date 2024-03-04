@@ -5,7 +5,9 @@ project(Arkanoid LANGUAGES C)
 find_package(SDL2 CONFIG REQUIRED)
 
 
-add_executable(${PROJECT_NAME})
+add_executable(${PROJECT_NAME}
+		delta_time.c
+		delta_time.h)
 target_sources(${PROJECT_NAME} PRIVATE arkanoid.c)
 
 if (TARGET SDL2::SDL2)
