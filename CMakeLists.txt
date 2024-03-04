@@ -6,6 +6,7 @@ find_package(SDL2 CONFIG REQUIRED)
 
 
 add_executable(${PROJECT_NAME}
+        config.h
 		delta_time.c
 		delta_time.h)
 target_sources(${PROJECT_NAME} PRIVATE arkanoid.c)

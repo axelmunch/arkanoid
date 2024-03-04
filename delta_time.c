@@ -1,6 +1,5 @@
 #include "delta_time.h"
-
-const double FPS_TARGET = 60;
+#include "config.h"
 
 DeltaTime delta_time;
 

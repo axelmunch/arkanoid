@@ -2,6 +2,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <stdbool.h>
+#include "config.h"
 #include "delta_time.h"
 
 //struct { double x; double y; } ball_speed;
@@ -105,7 +106,7 @@ int main(int argc, char** argv)
 		draw();
 		SDL_UpdateWindowSurface(pWindow);
 		
-        SDL_Delay((Uint32)(1000/60));
+        SDL_Delay((Uint32)GAME_FPS_MS);
 	}
 
     SDL_Quit();
