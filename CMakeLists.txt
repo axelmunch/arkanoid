@@ -17,11 +17,13 @@ add_executable(${PROJECT_NAME}
 		text.h)
 target_sources(${PROJECT_NAME} PRIVATE arkanoid.c)
 
+target_link_libraries(${PROJECT_NAME} PRIVATE m)
+
 if (TARGET SDL2::SDL2)
     target_link_libraries(${PROJECT_NAME} PRIVATE SDL2::SDL2 SDL2::SDL2main)
 else ()
     target_include_directories(${PROJECT_NAME} PRIVATE ${SDL2_INCLUDE_DIRS})
-    target_link_libraries(${PROJECT_NAME} PRIVATE SDL2 SDL2main m)
+    target_link_libraries(${PROJECT_NAME} PRIVATE SDL2 SDL2main)
 endif ()
 
 
