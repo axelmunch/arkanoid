@@ -1,5 +1,6 @@
 #include "config.h"
 #include "delta_time.h"
+#include "text.h"
 #include <SDL.h>
 #include <stdbool.h>
 #include <stdio.h>
@@ -79,6 +80,10 @@ void draw() {
     dest.x = x_vault;
     dest.y = win_surf->h - 32;
     SDL_BlitSurface(plancheSprites, &scrVaiss, win_surf, &dest);
+
+    draw_text(win_surf, "Arkanoid", 10, 10);
+    int fps_text_width = draw_text(win_surf, "FPS: ", 10, 40);
+    draw_number(win_surf, get_current_fps(), 10 + fps_text_width, 40);
 }
 
 int main(int argc, char **argv) {
@@ -88,11 +93,11 @@ int main(int argc, char **argv) {
 
     init();
     init_delta_time();
+    init_text();
 
     bool quit = false;
     while (!quit) {
         update_delta_time();
-        printf("FPS: %f\n", get_current_fps());
 
         SDL_PumpEvents();
         const Uint8 *keys = SDL_GetKeyboardState(NULL);
