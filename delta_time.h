@@ -3,8 +3,7 @@
 
 #include <SDL.h>
 
-struct delta_time_struct
-{
+struct delta_time_struct {
     Uint64 previous_time;
     Uint64 current_time;
     Uint64 frequency; // Performance frequency
