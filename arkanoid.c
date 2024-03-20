@@ -83,7 +83,7 @@ void draw() {
 
     draw_text(win_surf, "Arkanoid", 10, 10);
     int fps_text_width = draw_text(win_surf, "FPS: ", 10, 40);
-    draw_number(win_surf, get_current_fps(), 10 + fps_text_width, 40);
+    draw_integer(win_surf, (int) get_current_fps(), 10 + fps_text_width, 40);
 }
 
 int main(int argc, char **argv) {
