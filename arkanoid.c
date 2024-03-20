@@ -1,6 +1,7 @@
 #include "config.h"
 #include "delta_time.h"
 #include "text.h"
+#include "textures.h"
 #include <SDL.h>
 #include <stdbool.h>
 #include <stdio.h>
@@ -41,13 +42,11 @@ void init() {
 
 // fonction qui met à jour la surface de la fenetre "win_surf"
 void draw() {
-    // remplit le fond
+    // Remplit le fond
     SDL_Rect dest = {0, 0, 0, 0};
-    for (int j = 0; j < win_surf->h; j += 128) {
-        for (int i = 0; i < win_surf->w; i += 96) {
-            dest.x = i;
-            dest.y = j;
-            SDL_BlitSurface(plancheSprites, &srcBg, win_surf, &dest);
+    for (int j = 0; j < win_surf->h; j += 64) {
+        for (int i = 0; i < win_surf->w; i += 48) {
+            draw_texture(win_surf, BackgroundTile, i, j, false);
         }
     }
 
@@ -76,10 +75,8 @@ void draw() {
         srcBall.y = 96;
     }
 
-    // vaisseau
-    dest.x = x_vault;
-    dest.y = win_surf->h - 32;
-    SDL_BlitSurface(plancheSprites, &scrVaiss, win_surf, &dest);
+    // Vaisseau
+    draw_texture(win_surf, VausSize1, x_vault, win_surf->h - 32, false);
 
     draw_text(win_surf, "Arkanoid", 10, 10);
     int fps_text_width = draw_text(win_surf, "FPS: ", 10, 40);
@@ -94,6 +91,7 @@ int main(int argc, char **argv) {
     init();
     init_delta_time();
     init_text();
+    init_texture();
 
     bool quit = false;
     while (!quit) {
