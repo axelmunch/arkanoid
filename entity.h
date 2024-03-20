@@ -5,9 +5,9 @@
 typedef enum { Harmful, Capsule } Type;
 
 struct AnimatedEntity {
-    int maxAnimation;
-    int currentAnimation;
-    int timeBeforeNextAnimation;
+    int max_animation;
+    int current_animation;
+    int time_before_next_animation;
     double velocity;
     double direction;
     Type type;
