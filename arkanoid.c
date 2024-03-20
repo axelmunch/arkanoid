@@ -14,7 +14,7 @@ struct {
     double vy;
 } ball;
 
-int x_vault;
+double x_vault;
 
 SDL_Window *pWindow = NULL;
 SDL_Surface *win_surf = NULL;
