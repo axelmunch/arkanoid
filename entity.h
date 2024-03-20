@@ -46,4 +46,5 @@ struct VAUS {
 AnimatedEntity createEntity(SpecificType type, Point position);
 AnimatedEntity createHarmful(SpecificType harmfulType);
 AnimatedEntity createCapsule();
+Ball createBall(Point position);
 #endif // ARKANOID_ENTITY_H

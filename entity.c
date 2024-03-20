@@ -54,3 +54,11 @@ AnimatedEntity createCapsule() {
     capsule.hit_box.height = 16;
     return capsule;
 }
+Ball createBall(Point position) {
+    Ball ball;
+    ball.hit_box.origin = position;
+    ball.hit_box.radius = 16;
+    ball.velocity = 2.0;
+    ball.direction = 45;
+    return ball;
+}
