@@ -50,9 +50,8 @@ void draw() {
         }
     }
 
-    // affiche balle
-    SDL_Rect dstBall = {ball.x, ball.y, 0, 0};
-    SDL_BlitSurface(plancheSprites, &srcBall, win_surf, &dstBall);
+    // Affiche balle
+    draw_texture(win_surf, Ball, ball.x, ball.y, true);
 
     // deplacement
     ball.x += ball.vx * get_delta_time_target();
@@ -76,7 +75,7 @@ void draw() {
     }
 
     // Vaisseau
-    draw_texture(win_surf, VausSize1, x_vault, win_surf->h - 32, false);
+    draw_texture(win_surf, VausSize8, x_vault, win_surf->h - 32, false);
 
     draw_text(win_surf, "Arkanoid", 10, 10);
     int fps_text_width = draw_text(win_surf, "FPS: ", 10, 40);
