@@ -13,8 +13,8 @@ add_executable(${PROJECT_NAME}
         math/collisions.h
         math/math.c
         math/math.h
-		text.c
-		text.h)
+        text.c
+        text.h)
 target_sources(${PROJECT_NAME} PRIVATE arkanoid.c)
 
 target_link_libraries(${PROJECT_NAME} PRIVATE m)
@@ -28,7 +28,7 @@ endif ()
 
 
 file(COPY ${CMAKE_CURRENT_SOURCE_DIR}/sprites.bmp
-	DESTINATION ${CMAKE_CURRENT_BINARY_DIR}/)
+    DESTINATION ${CMAKE_CURRENT_BINARY_DIR}/)
 file(COPY ${CMAKE_CURRENT_SOURCE_DIR}/Arkanoid_ascii.bmp
-	DESTINATION ${CMAKE_CURRENT_BINARY_DIR}/)
+    DESTINATION ${CMAKE_CURRENT_BINARY_DIR}/)
 
