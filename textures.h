@@ -6,7 +6,7 @@
 
 typedef enum {
     BackgroundTile,
-    Ball,
+    BallTexture,
     VausSize1,
     VausSize2,
     VausSize3,

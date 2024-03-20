@@ -22,7 +22,7 @@ void get_texture_dimensions(Textures texture, int *pos_x, int *pos_y,
         *width = 48;
         *height = 64;
         break;
-    case Ball:
+    case BallTexture:
         *pos_x = 80;
         *pos_y = 64;
         *width = 16;
