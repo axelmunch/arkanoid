@@ -25,17 +25,17 @@ class Level:
 
         self.update()
 
-    def place(self, brick: Bricks, x, y):
+    def place(self, brick: tuple[Bricks, Capsules], x, y):
         self.bricks[y][x] = brick
 
     def remove(self, x, y):
         self.bricks[y][x] = (Bricks.EMPTY, Capsules.EMPTY)
 
-    def set_capsule(self, capsule: Capsules, x, y):
+    def remove_capsule(self, x, y):
         brick, _ = self.bricks[y][x]
         if brick == Bricks.EMPTY:
             return
-        self.bricks[y][x] = (brick, capsule)
+        self.bricks[y][x] = (brick, Capsules.EMPTY)
 
     def update(self):
         self.offset = 0
@@ -93,6 +93,9 @@ def update_game_board(
     mouse_position: tuple[int, int],
     left_click: bool,
     right_click: bool,
+    middle_click: bool,
+    selected_brick,
+    selected_capsule,
     frame_count,
 ):
     if is_mouse_hovering(mouse_position):
@@ -114,11 +117,14 @@ def update_game_board(
         if left_click:
             # Place brick
             if 0 <= x < LEVEL_WIDTH and 0 <= y < LEVEL_HEIGHT:
-                level.place((Bricks.GOLD, Capsules.EXPAND), x, y)
+                level.place((selected_brick, selected_capsule), x, y)
         if right_click:
             # Remove brick
             if 0 <= x < LEVEL_WIDTH and 0 <= y < LEVEL_HEIGHT:
                 level.remove(x, y)
+        if middle_click:
+            # Remove capsule
+            level.remove_capsule(x, y)
 
     draw_game_board(frame_count)
 

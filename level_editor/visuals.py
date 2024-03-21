@@ -15,7 +15,7 @@ ANIMATED_CAPSULE_ANIMATION_FRAMES = 8
 ANIMATED_CAPSULE_ANIMATION_TIME = 8
 
 bricks_sprites = {}
-Capsules_sprites = {}
+capsules_sprites = {}
 
 
 class Bricks(Enum):
@@ -123,11 +123,11 @@ def load_visuals():
         )
 
     # Capsules
-    Capsules_sprites[Capsules.EMPTY] = pygame.Surface((0, 0))
+    capsules_sprites[Capsules.EMPTY] = pygame.Surface((0, 0))
 
-    Capsules_sprites[Capsules.SLOW] = []
+    capsules_sprites[Capsules.SLOW] = []
     for i in range(ANIMATED_CAPSULE_ANIMATION_FRAMES):
-        Capsules_sprites[Capsules.SLOW].append(
+        capsules_sprites[Capsules.SLOW].append(
             sprites.subsurface(
                 256 + CAPSULE_WIDTH * i,
                 CAPSULE_HEIGHT * 0,
@@ -136,9 +136,9 @@ def load_visuals():
             )
         )
 
-    Capsules_sprites[Capsules.CATCH] = []
+    capsules_sprites[Capsules.CATCH] = []
     for i in range(ANIMATED_CAPSULE_ANIMATION_FRAMES):
-        Capsules_sprites[Capsules.CATCH].append(
+        capsules_sprites[Capsules.CATCH].append(
             sprites.subsurface(
                 256 + CAPSULE_WIDTH * i,
                 CAPSULE_HEIGHT * 1,
@@ -147,9 +147,9 @@ def load_visuals():
             )
         )
 
-    Capsules_sprites[Capsules.EXPAND] = []
+    capsules_sprites[Capsules.EXPAND] = []
     for i in range(ANIMATED_CAPSULE_ANIMATION_FRAMES):
-        Capsules_sprites[Capsules.EXPAND].append(
+        capsules_sprites[Capsules.EXPAND].append(
             sprites.subsurface(
                 256 + CAPSULE_WIDTH * i,
                 CAPSULE_HEIGHT * 2,
@@ -158,9 +158,9 @@ def load_visuals():
             )
         )
 
-    Capsules_sprites[Capsules.DIVIDE] = []
+    capsules_sprites[Capsules.DIVIDE] = []
     for i in range(ANIMATED_CAPSULE_ANIMATION_FRAMES):
-        Capsules_sprites[Capsules.DIVIDE].append(
+        capsules_sprites[Capsules.DIVIDE].append(
             sprites.subsurface(
                 256 + CAPSULE_WIDTH * i,
                 CAPSULE_HEIGHT * 3,
@@ -169,9 +169,9 @@ def load_visuals():
             )
         )
 
-    Capsules_sprites[Capsules.LASER] = []
+    capsules_sprites[Capsules.LASER] = []
     for i in range(ANIMATED_CAPSULE_ANIMATION_FRAMES):
-        Capsules_sprites[Capsules.LASER].append(
+        capsules_sprites[Capsules.LASER].append(
             sprites.subsurface(
                 256 + CAPSULE_WIDTH * i,
                 CAPSULE_HEIGHT * 4,
@@ -180,9 +180,9 @@ def load_visuals():
             )
         )
 
-    Capsules_sprites[Capsules.BREAK] = []
+    capsules_sprites[Capsules.BREAK] = []
     for i in range(ANIMATED_CAPSULE_ANIMATION_FRAMES):
-        Capsules_sprites[Capsules.BREAK].append(
+        capsules_sprites[Capsules.BREAK].append(
             sprites.subsurface(
                 256 + CAPSULE_WIDTH * i,
                 CAPSULE_HEIGHT * 5,
@@ -191,9 +191,9 @@ def load_visuals():
             )
         )
 
-    Capsules_sprites[Capsules.ADDITION] = []
+    capsules_sprites[Capsules.ADDITION] = []
     for i in range(ANIMATED_CAPSULE_ANIMATION_FRAMES):
-        Capsules_sprites[Capsules.ADDITION].append(
+        capsules_sprites[Capsules.ADDITION].append(
             sprites.subsurface(
                 256 + CAPSULE_WIDTH * i,
                 CAPSULE_HEIGHT * 6,
@@ -204,7 +204,6 @@ def load_visuals():
 
 
 def draw_brick(surface: pygame.Surface, brick: Bricks, x, y, frame_count):
-
     if brick == Bricks.METAL:
         surface.blit(
             bricks_sprites[Bricks.METAL][
@@ -228,8 +227,11 @@ def draw_brick(surface: pygame.Surface, brick: Bricks, x, y, frame_count):
 
 
 def draw_capsule(surface: pygame.Surface, capsule: Capsules, x, y, frame_count):
+    if capsule == Capsules.EMPTY:
+        return
+
     surface.blit(
-        Capsules_sprites[capsule][
+        capsules_sprites[capsule][
             frame_count
             // ANIMATED_CAPSULE_ANIMATION_TIME
             % ANIMATED_CAPSULE_ANIMATION_FRAMES

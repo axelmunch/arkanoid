@@ -25,6 +25,9 @@ frame_count = 0
 # Init
 load_visuals()
 
+selected_brick = Bricks.WHITE
+selected_capsule = Capsules.EMPTY
+
 while running:
     clock.tick(60)
 
@@ -32,6 +35,7 @@ while running:
 
     left_click = False
     right_click = False
+    middle_click = False
 
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
@@ -46,18 +50,23 @@ while running:
                 left_click = True
             if event.button == 3:
                 right_click = True
+            if event.button == 2:
+                middle_click = True
 
     mouse_position = pygame.mouse.get_pos()
 
-    update_toolbar(mouse_position, left_click)
+    selected_brick, selected_capsule = update_toolbar(
+        mouse_position, left_click, frame_count, selected_brick, selected_capsule
+    )
     update_game_board(
         (mouse_position[0] - TOOLBAR_WIDTH, mouse_position[1]),
         left_click,
         right_click,
+        middle_click,
+        selected_brick,
+        selected_capsule,
         frame_count,
     )
-
-    window.fill((255, 255, 255))
 
     window.blit(toolbar, (0, 0))
     window.blit(game_board, (TOOLBAR_WIDTH, 0))
@@ -65,10 +74,5 @@ while running:
     # FPS
     fps = str(int(clock.get_fps()))
     text(window, f"FPS: {fps}", 10, WINDOW_HEIGHT - 20, 24)
-
-    draw_brick(window, Bricks.WHITE, 100, 100, frame_count)
-    draw_brick(window, Bricks.METAL, 132, 100, frame_count)
-    draw_brick(window, Bricks.GOLD, 164, 100, frame_count)
-    draw_capsule(window, Capsules.LASER, 196, 100, frame_count)
 
     pygame.display.flip()
