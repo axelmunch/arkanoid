@@ -9,11 +9,11 @@ from .game_board import (
 from .toolbar import toolbar, update_toolbar, TOOLBAR_WIDTH, TOOLBAR_HEIGHT
 from .text import text
 
+WINDOW_WIDTH = TOOLBAR_WIDTH + GAME_BOARD_WIDTH
+WINDOW_HEIGHT = max(TOOLBAR_HEIGHT, GAME_BOARD_HEIGHT)
 
 pygame.init()
-window = pygame.display.set_mode(
-    (TOOLBAR_WIDTH + GAME_BOARD_WIDTH, max(TOOLBAR_HEIGHT, GAME_BOARD_HEIGHT))
-)
+window = pygame.display.set_mode((WINDOW_WIDTH, WINDOW_HEIGHT))
 pygame.display.set_caption("Arkanoid Level Editor")
 clock = pygame.time.Clock()
 
@@ -58,6 +58,9 @@ while running:
 
     frame_count = (frame_count + 1) % 10000
 
+    left_click = False
+    right_click = False
+
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             running = False
@@ -68,15 +71,17 @@ while running:
 
         if event.type == pygame.MOUSEBUTTONDOWN:
             if event.button == 1:
-                print("Left click")
+                left_click = True
 
             if event.button == 3:
-                print("Right click")
+                right_click = True
 
     mouse_position = pygame.mouse.get_pos()
 
-    update_toolbar(mouse_position)
-    update_game_board((mouse_position[0] - TOOLBAR_WIDTH, mouse_position[1]))
+    update_toolbar(mouse_position, left_click, right_click)
+    update_game_board(
+        (mouse_position[0] - TOOLBAR_WIDTH, mouse_position[1]), left_click, right_click
+    )
 
     window.fill((255, 255, 255))
 
@@ -85,7 +90,7 @@ while running:
 
     # FPS
     fps = str(int(clock.get_fps()))
-    text(window, f"FPS: {fps}", 10, 10)
+    text(window, f"FPS: {fps}", 10, WINDOW_HEIGHT - 20)
 
     draw_brick(window, Bricks.WHITE, 100, 100, frame_count)
     draw_brick(window, Bricks.METAL, 132, 100, frame_count)
