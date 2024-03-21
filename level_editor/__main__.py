@@ -7,6 +7,7 @@ from .game_board import (
     GAME_BOARD_HEIGHT,
 )
 from .toolbar import toolbar, update_toolbar, TOOLBAR_WIDTH, TOOLBAR_HEIGHT
+from .text import text
 
 
 pygame.init()
@@ -15,7 +16,6 @@ window = pygame.display.set_mode(
 )
 pygame.display.set_caption("Arkanoid Level Editor")
 clock = pygame.time.Clock()
-font = pygame.font.SysFont(None, 24)
 
 
 running = True
@@ -48,11 +48,6 @@ def load_level(filename):
             level.bricks.append((x, y))
 
     return level
-
-
-def text(value: str, x, y, color=(0, 0, 0)):
-    text = font.render(value, True, color)
-    window.blit(text, (x, y))
 
 
 # Init
@@ -90,7 +85,7 @@ while running:
 
     # FPS
     fps = str(int(clock.get_fps()))
-    text(f"FPS: {fps}", 10, 10)
+    text(window, f"FPS: {fps}", 10, 10)
 
     draw_brick(window, Bricks.WHITE, 100, 100, frame_count)
     draw_brick(window, Bricks.METAL, 132, 100, frame_count)
