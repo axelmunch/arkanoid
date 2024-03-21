@@ -25,20 +25,28 @@ def is_mouse_hovering_rect(
     )
 
 
-def update_toolbar(
-    mouse_position: tuple[int, int], left_click: bool, right_click: bool
-):
+def update_toolbar(mouse_position: tuple[int, int], left_click: bool):
     if is_mouse_hovering(mouse_position):
-        pass
+        if left_click:
+            # Load
+            if is_mouse_hovering_rect(mouse_position, load_button_rect):
+                print("Load")
+            # Save
+            if is_mouse_hovering_rect(mouse_position, save_button_rect):
+                print("Save")
 
+    draw_toolbar()
+
+
+def draw_toolbar():
     toolbar.fill((192, 192, 192))
 
     # Load button
     pygame.draw.rect(toolbar, (255, 255, 255), load_button_rect)
     pygame.draw.rect(toolbar, (0, 0, 0), load_button_rect, 1)
-    text(toolbar, "Load", 40, 30)
+    text(toolbar, "Load", 40, 30, 24)
 
     # Save button
     pygame.draw.rect(toolbar, (255, 255, 255), save_button_rect)
     pygame.draw.rect(toolbar, (0, 0, 0), save_button_rect, 1)
-    text(toolbar, "Save", 140, 30)
+    text(toolbar, "Save", 140, 30, 24)

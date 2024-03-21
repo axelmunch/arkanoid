@@ -22,34 +22,6 @@ running = True
 frame_count = 0
 
 
-class Level:
-    def __init__(self):
-        self.offset = 0
-        self.height = 1
-        self.bricks = []
-
-
-def save_level(level: Level, filename):
-    with open(filename, "w") as file:
-        file.write(f"{level.offset}\n")
-        file.write(f"{level.height}\n")
-        for brick in level.bricks:
-            file.write(f"{brick[0]} {brick[1]}\n")
-
-
-def load_level(filename):
-    level = Level()
-
-    with open(filename, "r") as file:
-        level.offset = int(file.readline())
-        level.height = int(file.readline())
-        for line in file:
-            x, y = map(int, line.split())
-            level.bricks.append((x, y))
-
-    return level
-
-
 # Init
 load_visuals()
 
@@ -72,15 +44,17 @@ while running:
         if event.type == pygame.MOUSEBUTTONDOWN:
             if event.button == 1:
                 left_click = True
-
             if event.button == 3:
                 right_click = True
 
     mouse_position = pygame.mouse.get_pos()
 
-    update_toolbar(mouse_position, left_click, right_click)
+    update_toolbar(mouse_position, left_click)
     update_game_board(
-        (mouse_position[0] - TOOLBAR_WIDTH, mouse_position[1]), left_click, right_click
+        (mouse_position[0] - TOOLBAR_WIDTH, mouse_position[1]),
+        left_click,
+        right_click,
+        frame_count,
     )
 
     window.fill((255, 255, 255))
@@ -90,7 +64,7 @@ while running:
 
     # FPS
     fps = str(int(clock.get_fps()))
-    text(window, f"FPS: {fps}", 10, WINDOW_HEIGHT - 20)
+    text(window, f"FPS: {fps}", 10, WINDOW_HEIGHT - 20, 24)
 
     draw_brick(window, Bricks.WHITE, 100, 100, frame_count)
     draw_brick(window, Bricks.METAL, 132, 100, frame_count)

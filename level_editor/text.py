@@ -1,9 +1,13 @@
 import pygame
 
 pygame.init()
-font = pygame.font.SysFont(None, 24)
+
+fonts = {}
 
 
-def text(window, value: str, x, y, color=(0, 0, 0)):
-    text = font.render(value, True, color)
+def text(window, value: str, x, y, size, color=(0, 0, 0)):
+    if size not in fonts:
+        fonts[size] = pygame.font.SysFont(None, size)
+
+    text = fonts[size].render(value, True, color)
     window.blit(text, (x, y))
