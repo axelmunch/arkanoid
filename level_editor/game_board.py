@@ -19,6 +19,8 @@ game_board = pygame.Surface((GAME_BOARD_WIDTH, GAME_BOARD_HEIGHT))
 
 class Level:
     def __init__(self):
+        self.theme = 0
+
         self.offset = 0
         self.height = 1
 
@@ -74,6 +76,7 @@ def save_level(level: Level):
 
     with open(filename, "w") as file:
         write_text = ""
+        write_text += f"{level.theme}\n"
         write_text += f"{level.offset}\n"
         write_text += f"{level.height}\n"
         for y in range(level.offset, level.offset + level.height):
@@ -91,6 +94,7 @@ def load_level(filename):
     level = Level()
 
     with open(filename, "r") as file:
+        level.theme = int(file.readline())
         level.offset = int(file.readline())
         level.height = int(file.readline())
 
