@@ -20,11 +20,18 @@ load_button_rect = (20, 20, 80, 32)
 save_button_rect = (120, 20, 80, 32)
 
 elements_by_line = 4
-elements_start_x = 36
 elements_space_x = 50
 elements_space_y = 30
 bricks_start_y = 150
 capsules_start_y = 400
+elements_start_x = (
+    TOOLBAR_WIDTH / 2
+    - (
+        elements_by_line * (max(BRICK_WIDTH, CAPSULE_WIDTH) + elements_space_x)
+        - elements_space_x
+    )
+    / 2
+)
 
 
 def is_mouse_hovering(mouse_position: tuple[int, int]) -> bool:
@@ -49,14 +56,17 @@ def update_toolbar(
     selected_brick,
     selected_capsule,
 ):
+    event_load = False
+    event_save = False
+
     if is_mouse_hovering(mouse_position):
         if left_click:
             # Load
             if is_mouse_hovering_rect(mouse_position, load_button_rect):
-                print("Load")
+                event_load = True
             # Save
             if is_mouse_hovering_rect(mouse_position, save_button_rect):
-                print("Save")
+                event_save = True
 
             # Select brick
             for i, brick in enumerate(Bricks):
@@ -86,7 +96,7 @@ def update_toolbar(
 
     draw_toolbar(selected_brick, selected_capsule, frame_count)
 
-    return selected_brick, selected_capsule
+    return selected_brick, selected_capsule, event_load, event_save
 
 
 def draw_toolbar(selected_brick, selected_capsule, frame_count):

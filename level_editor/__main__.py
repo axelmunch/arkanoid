@@ -5,6 +5,9 @@ from .game_board import (
     update_game_board,
     GAME_BOARD_WIDTH,
     GAME_BOARD_HEIGHT,
+    Level,
+    load_level,
+    save_level,
 )
 from .toolbar import toolbar, update_toolbar, TOOLBAR_WIDTH, TOOLBAR_HEIGHT
 from .text import text
@@ -27,6 +30,7 @@ load_visuals()
 
 selected_brick = Bricks.WHITE
 selected_capsule = Capsules.EMPTY
+level = Level()
 
 while running:
     clock.tick(60)
@@ -55,9 +59,19 @@ while running:
 
     mouse_position = pygame.mouse.get_pos()
 
-    selected_brick, selected_capsule = update_toolbar(
-        mouse_position, left_click, frame_count, selected_brick, selected_capsule
+    selected_brick, selected_capsule, event_load, event_save = update_toolbar(
+        mouse_position,
+        left_click,
+        frame_count,
+        selected_brick,
+        selected_capsule,
     )
+
+    if event_load:
+        level = load_level(level)
+    if event_save:
+        save_level(level)
+
     update_game_board(
         (mouse_position[0] - TOOLBAR_WIDTH, mouse_position[1]),
         left_click,
@@ -65,6 +79,7 @@ while running:
         middle_click,
         selected_brick,
         selected_capsule,
+        level,
         frame_count,
     )
 

@@ -1,13 +1,14 @@
 import pygame
 from .visuals import Bricks, Capsules, BRICK_WIDTH, BRICK_HEIGHT, draw_brick
 from .text import text
+from .files import select_file_load, select_file_save
 
 GAME_BOARD_WIDTH = 600
 GAME_BOARD_HEIGHT = 600
-GAME_BOARD_MARGIN_TOP = 50
-GAME_BOARD_MARGIN_BOTTOM = 50
-GAME_BOARD_MARGIN_LEFT = 50
-GAME_BOARD_MARGIN_RIGHT = 50
+GAME_BOARD_MARGIN_TOP = 150
+GAME_BOARD_MARGIN_BOTTOM = 200
+GAME_BOARD_MARGIN_LEFT = 10
+GAME_BOARD_MARGIN_RIGHT = 10
 
 LEVEL_WIDTH = 13
 LEVEL_HEIGHT = 14
@@ -18,6 +19,9 @@ game_board = pygame.Surface((GAME_BOARD_WIDTH, GAME_BOARD_HEIGHT))
 
 class Level:
     def __init__(self):
+        self.offset = 0
+        self.height = 1
+
         self.bricks = [
             [(Bricks.EMPTY, Capsules.EMPTY) for x in range(LEVEL_WIDTH)]
             for y in range(LEVEL_HEIGHT)
@@ -27,44 +31,71 @@ class Level:
 
     def place(self, brick: tuple[Bricks, Capsules], x, y):
         self.bricks[y][x] = brick
+        self.update()
 
     def remove(self, x, y):
         self.bricks[y][x] = (Bricks.EMPTY, Capsules.EMPTY)
+        self.update()
 
     def remove_capsule(self, x, y):
         brick, _ = self.bricks[y][x]
         if brick == Bricks.EMPTY:
             return
         self.bricks[y][x] = (brick, Capsules.EMPTY)
+        self.update()
 
     def update(self):
         self.offset = 0
+        offset_found = False
         for y in range(LEVEL_HEIGHT):
             for x in range(LEVEL_WIDTH):
-                if self.bricks[y][x][0] != Bricks.EMPTY:
-                    self.offset = max(self.offset, y)
+                if self.bricks[y][x][0] != Bricks.EMPTY and not offset_found:
+                    self.offset = y
+                    offset_found = True
 
         last_line_with_data = self.offset
         for y in range(self.offset, LEVEL_HEIGHT):
             for x in range(LEVEL_WIDTH):
                 if self.bricks[y][x][0] != Bricks.EMPTY:
                     last_line_with_data = y
-        self.height = min(last_line_with_data - self.offset, 1)
+                    break
+        self.height = last_line_with_data - self.offset + 1
 
 
-def save_level(level: Level, filename):
+def save_level(level: Level):
+    filename = select_file_save()
+    if filename is None or filename == "":
+        return
+
     with open(filename, "w") as file:
-        file.write(f"{level.offset}\n")
-        file.write(f"{level.height}\n")
-        for brick in level.bricks:
-            file.write(f"{brick[0]} {brick[1]}\n")
+        write_text = ""
+        write_text += f"{level.offset}\n"
+        write_text += f"{level.height}\n"
+        for y in range(level.offset, level.offset + level.height):
+            for x in range(LEVEL_WIDTH):
+                brick, capsule = level.bricks[y][x]
+                write_text += f"{str(brick.value)}\n{str(capsule.value)}\n"
+        file.write(write_text[:-1])
 
 
 def load_level(filename):
+    filename = select_file_load()
+    if filename is None or filename == "":
+        return
+
+    level = Level()
+
     with open(filename, "r") as file:
-        for line in file:
-            x, y = map(int, line.split())
-            level.bricks.append((x, y))
+        level.offset = int(file.readline())
+        level.height = int(file.readline())
+
+        for i in range(level.height * LEVEL_WIDTH):
+            brick = Bricks(int(file.readline()))
+            capsule = Capsules(int(file.readline()))
+            level.bricks[i // LEVEL_WIDTH + level.offset][i % LEVEL_WIDTH] = (
+                brick,
+                capsule,
+            )
 
     return level
 
@@ -86,9 +117,6 @@ def is_mouse_hovering_rect(
     )
 
 
-level = Level()
-
-
 def update_game_board(
     mouse_position: tuple[int, int],
     left_click: bool,
@@ -96,6 +124,7 @@ def update_game_board(
     middle_click: bool,
     selected_brick,
     selected_capsule,
+    level: Level,
     frame_count,
 ):
     if is_mouse_hovering(mouse_position):
@@ -126,10 +155,10 @@ def update_game_board(
             # Remove capsule
             level.remove_capsule(x, y)
 
-    draw_game_board(frame_count)
+    draw_game_board(level, frame_count)
 
 
-def draw_game_board(frame_count):
+def draw_game_board(level, frame_count):
     game_board.fill((192, 64, 64))
 
     pygame.draw.rect(
