@@ -22,12 +22,9 @@ class Level:
         self.offset = 0
         self.height = 1
 
-        self.bricks = [
-            [(Bricks.EMPTY, Capsules.EMPTY) for x in range(LEVEL_WIDTH)]
-            for y in range(LEVEL_HEIGHT)
-        ]
+        self.bricks = []
 
-        self.update()
+        self.clear()
 
     def place(self, brick: tuple[Bricks, Capsules], x, y):
         self.bricks[y][x] = brick
@@ -42,6 +39,14 @@ class Level:
         if brick == Bricks.EMPTY:
             return
         self.bricks[y][x] = (brick, Capsules.EMPTY)
+        self.update()
+
+    def clear(self):
+        self.bricks = [
+            [(Bricks.EMPTY, Capsules.EMPTY) for _ in range(LEVEL_WIDTH)]
+            for _ in range(LEVEL_HEIGHT)
+        ]
+
         self.update()
 
     def update(self):

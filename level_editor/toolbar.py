@@ -18,6 +18,7 @@ toolbar = pygame.Surface((TOOLBAR_WIDTH, TOOLBAR_HEIGHT))
 
 load_button_rect = (20, 20, 80, 32)
 save_button_rect = (120, 20, 80, 32)
+clear_button_rect = (220, 20, 80, 32)
 
 elements_by_line = 4
 elements_space_x = 50
@@ -58,6 +59,7 @@ def update_toolbar(
 ):
     event_load = False
     event_save = False
+    event_clear = False
 
     if is_mouse_hovering(mouse_position):
         if left_click:
@@ -67,6 +69,9 @@ def update_toolbar(
             # Save
             if is_mouse_hovering_rect(mouse_position, save_button_rect):
                 event_save = True
+            # Clear
+            if is_mouse_hovering_rect(mouse_position, clear_button_rect):
+                event_clear = True
 
             # Select brick
             for i, brick in enumerate(Bricks):
@@ -96,7 +101,7 @@ def update_toolbar(
 
     draw_toolbar(selected_brick, selected_capsule, frame_count)
 
-    return selected_brick, selected_capsule, event_load, event_save
+    return selected_brick, selected_capsule, event_load, event_save, event_clear
 
 
 def draw_toolbar(selected_brick, selected_capsule, frame_count):
@@ -111,6 +116,11 @@ def draw_toolbar(selected_brick, selected_capsule, frame_count):
     pygame.draw.rect(toolbar, (255, 255, 255), save_button_rect)
     pygame.draw.rect(toolbar, (0, 0, 0), save_button_rect, 1)
     text(toolbar, "Save", 140, 30, 24)
+
+    # Clear button
+    pygame.draw.rect(toolbar, (255, 255, 255), clear_button_rect)
+    pygame.draw.rect(toolbar, (0, 0, 0), clear_button_rect, 1)
+    text(toolbar, "Clear", 240, 30, 24)
 
     # Bricks
     for i, brick in enumerate(Bricks):

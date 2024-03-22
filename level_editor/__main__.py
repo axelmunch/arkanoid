@@ -59,18 +59,22 @@ while running:
 
     mouse_position = pygame.mouse.get_pos()
 
-    selected_brick, selected_capsule, event_load, event_save = update_toolbar(
-        mouse_position,
-        left_click,
-        frame_count,
-        selected_brick,
-        selected_capsule,
+    selected_brick, selected_capsule, event_load, event_save, event_clear = (
+        update_toolbar(
+            mouse_position,
+            left_click,
+            frame_count,
+            selected_brick,
+            selected_capsule,
+        )
     )
 
     if event_load:
         level = load_level(level)
     if event_save:
         save_level(level)
+    if event_clear:
+        level.clear()
 
     update_game_board(
         (mouse_position[0] - TOOLBAR_WIDTH, mouse_position[1]),
