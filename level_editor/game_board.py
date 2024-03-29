@@ -90,7 +90,7 @@ def save_level(level: Level):
         file.write(write_text[:-1])
 
 
-def load_level(filename):
+def load_level():
     filename = select_file_load()
     if filename is None or filename == "":
         return

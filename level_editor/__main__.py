@@ -80,8 +80,10 @@ while running:
     level.set_theme(selected_theme)
 
     if event_load:
-        level = load_level(level)
-        selected_theme = level.theme
+        loaded_data = load_level()
+        if loaded_data is not None:
+            level = loaded_data
+            selected_theme = level.theme
     if event_save:
         save_level(level)
     if event_clear:
