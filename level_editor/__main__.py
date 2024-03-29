@@ -1,5 +1,5 @@
 import pygame
-from .visuals import load_visuals, Bricks, Capsules, draw_brick, draw_capsule
+from .visuals import load_visuals, Bricks, Capsules, Theme, draw_brick, draw_capsule
 from .game_board import (
     game_board,
     update_game_board,
@@ -30,6 +30,7 @@ load_visuals()
 
 selected_brick = Bricks.WHITE
 selected_capsule = Capsules.EMPTY
+selected_theme = Theme.THEME_1
 level = Level()
 
 while running:
@@ -59,18 +60,27 @@ while running:
 
     mouse_position = pygame.mouse.get_pos()
 
-    selected_brick, selected_capsule, event_load, event_save, event_clear = (
-        update_toolbar(
-            mouse_position,
-            left_click,
-            frame_count,
-            selected_brick,
-            selected_capsule,
-        )
+    (
+        selected_brick,
+        selected_capsule,
+        selected_theme,
+        event_load,
+        event_save,
+        event_clear,
+    ) = update_toolbar(
+        mouse_position,
+        left_click,
+        frame_count,
+        selected_brick,
+        selected_capsule,
+        selected_theme,
     )
+
+    level.set_theme(selected_theme)
 
     if event_load:
         level = load_level(level)
+        selected_theme = level.theme
     if event_save:
         save_level(level)
     if event_clear:

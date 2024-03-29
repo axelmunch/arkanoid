@@ -14,8 +14,11 @@ CAPSULE_HEIGHT = 16
 ANIMATED_CAPSULE_ANIMATION_FRAMES = 8
 ANIMATED_CAPSULE_ANIMATION_TIME = 8
 
+THEME_SIZE = 32
+
 bricks_sprites = {}
 capsules_sprites = {}
+themes_sprites = {}
 
 
 class Bricks(Enum):
@@ -51,6 +54,18 @@ class Capsules(Enum):
     LASER = 5
     BREAK = 6
     ADDITION = 7
+
+
+class Theme(Enum):
+    def __str__(self):
+        return str(self.value)
+
+    THEME_1 = 0
+    THEME_2 = 1
+    THEME_3 = 2
+    THEME_4 = 3
+    THEME_5 = 4
+    THEME_6 = 5
 
 
 def load_visuals():
@@ -202,6 +217,19 @@ def load_visuals():
             )
         )
 
+    # Themes
+    themes_sprites[Theme.THEME_1] = sprites.subsurface(0 + 64 * 0, 128, 64, 64)
+    themes_sprites[Theme.THEME_2] = sprites.subsurface(0 + 64 * 1, 128, 64, 64)
+    themes_sprites[Theme.THEME_3] = sprites.subsurface(0 + 64 * 2, 128, 64, 64)
+    themes_sprites[Theme.THEME_4] = sprites.subsurface(0 + 64 * 3, 128, 64, 64)
+    themes_sprites[Theme.THEME_5] = sprites.subsurface(0 + 64 * 4, 128, 64, 64)
+    themes_sprites[Theme.THEME_6] = sprites.subsurface(0 + 64 * 5, 128, 64, 64)
+
+    for theme in themes_sprites:
+        themes_sprites[theme] = pygame.transform.scale(
+            themes_sprites[theme], (THEME_SIZE, THEME_SIZE)
+        )
+
 
 def draw_brick(surface: pygame.Surface, brick: Bricks, x, y, frame_count):
     if brick == Bricks.METAL:
@@ -238,3 +266,7 @@ def draw_capsule(surface: pygame.Surface, capsule: Capsules, x, y, frame_count):
         ],
         (x, y),
     )
+
+
+def draw_theme(surface: pygame.Surface, theme: Theme, x, y):
+    surface.blit(themes_sprites[theme], (x, y))

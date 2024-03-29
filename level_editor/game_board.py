@@ -1,5 +1,5 @@
 import pygame
-from .visuals import Bricks, Capsules, BRICK_WIDTH, BRICK_HEIGHT, draw_brick
+from .visuals import Bricks, Capsules, Theme, BRICK_WIDTH, BRICK_HEIGHT, draw_brick
 from .text import text
 from .files import select_file_load, select_file_save
 
@@ -19,7 +19,7 @@ game_board = pygame.Surface((GAME_BOARD_WIDTH, GAME_BOARD_HEIGHT))
 
 class Level:
     def __init__(self):
-        self.theme = 0
+        self.theme = Theme.THEME_1
 
         self.offset = 0
         self.height = 1
@@ -42,6 +42,9 @@ class Level:
             return
         self.bricks[y][x] = (brick, Capsules.EMPTY)
         self.update()
+
+    def set_theme(self, theme: Theme):
+        self.theme = theme
 
     def clear(self):
         self.bricks = [
@@ -94,7 +97,7 @@ def load_level(filename):
     level = Level()
 
     with open(filename, "r") as file:
-        level.theme = int(file.readline())
+        level.theme = Theme(int(file.readline()))
         level.offset = int(file.readline())
         level.height = int(file.readline())
 

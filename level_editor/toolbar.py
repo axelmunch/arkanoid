@@ -8,6 +8,9 @@ from .visuals import (
     CAPSULE_WIDTH,
     CAPSULE_HEIGHT,
     draw_capsule,
+    Theme,
+    THEME_SIZE,
+    draw_theme,
 )
 from .text import text
 
@@ -23,8 +26,9 @@ clear_button_rect = (220, 20, 80, 32)
 elements_by_line = 4
 elements_space_x = 50
 elements_space_y = 30
-bricks_start_y = 150
-capsules_start_y = 400
+bricks_start_y = 250
+capsules_start_y = 460
+themes_start_y = 100
 elements_start_x = (
     TOOLBAR_WIDTH / 2
     - (
@@ -56,6 +60,7 @@ def update_toolbar(
     frame_count,
     selected_brick,
     selected_capsule,
+    selected_theme,
 ):
     event_load = False
     event_save = False
@@ -99,12 +104,32 @@ def update_toolbar(
                 ):
                     selected_capsule = capsule
 
-    draw_toolbar(selected_brick, selected_capsule, frame_count)
+            # Select theme
+            for i, theme in enumerate(Theme):
+                x = elements_start_x + i % elements_by_line * (
+                    THEME_SIZE + elements_space_x
+                )
+                y = themes_start_y + i // elements_by_line * (
+                    THEME_SIZE + elements_space_y
+                )
+                if is_mouse_hovering_rect(
+                    mouse_position, (x, y, THEME_SIZE, THEME_SIZE)
+                ):
+                    selected_theme = theme
 
-    return selected_brick, selected_capsule, event_load, event_save, event_clear
+    draw_toolbar(selected_brick, selected_capsule, selected_theme, frame_count)
+
+    return (
+        selected_brick,
+        selected_capsule,
+        selected_theme,
+        event_load,
+        event_save,
+        event_clear,
+    )
 
 
-def draw_toolbar(selected_brick, selected_capsule, frame_count):
+def draw_toolbar(selected_brick, selected_capsule, selected_theme, frame_count):
     toolbar.fill((192, 192, 192))
 
     # Load button
@@ -160,5 +185,23 @@ def draw_toolbar(selected_brick, selected_capsule, frame_count):
                 toolbar,
                 (255, 0, 0),
                 (x - 4, y - 4, CAPSULE_WIDTH + 8, CAPSULE_HEIGHT + 8),
+                2,
+            )
+
+    # Themes
+    for i, theme in enumerate(Theme):
+        x = elements_start_x + i % elements_by_line * (THEME_SIZE + elements_space_x)
+        y = themes_start_y + i // elements_by_line * (THEME_SIZE + elements_space_y)
+        draw_theme(
+            toolbar,
+            theme,
+            x,
+            y,
+        )
+        if selected_theme == theme:
+            pygame.draw.rect(
+                toolbar,
+                (255, 0, 0),
+                (x - 4, y - 4, THEME_SIZE + 8, THEME_SIZE + 8),
                 2,
             )
