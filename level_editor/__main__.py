@@ -1,16 +1,17 @@
 import pygame
-from .visuals import load_visuals, Bricks, Capsules, Theme, draw_brick, draw_capsule
+
 from .game_board import (
-    game_board,
-    update_game_board,
-    GAME_BOARD_WIDTH,
     GAME_BOARD_HEIGHT,
+    GAME_BOARD_WIDTH,
     Level,
+    game_board,
     load_level,
     save_level,
+    update_game_board,
 )
-from .toolbar import toolbar, update_toolbar, TOOLBAR_WIDTH, TOOLBAR_HEIGHT
 from .text import text
+from .toolbar import TOOLBAR_HEIGHT, TOOLBAR_WIDTH, toolbar, update_toolbar
+from .visuals import Bricks, Capsules, Theme, draw_brick, draw_capsule, load_visuals
 
 WINDOW_WIDTH = TOOLBAR_WIDTH + GAME_BOARD_WIDTH
 WINDOW_HEIGHT = max(TOOLBAR_HEIGHT, GAME_BOARD_HEIGHT)

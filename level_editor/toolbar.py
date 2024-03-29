@@ -1,18 +1,19 @@
 import pygame
+
+from .text import text
 from .visuals import (
-    Bricks,
-    BRICK_WIDTH,
     BRICK_HEIGHT,
-    draw_brick,
-    Capsules,
-    CAPSULE_WIDTH,
+    BRICK_WIDTH,
     CAPSULE_HEIGHT,
-    draw_capsule,
-    Theme,
+    CAPSULE_WIDTH,
     THEME_SIZE,
+    Bricks,
+    Capsules,
+    Theme,
+    draw_brick,
+    draw_capsule,
     draw_theme,
 )
-from .text import text
 
 TOOLBAR_WIDTH = 350
 TOOLBAR_HEIGHT = 600

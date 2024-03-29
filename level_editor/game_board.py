@@ -1,7 +1,8 @@
 import pygame
-from .visuals import Bricks, Capsules, Theme, BRICK_WIDTH, BRICK_HEIGHT, draw_brick
-from .text import text
+
 from .files import select_file_load, select_file_save
+from .text import text
+from .visuals import BRICK_HEIGHT, BRICK_WIDTH, Bricks, Capsules, Theme, draw_brick
 
 GAME_BOARD_WIDTH = 600
 GAME_BOARD_HEIGHT = 600

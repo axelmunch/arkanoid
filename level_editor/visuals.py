@@ -1,6 +1,6 @@
-import pygame
 from enum import Enum
 
+import pygame
 
 SPRITE_SHEET = "Arkanoid_sprites.bmp"
 
