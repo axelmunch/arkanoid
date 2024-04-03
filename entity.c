@@ -62,3 +62,13 @@ Ball createBall(Point position) {
     ball.direction = 42;
     return ball;
 }
+VAUS createVAUS(Point position) {
+    VAUS vaus;
+    vaus.hit_box.width = 64;
+    vaus.hit_box.height = 16;
+    vaus.hit_box.origin = position;
+    vaus.hit_box.origin.x -= vaus.hit_box.width / 2;
+    vaus.hit_box.origin.y -= vaus.hit_box.height;
+    vaus.expand_size = 5;
+    return vaus;
+}

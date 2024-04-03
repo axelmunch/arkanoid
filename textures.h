@@ -1,6 +1,7 @@
 #ifndef ARKANOID_TEXTURES_H
 #define ARKANOID_TEXTURES_H
 
+#include "entity.h"
 #include <SDL.h>
 #include <stdbool.h>
 
@@ -22,5 +23,6 @@ void get_texture_dimensions(Textures texture, int *pos_x, int *pos_y,
                             int *width, int *height);
 void draw_texture(SDL_Surface *surface, Textures texture, int x, int y,
                   bool centered);
+void draw_vaus(SDL_Surface *surface, VAUS vaus);
 
 #endif // ARKANOID_TEXTURES_H

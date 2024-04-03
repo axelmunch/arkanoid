@@ -8,11 +8,15 @@
 #include <stdio.h>
 
 Ball ball;
-double x_vault;
+VAUS vaus;
 
 SDL_Window *pWindow = NULL;
 SDL_Surface *win_surf = NULL;
 SDL_Surface *plancheSprites = NULL;
+
+void moveVAUS(double distance) {
+    vaus.hit_box.origin.x += distance * get_delta_time_target();
+}
 
 void init() {
     pWindow = SDL_CreateWindow("Arknoid", SDL_WINDOWPOS_UNDEFINED,
@@ -24,6 +28,8 @@ void init() {
 
     Point ballPosition = {win_surf->w / 2, win_surf->h / 2};
     ball = createBall(ballPosition);
+    Point vausPosition = {win_surf->w / 2, win_surf->h - 32};
+    vaus = createVAUS(vausPosition);
 }
 
 void draw() {
@@ -54,8 +60,7 @@ void draw() {
         ball.hit_box.origin.y += ball_movement.y;
     }
 
-    draw_texture(win_surf, VausSize8, x_vault, win_surf->h - 32, false);
-
+    draw_vaus(win_surf, vaus);
     draw_text(win_surf, "Arkanoid", 10, 10);
     int fps_text_width = draw_text(win_surf, "FPS: ", 10, 40);
     draw_integer(win_surf, (int) get_current_fps(), 10 + fps_text_width, 40);
@@ -78,10 +83,10 @@ int main(int argc, char **argv) {
         SDL_PumpEvents();
         const Uint8 *keys = SDL_GetKeyboardState(NULL);
         if (keys[SDL_SCANCODE_LEFT]) {
-            x_vault -= 10 * get_delta_time_target();
+            moveVAUS(-10);
         }
         if (keys[SDL_SCANCODE_RIGHT]) {
-            x_vault += 10 * get_delta_time_target();
+            moveVAUS(10);
         }
 
         SDL_Event event;
