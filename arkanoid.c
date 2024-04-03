@@ -46,7 +46,13 @@ void draw() {
 
     draw_texture(win_surf, BallTexture, ball.hit_box.origin.x,
                  ball.hit_box.origin.y, true);
+    draw_vaus(win_surf, vaus.hit_box.origin, vaus.expand_size);
+    draw_text(win_surf, "Arkanoid", 10, 10);
+    int fps_text_width = draw_text(win_surf, "FPS: ", 10, 40);
+    draw_integer(win_surf, (int) get_current_fps(), 10 + fps_text_width, 40);
+}
 
+void update() {
     Vector ball_movement;
     rotate_by_angle(ball.velocity * get_delta_time_target(), ball.direction,
                     &ball_movement);
@@ -64,13 +70,7 @@ void draw() {
         ball.direction = fmod(360 - ball.direction, 360);
         ball.hit_box.origin.y += ball_movement.y;
     }
-
-    draw_vaus(win_surf, vaus.hit_box.origin, vaus.expand_size);
-    draw_text(win_surf, "Arkanoid", 10, 10);
-    int fps_text_width = draw_text(win_surf, "FPS: ", 10, 40);
-    draw_integer(win_surf, (int) get_current_fps(), 10 + fps_text_width, 40);
 }
-
 int main(int argc, char **argv) {
     if (SDL_Init(SDL_INIT_VIDEO | SDL_INIT_AUDIO) != 0) {
         return 1;
@@ -103,6 +103,7 @@ int main(int argc, char **argv) {
             }
         }
 
+        update();
         draw();
         SDL_UpdateWindowSurface(pWindow);
 
