@@ -8,4 +8,7 @@
 #define SCREEN_WIDTH  600
 #define SCREEN_HEIGHT 600
 
+#define VAUS_MAX_SIZE      8
+#define ANIMATION_TIMER_MS 150
+
 #endif // ARKANOID_CONFIG_H

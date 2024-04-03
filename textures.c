@@ -22,7 +22,7 @@ void get_texture_dimensions(Textures texture, int *pos_x, int *pos_y,
         *width = 48;
         *height = 64;
         break;
-    case Ball:
+    case BallTexture:
         *pos_x = 80;
         *pos_y = 64;
         *width = 16;
@@ -92,4 +92,9 @@ void draw_texture(SDL_Surface *surface, Textures texture, int x, int y,
     }
 
     SDL_BlitSurface(texture_bitmap, &src, surface, &dst);
+}
+void draw_vaus(SDL_Surface *surface, Point position, int size) {
+    Textures normalizedVausTexture = size + VausSize1 - 1;
+    draw_texture(surface, normalizedVausTexture, (int) position.x,
+                 (int) position.y, false);
 }

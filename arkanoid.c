@@ -1,29 +1,27 @@
 #include "config.h"
 #include "delta_time.h"
+#include "entity.h"
 #include "text.h"
 #include "textures.h"
 #include <SDL.h>
 #include <stdbool.h>
 #include <stdio.h>
-#include <stdlib.h>
 
-// struct { double x; double y; } ball_speed;
-struct {
-    double x;
-    double y;
-    double vx;
-    double vy;
-} ball;
-
-int x_vault;
+Ball ball;
+VAUS vaus;
 
 SDL_Window *pWindow = NULL;
 SDL_Surface *win_surf = NULL;
 SDL_Surface *plancheSprites = NULL;
 
-SDL_Rect srcBg = {0, 128, 96, 128}; // x,y, w,h (0,0) en haut a gauche
-SDL_Rect srcBall = {0, 96, 24, 24};
-SDL_Rect scrVaiss = {128, 0, 128, 32};
+void move_VAUS(double distance) {
+    vaus.hit_box.origin.x += distance * get_delta_time_target();
+    if (vaus.hit_box.origin.x < 0) {
+        vaus.hit_box.origin.x = 0;
+    } else if (vaus.hit_box.origin.x + vaus.hit_box.width > win_surf->w) {
+        vaus.hit_box.origin.x = win_surf->w - vaus.hit_box.width;
+    }
+}
 
 void init() {
     pWindow = SDL_CreateWindow("Arknoid", SDL_WINDOWPOS_UNDEFINED,
@@ -31,52 +29,43 @@ void init() {
                                SCREEN_HEIGHT, SDL_WINDOW_SHOWN);
     win_surf = SDL_GetWindowSurface(pWindow);
     plancheSprites = SDL_LoadBMP("./sprites.bmp");
-    SDL_SetColorKey(plancheSprites, true,
-                    0); // 0: 00/00/00 noir -> transparent
+    SDL_SetColorKey(plancheSprites, true, 0);
 
-    ball.x = win_surf->w / 2;
-    ball.y = win_surf->h / 2;
-    ball.vx = 1.0;
-    ball.vy = 1.4;
+    Point ballPosition = {win_surf->w / 2, win_surf->h / 2};
+    ball = create_ball(ballPosition);
+    Point vausPosition = {win_surf->w / 2, win_surf->h - 32};
+    vaus = create_VAUS(vausPosition);
 }
 
-// fonction qui met à jour la surface de la fenetre "win_surf"
 void draw() {
-    // Remplit le fond
-    SDL_Rect dest = {0, 0, 0, 0};
     for (int j = 0; j < win_surf->h; j += 64) {
         for (int i = 0; i < win_surf->w; i += 48) {
             draw_texture(win_surf, BackgroundTile, i, j, false);
         }
     }
 
-    // Affiche balle
-    draw_texture(win_surf, Ball, ball.x, ball.y, true);
+    draw_texture(win_surf, BallTexture, ball.hit_box.origin.x,
+                 ball.hit_box.origin.y, true);
 
-    // deplacement
-    ball.x += ball.vx * get_delta_time_target();
-    ball.y += ball.vy * get_delta_time_target();
+    Vector ball_movement;
+    rotate_by_angle(ball.velocity * get_delta_time_target(), ball.direction,
+                    &ball_movement);
 
-    // collision bord
-    if ((ball.x < 1) || (ball.x > (win_surf->w - 25))) {
-        ball.vx *= -1;
-    }
-    if ((ball.y < 1) || (ball.y > (win_surf->h - 25))) {
-        ball.vy *= -1;
-    }
-
-    // touche bas -> rouge
-    if (ball.y > (win_surf->h - 25)) {
-        srcBall.y = 64;
-    }
-    // touche bas -> vert
-    if (ball.y < 1) {
-        srcBall.y = 96;
+    ball.hit_box.origin.x += ball_movement.x;
+    if ((ball.hit_box.origin.x < ball.hit_box.radius) ||
+        (ball.hit_box.origin.x > (win_surf->w - ball.hit_box.radius))) {
+        ball.direction = fmod(180 - ball.direction, 360);
+        ball.hit_box.origin.x -= ball_movement.x;
     }
 
-    // Vaisseau
-    draw_texture(win_surf, VausSize8, x_vault, win_surf->h - 32, false);
+    ball.hit_box.origin.y -= ball_movement.y;
+    if ((ball.hit_box.origin.y < ball.hit_box.radius) ||
+        (ball.hit_box.origin.y > (win_surf->h - ball.hit_box.radius))) {
+        ball.direction = fmod(360 - ball.direction, 360);
+        ball.hit_box.origin.y += ball_movement.y;
+    }
 
+    draw_vaus(win_surf, vaus.hit_box.origin, vaus.expand_size);
     draw_text(win_surf, "Arkanoid", 10, 10);
     int fps_text_width = draw_text(win_surf, "FPS: ", 10, 40);
     draw_integer(win_surf, (int) get_current_fps(), 10 + fps_text_width, 40);
@@ -99,10 +88,10 @@ int main(int argc, char **argv) {
         SDL_PumpEvents();
         const Uint8 *keys = SDL_GetKeyboardState(NULL);
         if (keys[SDL_SCANCODE_LEFT]) {
-            x_vault -= 10 * get_delta_time_target();
+            move_VAUS(-10);
         }
         if (keys[SDL_SCANCODE_RIGHT]) {
-            x_vault += 10 * get_delta_time_target();
+            move_VAUS(10);
         }
 
         SDL_Event event;

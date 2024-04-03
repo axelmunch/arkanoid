@@ -15,6 +15,8 @@ add_executable(${PROJECT_NAME}
         math/math.h
         text.c
         text.h
+        entity.h
+        entity.c
         textures.c
         textures.h)
 target_sources(${PROJECT_NAME} PRIVATE arkanoid.c)
