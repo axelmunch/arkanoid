@@ -10,6 +10,7 @@ typedef struct Ball Ball;
 typedef struct VAUS VAUS;
 typedef enum { HARMFUL, CAPSULE, EXPLOSION } EntityType;
 typedef enum {
+    CAPSULE_EMPTY,
     CAPSULE_SLOW,
     CAPSULE_CATCH,
     CAPSULE_EXPAND,

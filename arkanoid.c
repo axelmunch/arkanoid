@@ -1,6 +1,7 @@
 #include "config.h"
 #include "delta_time.h"
 #include "entity.h"
+#include "levels.h"
 #include "text.h"
 #include "textures.h"
 #include <SDL.h>
@@ -30,6 +31,8 @@ void init() {
     win_surf = SDL_GetWindowSurface(pWindow);
     plancheSprites = SDL_LoadBMP("./sprites.bmp");
     SDL_SetColorKey(plancheSprites, true, 0);
+
+    load_level("levels/1.level");
 
     Point ballPosition = {win_surf->w / 2, win_surf->h / 2};
     ball = create_ball(ballPosition);
