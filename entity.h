@@ -3,6 +3,8 @@
 
 #include "config.h"
 #include "math/math.h"
+#include "textures.h"
+
 typedef struct AnimatedEntity AnimatedEntity;
 typedef struct Ball Ball;
 typedef struct VAUS VAUS;
@@ -48,4 +50,5 @@ AnimatedEntity create_harmful(SpecificType harmfulType);
 AnimatedEntity create_capsule();
 Ball create_ball(Point position);
 VAUS create_VAUS(Point position);
+void update_VAUS_size(VAUS *vaus, int size);
 #endif // ARKANOID_ENTITY_H

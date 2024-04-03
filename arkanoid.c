@@ -16,6 +16,11 @@ SDL_Surface *plancheSprites = NULL;
 
 void move_VAUS(double distance) {
     vaus.hit_box.origin.x += distance * get_delta_time_target();
+    if (vaus.hit_box.origin.x < 0) {
+        vaus.hit_box.origin.x = 0;
+    } else if (vaus.hit_box.origin.x + vaus.hit_box.width > win_surf->w) {
+        vaus.hit_box.origin.x = win_surf->w - vaus.hit_box.width;
+    }
 }
 
 void init() {
@@ -60,7 +65,7 @@ void draw() {
         ball.hit_box.origin.y += ball_movement.y;
     }
 
-    draw_vaus(win_surf, vaus);
+    draw_vaus(win_surf, vaus.hit_box.origin, vaus.expand_size);
     draw_text(win_surf, "Arkanoid", 10, 10);
     int fps_text_width = draw_text(win_surf, "FPS: ", 10, 40);
     draw_integer(win_surf, (int) get_current_fps(), 10 + fps_text_width, 40);

@@ -64,11 +64,20 @@ Ball create_ball(Point position) {
 }
 VAUS create_VAUS(Point position) {
     VAUS vaus;
-    vaus.hit_box.width = 64;
-    vaus.hit_box.height = 16;
+    update_VAUS_size(&vaus, 5);
     vaus.hit_box.origin = position;
     vaus.hit_box.origin.x -= vaus.hit_box.width / 2;
     vaus.hit_box.origin.y -= vaus.hit_box.height;
-    vaus.expand_size = 5;
     return vaus;
+}
+
+void update_VAUS_size(VAUS *vaus, int size) {
+    vaus->expand_size = size;
+    Textures VAUS_texture = vaus->expand_size + VausSize1 - 1;
+    int mock;
+    int width;
+    int height;
+    get_texture_dimensions(VAUS_texture, &mock, &mock, &width, &height);
+    vaus->hit_box.width = width;
+    vaus->hit_box.height = height;
 }

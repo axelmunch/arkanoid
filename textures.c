@@ -93,8 +93,8 @@ void draw_texture(SDL_Surface *surface, Textures texture, int x, int y,
 
     SDL_BlitSurface(texture_bitmap, &src, surface, &dst);
 }
-void draw_vaus(SDL_Surface *surface, VAUS vaus) {
-    Textures normalizedVausTexture = vaus.expand_size + VausSize1 - 1;
-    draw_texture(surface, normalizedVausTexture, (int) vaus.hit_box.origin.x,
-                 (int) vaus.hit_box.origin.y, false);
+void draw_vaus(SDL_Surface *surface, Point position, int size) {
+    Textures normalizedVausTexture = size + VausSize1 - 1;
+    draw_texture(surface, normalizedVausTexture, (int) position.x,
+                 (int) position.y, false);
 }
