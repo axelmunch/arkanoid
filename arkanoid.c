@@ -14,7 +14,7 @@ SDL_Window *pWindow = NULL;
 SDL_Surface *win_surf = NULL;
 SDL_Surface *plancheSprites = NULL;
 
-void moveVAUS(double distance) {
+void move_VAUS(double distance) {
     vaus.hit_box.origin.x += distance * get_delta_time_target();
 }
 
@@ -27,9 +27,9 @@ void init() {
     SDL_SetColorKey(plancheSprites, true, 0);
 
     Point ballPosition = {win_surf->w / 2, win_surf->h / 2};
-    ball = createBall(ballPosition);
+    ball = create_ball(ballPosition);
     Point vausPosition = {win_surf->w / 2, win_surf->h - 32};
-    vaus = createVAUS(vausPosition);
+    vaus = create_VAUS(vausPosition);
 }
 
 void draw() {
@@ -83,10 +83,10 @@ int main(int argc, char **argv) {
         SDL_PumpEvents();
         const Uint8 *keys = SDL_GetKeyboardState(NULL);
         if (keys[SDL_SCANCODE_LEFT]) {
-            moveVAUS(-10);
+            move_VAUS(-10);
         }
         if (keys[SDL_SCANCODE_RIGHT]) {
-            moveVAUS(10);
+            move_VAUS(10);
         }
 
         SDL_Event event;

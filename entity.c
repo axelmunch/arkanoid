@@ -1,6 +1,6 @@
 #include "entity.h"
 
-AnimatedEntity createEntity(SpecificType type, Point position) {
+AnimatedEntity create_entity(SpecificType type, Point position) {
     AnimatedEntity entity;
     switch (type) {
     case CAPSULE_SLOW:
@@ -10,13 +10,13 @@ AnimatedEntity createEntity(SpecificType type, Point position) {
     case CAPSULE_LASER:
     case CAPSULE_BREAK:
     case CAPSULE_ADDITION: {
-        entity = createCapsule();
+        entity = create_capsule();
         break;
     }
     case HARMFUL_1:
     case HARMFUL_2:
     case HARMFUL_3: {
-        entity = createHarmful(type);
+        entity = create_harmful(type);
         break;
     }
     }
@@ -28,7 +28,7 @@ AnimatedEntity createEntity(SpecificType type, Point position) {
     entity.hit_box.origin = position;
     return entity;
 }
-AnimatedEntity createHarmful(SpecificType harmfulType) {
+AnimatedEntity create_harmful(SpecificType harmfulType) {
     AnimatedEntity harmful;
     harmful.type = HARMFUL;
     switch (harmfulType) {
@@ -46,7 +46,7 @@ AnimatedEntity createHarmful(SpecificType harmfulType) {
     harmful.hit_box.height = 32;
     return harmful;
 }
-AnimatedEntity createCapsule() {
+AnimatedEntity create_capsule() {
     AnimatedEntity capsule;
     capsule.type = CAPSULE;
     capsule.max_animation = 8;
@@ -54,7 +54,7 @@ AnimatedEntity createCapsule() {
     capsule.hit_box.height = 16;
     return capsule;
 }
-Ball createBall(Point position) {
+Ball create_ball(Point position) {
     Ball ball;
     ball.hit_box.origin = position;
     ball.hit_box.radius = 8;
@@ -62,7 +62,7 @@ Ball createBall(Point position) {
     ball.direction = 42;
     return ball;
 }
-VAUS createVAUS(Point position) {
+VAUS create_VAUS(Point position) {
     VAUS vaus;
     vaus.hit_box.width = 64;
     vaus.hit_box.height = 16;
