@@ -77,6 +77,13 @@ void get_texture_dimensions(Textures texture, int *pos_x, int *pos_y,
         *height = 16;
         break;
     }
+    if (texture >= BrickWhite && texture <= BrickGold6) {
+        *pos_x = ((texture - BrickWhite) % 6) * 32;
+        *pos_y = ((texture - BrickWhite) / 6) * 16;
+
+        *width = 32;
+        *height = 16;
+    }
 }
 
 void draw_texture(SDL_Surface *surface, Textures texture, int x, int y,
@@ -92,6 +99,20 @@ void draw_texture(SDL_Surface *surface, Textures texture, int x, int y,
     }
 
     SDL_BlitSurface(texture_bitmap, &src, surface, &dst);
+}
+
+void draw_brick(SDL_Surface *surface, BrickType type, int brick_animation,
+                int x, int y) {
+    Textures brickTexture = type - 1 + BrickWhite;
+
+    if (type == METAL) {
+        brickTexture = BrickMetal1 + brick_animation;
+    }
+    if (type == GOLD) {
+        brickTexture = BrickGold1 + brick_animation;
+    }
+
+    draw_texture(surface, brickTexture, x, y, false);
 }
 
 void draw_vaus(SDL_Surface *surface, VAUS vaus) {

@@ -72,6 +72,22 @@ void draw() {
     draw_text(win_surf, "Arkanoid", 10, 10);
     int fps_text_width = draw_text(win_surf, "FPS: ", 10, 40);
     draw_integer(win_surf, (int) get_current_fps(), 10 + fps_text_width, 40);
+
+    Level *level = get_level();
+    int offset_x = (win_surf->w - LEVEL_WIDTH * 32) / 2;
+    int offset_y = 150;
+    for (int y = level->offset; y < level->height + level->offset; y++) {
+        for (int x = 0; x < LEVEL_WIDTH; x++) {
+            if (level->bricks[y][x].type != EMPTY) {
+                int brick_x = offset_x + x * 32;
+                int brick_y = offset_y + level->offset * 16 + y * 16;
+                draw_texture(win_surf, BallTexture, brick_x, brick_y, false);
+                draw_brick(win_surf, level->bricks[y][x].type,
+                           level->bricks[y][x].current_animation, brick_x,
+                           brick_y);
+            }
+        }
+    }
 }
 
 int main(int argc, char **argv) {

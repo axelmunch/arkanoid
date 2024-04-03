@@ -5,6 +5,7 @@
 #include "entities/entities_structures.h"
 #include <stdbool.h>
 #include <stdio.h>
+#include <stdlib.h>
 
 typedef struct Brick Brick;
 typedef struct Level Level;
