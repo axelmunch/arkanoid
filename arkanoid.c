@@ -1,6 +1,7 @@
 #include "config.h"
 #include "delta_time.h"
 #include "entity.h"
+#include "math/collisions.h"
 #include "text.h"
 #include "textures.h"
 #include <SDL.h>
@@ -14,12 +15,29 @@ SDL_Window *pWindow = NULL;
 SDL_Surface *win_surf = NULL;
 SDL_Surface *plancheSprites = NULL;
 
+bool ball_collides_with_horizontal_border() {
+    return (ball.hit_box.origin.y < ball.hit_box.radius) ||
+           (ball.hit_box.origin.y > (win_surf->h - ball.hit_box.radius));
+}
+bool ball_collides_with_vertical_border() {
+    return (ball.hit_box.origin.x < ball.hit_box.radius) ||
+           (ball.hit_box.origin.x > (win_surf->w - ball.hit_box.radius));
+}
+
 void move_VAUS(double distance) {
     vaus.hit_box.origin.x += distance * get_delta_time_target();
     if (vaus.hit_box.origin.x < 0) {
         vaus.hit_box.origin.x = 0;
     } else if (vaus.hit_box.origin.x + vaus.hit_box.width > win_surf->w) {
         vaus.hit_box.origin.x = win_surf->w - vaus.hit_box.width;
+    }
+
+    if (rect_circle_collision(vaus.hit_box, ball.hit_box)) {
+        ball.hit_box.origin.x += distance * get_delta_time_target();
+        if (ball_collides_with_vertical_border()) {
+            ball.hit_box.origin.x -= distance * get_delta_time_target();
+            ball.hit_box.origin.y = vaus.hit_box.origin.y - ball.hit_box.radius;
+        }
     }
 }
 
@@ -52,25 +70,25 @@ void draw() {
     draw_integer(win_surf, (int) get_current_fps(), 10 + fps_text_width, 40);
 }
 
-void update() {
+void update_ball() {
     Vector ball_movement;
     rotate_by_angle(ball.velocity * get_delta_time_target(), ball.direction,
                     &ball_movement);
-
     ball.hit_box.origin.x += ball_movement.x;
-    if ((ball.hit_box.origin.x < ball.hit_box.radius) ||
-        (ball.hit_box.origin.x > (win_surf->w - ball.hit_box.radius))) {
+    bool collide_with_vaus = rect_circle_collision(vaus.hit_box, ball.hit_box);
+    if (ball_collides_with_vertical_border() || collide_with_vaus) {
         ball.direction = fmod(180 - ball.direction, 360);
         ball.hit_box.origin.x -= ball_movement.x;
     }
 
     ball.hit_box.origin.y -= ball_movement.y;
-    if ((ball.hit_box.origin.y < ball.hit_box.radius) ||
-        (ball.hit_box.origin.y > (win_surf->h - ball.hit_box.radius))) {
+    collide_with_vaus = rect_circle_collision(vaus.hit_box, ball.hit_box);
+    if (ball_collides_with_horizontal_border() || collide_with_vaus) {
         ball.direction = fmod(360 - ball.direction, 360);
         ball.hit_box.origin.y += ball_movement.y;
     }
 }
+void update() { update_ball(); }
 int main(int argc, char **argv) {
     if (SDL_Init(SDL_INIT_VIDEO | SDL_INIT_AUDIO) != 0) {
         return 1;
