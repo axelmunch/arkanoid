@@ -2,8 +2,9 @@
 #define ARKANOID_LEVELS_H
 
 #include "config.h"
-#include "entity.h"
+#include "entities/entities_structures.h"
 #include <stdbool.h>
+#include <stdio.h>
 
 typedef struct Brick Brick;
 typedef struct Level Level;
@@ -53,5 +54,6 @@ struct Level {
 Brick create_brick(BrickType type, SpecificType capsule_reward);
 void load_level(const char *filename);
 bool is_level_empty();
+Level *get_level();
 
 #endif // ARKANOID_LEVELS_H

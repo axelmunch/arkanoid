@@ -15,8 +15,9 @@ add_executable(${PROJECT_NAME}
         math/math.h
         text.c
         text.h
-        entity.h
-        entity.c
+        entities/entity.h
+        entities/entity.c
+        entities/entities_structures.h
         textures.c
         textures.h
         levels.c

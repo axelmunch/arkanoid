@@ -65,3 +65,16 @@ void load_level(const char *filename) {
         }
     }
 }
+
+bool is_level_empty() {
+    for (int y = level.offset; y < level.height + level.offset; y++) {
+        for (int x = 0; x < LEVEL_WIDTH; x++) {
+            if (level.bricks[y][x].type != EMPTY) {
+                return false;
+            }
+        }
+    }
+    return true;
+}
+
+Level *get_level() { return &level; }

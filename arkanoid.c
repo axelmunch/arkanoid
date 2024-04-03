@@ -1,6 +1,6 @@
 #include "config.h"
 #include "delta_time.h"
-#include "entity.h"
+#include "entities/entity.h"
 #include "levels.h"
 #include "text.h"
 #include "textures.h"
@@ -68,7 +68,7 @@ void draw() {
         ball.hit_box.origin.y += ball_movement.y;
     }
 
-    draw_vaus(win_surf, vaus.hit_box.origin, vaus.expand_size);
+    draw_vaus(win_surf, vaus);
     draw_text(win_surf, "Arkanoid", 10, 10);
     int fps_text_width = draw_text(win_surf, "FPS: ", 10, 40);
     draw_integer(win_surf, (int) get_current_fps(), 10 + fps_text_width, 40);
