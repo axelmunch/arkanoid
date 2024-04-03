@@ -39,16 +39,19 @@ void draw() {
     Vector ball_movement;
     rotate_by_angle(ball.velocity * get_delta_time_target(), ball.direction,
                     &ball_movement);
-    ball.hit_box.origin.x += ball_movement.x;
-    ball.hit_box.origin.y -= ball_movement.y;
 
-    if ((ball.hit_box.origin.x < 1) ||
-        (ball.hit_box.origin.x > (win_surf->w - ball.hit_box.radius / 2))) {
+    ball.hit_box.origin.x += ball_movement.x;
+    if ((ball.hit_box.origin.x < ball.hit_box.radius) ||
+        (ball.hit_box.origin.x > (win_surf->w - ball.hit_box.radius))) {
         ball.direction += 90;
-    } else if ((ball.hit_box.origin.y < 1) ||
-               (ball.hit_box.origin.y >
-                (win_surf->h - ball.hit_box.radius / 2))) {
-        ball.direction -= 90;
+        ball.hit_box.origin.x -= ball_movement.x;
+    }
+
+    ball.hit_box.origin.y -= ball_movement.y;
+    if ((ball.hit_box.origin.y < ball.hit_box.radius) ||
+        (ball.hit_box.origin.y > (win_surf->h - ball.hit_box.radius))) {
+        ball.direction += 90;
+        ball.hit_box.origin.y += ball_movement.y;
     }
 
     draw_texture(win_surf, VausSize8, x_vault, win_surf->h - 32, false);

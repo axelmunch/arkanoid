@@ -57,7 +57,7 @@ AnimatedEntity createCapsule() {
 Ball createBall(Point position) {
     Ball ball;
     ball.hit_box.origin = position;
-    ball.hit_box.radius = 16;
+    ball.hit_box.radius = 8;
     ball.velocity = 2.0;
     ball.direction = 42;
     return ball;
