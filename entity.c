@@ -73,6 +73,12 @@ VAUS create_VAUS(Point position) {
 
 void update_VAUS_size(VAUS *vaus, int size) {
     vaus->expand_size = size;
+    if (vaus->expand_size > VAUS_MAX_SIZE) {
+        vaus->expand_size = VAUS_MAX_SIZE;
+    }
+    if (vaus->expand_size < 1) {
+        vaus->expand_size = 1;
+    }
     Textures VAUS_texture = vaus->expand_size + VausSize1 - 1;
     int mock;
     int width;
