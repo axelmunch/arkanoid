@@ -43,14 +43,14 @@ void draw() {
     ball.hit_box.origin.x += ball_movement.x;
     if ((ball.hit_box.origin.x < ball.hit_box.radius) ||
         (ball.hit_box.origin.x > (win_surf->w - ball.hit_box.radius))) {
-        ball.direction += 90;
+        ball.direction = fmod(180 - ball.direction, 360);
         ball.hit_box.origin.x -= ball_movement.x;
     }
 
     ball.hit_box.origin.y -= ball_movement.y;
     if ((ball.hit_box.origin.y < ball.hit_box.radius) ||
         (ball.hit_box.origin.y > (win_surf->h - ball.hit_box.radius))) {
-        ball.direction += 90;
+        ball.direction = fmod(360 - ball.direction, 360);
         ball.hit_box.origin.y += ball_movement.y;
     }
 
