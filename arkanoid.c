@@ -92,9 +92,9 @@ void update_ball() {
 
     if (collide_with_vaus_x || collide_with_vaus_y) {
         if (vaus.moving_direction == LEFT) {
-            ball.direction += BALL_EFFECT;
+            ball.direction = fmod(ball.direction + BALL_EFFECT, 360);
         } else if (vaus.moving_direction == RIGHT) {
-            ball.direction -= BALL_EFFECT;
+            ball.direction = fmod(ball.direction - BALL_EFFECT, 360);
         }
     }
 }
