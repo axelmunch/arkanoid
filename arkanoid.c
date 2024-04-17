@@ -87,7 +87,6 @@ void draw() {
             if (level->bricks[y][x].type != EMPTY) {
                 int brick_x = offset_x + x * 32;
                 int brick_y = offset_y + y * 16;
-                draw_texture(win_surf, BallTexture, brick_x, brick_y, false);
                 draw_brick(win_surf, level->bricks[y][x].type,
                            level->bricks[y][x].current_animation, brick_x,
                            brick_y);

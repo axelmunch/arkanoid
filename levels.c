@@ -16,8 +16,10 @@ Brick create_brick(BrickType type, SpecificType capsule_reward) {
         brick.max_animation = 0;
     }
 
-void load_level(const char *filename) {
-    // Reset level
+    return brick;
+}
+
+void reset_level() {
     level.theme = THEME_1;
     level.offset = 0;
     level.height = 0;
@@ -26,6 +28,10 @@ void load_level(const char *filename) {
             level.bricks[y][x] = create_brick(EMPTY, CAPSULE_EMPTY);
         }
     }
+}
+
+void load_level(const char *filename) {
+    reset_level();
 
     FILE *file = fopen(filename, "r");
     if (file == NULL) {
