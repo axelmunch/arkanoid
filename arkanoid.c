@@ -126,6 +126,36 @@ void update_ball() {
             ball.direction = fmod(ball.direction - BALL_EFFECT, 360);
         }
     }
+
+    else {
+        Level *level = get_level();
+        int offset_x = (win_surf->w - LEVEL_WIDTH * 32) / 2;
+        int offset_y = 150;
+        for (int y = level->offset; y < level->height + level->offset; y++) {
+            for (int x = 0; x < LEVEL_WIDTH; x++) {
+                Brick brick = level->bricks[y][x];
+                if (brick.type != EMPTY) {
+                    Rectangle brick_hitbox;
+                    brick_hitbox.origin.x = offset_x + x * BRICK_WIDTH;
+                    brick_hitbox.origin.y = offset_y + y * BRICK_HEIGHT;
+                    brick_hitbox.height = BRICK_HEIGHT;
+                    brick_hitbox.width = BRICK_WIDTH;
+                    if (rect_circle_collision(brick_hitbox, ball.hit_box)) {
+                        printf("Collide with (%f,%f) %d\tDurability: %d\n",
+                               brick_hitbox.origin.x, brick_hitbox.origin.y,
+                               brick.type, brick.durability);
+                        brick.durability--;
+                        if (brick.durability == 0) {
+                            level->bricks[y][x] =
+                                create_brick(EMPTY, CAPSULE_EMPTY);
+                        } else {
+                            level->bricks[y][x] = brick;
+                        }
+                    }
+                }
+            }
+        }
+    }
 }
 void update() { update_ball(); }
 int main(int argc, char **argv) {
