@@ -40,7 +40,7 @@ void init() {
     vaus = create_VAUS(vausPosition);
 }
 
-void draw() {
+void draw_background() {
     Level *level = get_level();
     LevelTheme level_theme = level->theme;
     Textures theme_texture = BackgroundTheme1 + level_theme;
@@ -53,6 +53,10 @@ void draw() {
             draw_texture(win_surf, theme_texture, i, j, false);
         }
     }
+}
+
+void draw() {
+    draw_background();
 
     draw_texture(win_surf, BallTexture, ball.hit_box.origin.x,
                  ball.hit_box.origin.y, true);
@@ -80,6 +84,7 @@ void draw() {
     int fps_text_width = draw_text(win_surf, "FPS: ", 10, 40);
     draw_integer(win_surf, (int) get_current_fps(), 10 + fps_text_width, 40);
 
+    Level *level = get_level();
     int offset_x = (win_surf->w - LEVEL_WIDTH * 32) / 2;
     int offset_y = 150;
     for (int y = level->offset; y < level->height + level->offset; y++) {
