@@ -5,18 +5,16 @@ Level level;
 Brick create_brick(BrickType type, SpecificType capsule_reward) {
     Brick brick;
     brick.type = type;
-    brick.durability = 1;
     brick.current_animation = 0;
-    brick.max_animation = 0;
     brick.capsule_reward = capsule_reward;
 
     if (type == METAL || type == GOLD) {
         brick.durability = 8;
         brick.max_animation = 6;
+    } else {
+        brick.durability = 1;
+        brick.max_animation = 0;
     }
-
-    return brick;
-}
 
 void load_level(const char *filename) {
     // Reset level
