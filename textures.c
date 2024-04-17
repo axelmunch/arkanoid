@@ -1,8 +1,5 @@
 #include "textures.h"
-#include <math.h>
 #include <stdbool.h>
-
-#include <stdlib.h>
 
 char *texture_file = "Arkanoid_sprites.bmp";
 
