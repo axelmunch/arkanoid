@@ -91,15 +91,9 @@ void update_ball() {
     }
 
     if (collide_with_vaus_x || collide_with_vaus_y) {
-        const bool is_moving_opposite =
-            vaus.moving_direction == LEFT && ball_movement.x > 0 ||
-            vaus.moving_direction == RIGHT && ball_movement.x > 0;
-        const bool is_moving_same =
-            vaus.moving_direction == LEFT && ball_movement.x < 0 ||
-            vaus.moving_direction == RIGHT && ball_movement.x < 0;
-        if (is_moving_opposite) {
+        if (vaus.moving_direction == LEFT) {
             ball.direction += BALL_EFFECT;
-        } else if (is_moving_same) {
+        } else if (vaus.moving_direction == RIGHT) {
             ball.direction -= BALL_EFFECT;
         }
     }
