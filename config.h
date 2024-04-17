@@ -16,4 +16,7 @@
 #define LEVEL_WIDTH  13
 #define LEVEL_HEIGHT 14
 
+#define BRICK_WIDTH  32
+#define BRICK_HEIGHT 16
+
 #endif // ARKANOID_CONFIG_H

@@ -89,8 +89,8 @@ void draw() {
     for (int y = level->offset; y < level->height + level->offset; y++) {
         for (int x = 0; x < LEVEL_WIDTH; x++) {
             if (level->bricks[y][x].type != EMPTY) {
-                int brick_x = offset_x + x * 32;
-                int brick_y = offset_y + y * 16;
+                int brick_x = offset_x + x * BRICK_WIDTH;
+                int brick_y = offset_y + y * BRICK_HEIGHT;
                 draw_brick(win_surf, level->bricks[y][x].type,
                            level->bricks[y][x].current_animation, brick_x,
                            brick_y);
