@@ -41,9 +41,16 @@ void init() {
 }
 
 void draw() {
-    for (int j = 0; j < win_surf->h; j += 64) {
-        for (int i = 0; i < win_surf->w; i += 48) {
-            draw_texture(win_surf, BackgroundTile, i, j, false);
+    Level *level = get_level();
+    LevelTheme level_theme = level->theme;
+    Textures theme_texture = BackgroundTheme1 + level_theme;
+    int level_theme_position_ignore, level_theme_width, level_theme_height;
+    get_texture_dimensions(theme_texture, &level_theme_position_ignore,
+                           &level_theme_position_ignore, &level_theme_width,
+                           &level_theme_height);
+    for (int j = 0; j < win_surf->h; j += level_theme_height) {
+        for (int i = 0; i < win_surf->w; i += level_theme_width) {
+            draw_texture(win_surf, theme_texture, i, j, false);
         }
     }
 
@@ -73,7 +80,6 @@ void draw() {
     int fps_text_width = draw_text(win_surf, "FPS: ", 10, 40);
     draw_integer(win_surf, (int) get_current_fps(), 10 + fps_text_width, 40);
 
-    Level *level = get_level();
     int offset_x = (win_surf->w - LEVEL_WIDTH * 32) / 2;
     int offset_y = 150;
     for (int y = level->offset; y < level->height + level->offset; y++) {

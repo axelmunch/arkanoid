@@ -16,10 +16,40 @@ void init_texture() {
 void get_texture_dimensions(Textures texture, int *pos_x, int *pos_y,
                             int *width, int *height) {
     switch (texture) {
-    case BackgroundTile:
+    case BackgroundTheme1:
         *pos_x = 0;
         *pos_y = 128;
         *width = 48;
+        *height = 64;
+        break;
+    case BackgroundTheme2:
+        *pos_x = 64;
+        *pos_y = 128;
+        *width = 64;
+        *height = 64;
+        break;
+    case BackgroundTheme3:
+        *pos_x = 128;
+        *pos_y = 128;
+        *width = 64;
+        *height = 64;
+        break;
+    case BackgroundTheme4:
+        *pos_x = 192;
+        *pos_y = 128;
+        *width = 64;
+        *height = 64;
+        break;
+    case BackgroundTheme5:
+        *pos_x = 256;
+        *pos_y = 128;
+        *width = 64;
+        *height = 64;
+        break;
+    case BackgroundTheme6:
+        *pos_x = 320;
+        *pos_y = 128;
+        *width = 64;
         *height = 64;
         break;
     case BallTexture:

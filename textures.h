@@ -7,7 +7,12 @@
 #include <stdbool.h>
 
 typedef enum {
-    BackgroundTile,
+    BackgroundTheme1,
+    BackgroundTheme2,
+    BackgroundTheme3,
+    BackgroundTheme4,
+    BackgroundTheme5,
+    BackgroundTheme6,
     BallTexture,
     VausSize1,
     VausSize2,
