@@ -16,10 +16,40 @@ void init_texture() {
 void get_texture_dimensions(Textures texture, int *pos_x, int *pos_y,
                             int *width, int *height) {
     switch (texture) {
-    case BackgroundTile:
+    case BackgroundTheme1:
         *pos_x = 0;
         *pos_y = 128;
         *width = 48;
+        *height = 64;
+        break;
+    case BackgroundTheme2:
+        *pos_x = 64;
+        *pos_y = 128;
+        *width = 64;
+        *height = 64;
+        break;
+    case BackgroundTheme3:
+        *pos_x = 128;
+        *pos_y = 128;
+        *width = 64;
+        *height = 64;
+        break;
+    case BackgroundTheme4:
+        *pos_x = 192;
+        *pos_y = 128;
+        *width = 64;
+        *height = 64;
+        break;
+    case BackgroundTheme5:
+        *pos_x = 256;
+        *pos_y = 128;
+        *width = 64;
+        *height = 64;
+        break;
+    case BackgroundTheme6:
+        *pos_x = 320;
+        *pos_y = 128;
+        *width = 64;
         *height = 64;
         break;
     case BallTexture:
@@ -77,6 +107,13 @@ void get_texture_dimensions(Textures texture, int *pos_x, int *pos_y,
         *height = 16;
         break;
     }
+    if (texture >= BrickWhite && texture <= BrickGold6) {
+        *pos_x = ((texture - BrickWhite) % 6) * 32;
+        *pos_y = ((texture - BrickWhite) / 6) * 16;
+
+        *width = 32;
+        *height = 16;
+    }
 }
 
 void draw_texture(SDL_Surface *surface, Textures texture, int x, int y,
@@ -93,8 +130,23 @@ void draw_texture(SDL_Surface *surface, Textures texture, int x, int y,
 
     SDL_BlitSurface(texture_bitmap, &src, surface, &dst);
 }
-void draw_vaus(SDL_Surface *surface, Point position, int size) {
-    Textures normalizedVausTexture = size + VausSize1 - 1;
-    draw_texture(surface, normalizedVausTexture, (int) position.x,
-                 (int) position.y, false);
+
+void draw_brick(SDL_Surface *surface, BrickType type, int brick_animation,
+                int x, int y) {
+    Textures brickTexture = type - 1 + BrickWhite;
+
+    if (type == METAL) {
+        brickTexture = BrickMetal1 + brick_animation;
+    }
+    if (type == GOLD) {
+        brickTexture = BrickGold1 + brick_animation;
+    }
+
+    draw_texture(surface, brickTexture, x, y, false);
+}
+
+void draw_vaus(SDL_Surface *surface, VAUS vaus) {
+    Textures normalizedVausTexture = vaus.expand_size + VausSize1 - 1;
+    draw_texture(surface, normalizedVausTexture, (int) vaus.hit_box.origin.x,
+                 (int) vaus.hit_box.origin.y, false);
 }

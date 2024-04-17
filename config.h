@@ -11,4 +11,7 @@
 #define VAUS_MAX_SIZE      8
 #define ANIMATION_TIMER_MS 150
 
+#define LEVEL_WIDTH  13
+#define LEVEL_HEIGHT 14
+
 #endif // ARKANOID_CONFIG_H

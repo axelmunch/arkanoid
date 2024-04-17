@@ -15,10 +15,13 @@ add_executable(${PROJECT_NAME}
         math/math.h
         text.c
         text.h
-        entity.h
-        entity.c
+        entities/entity.h
+        entities/entity.c
+        entities/entities_structures.h
         textures.c
-        textures.h)
+        textures.h
+        levels.c
+        levels.h)
 target_sources(${PROJECT_NAME} PRIVATE arkanoid.c)
 
 target_link_libraries(${PROJECT_NAME} PRIVATE m)
@@ -36,4 +39,6 @@ file(COPY ${CMAKE_CURRENT_SOURCE_DIR}/sprites.bmp
 file(COPY ${CMAKE_CURRENT_SOURCE_DIR}/Arkanoid_ascii.bmp
     DESTINATION ${CMAKE_CURRENT_BINARY_DIR}/)
 file(COPY ${CMAKE_CURRENT_SOURCE_DIR}/Arkanoid_sprites.bmp
+    DESTINATION ${CMAKE_CURRENT_BINARY_DIR}/)
+file(COPY ${CMAKE_CURRENT_SOURCE_DIR}/levels
     DESTINATION ${CMAKE_CURRENT_BINARY_DIR}/)

@@ -1,15 +1,14 @@
-#ifndef ARKANOID_ENTITY_H
-#define ARKANOID_ENTITY_H
+#ifndef ARKANOID_ENTITIES_STRUCTURES_H
+#define ARKANOID_ENTITIES_STRUCTURES_H
 
-#include "config.h"
-#include "math/math.h"
-#include "textures.h"
+#include "../math/math.h"
 
 typedef struct AnimatedEntity AnimatedEntity;
 typedef struct Ball Ball;
 typedef struct VAUS VAUS;
 typedef enum { HARMFUL, CAPSULE, EXPLOSION } EntityType;
 typedef enum {
+    CAPSULE_EMPTY,
     CAPSULE_SLOW,
     CAPSULE_CATCH,
     CAPSULE_EXPAND,
@@ -45,10 +44,4 @@ struct VAUS {
     SpecificType active_powerup;
 };
 
-AnimatedEntity create_entity(SpecificType type, Point position);
-AnimatedEntity create_harmful(SpecificType harmfulType);
-AnimatedEntity create_capsule();
-Ball create_ball(Point position);
-VAUS create_VAUS(Point position);
-void update_VAUS_size(VAUS *vaus, int size);
-#endif // ARKANOID_ENTITY_H
+#endif //ARKANOID_ENTITIES_STRUCTURES_H

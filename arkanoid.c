@@ -1,6 +1,7 @@
 #include "config.h"
 #include "delta_time.h"
-#include "entity.h"
+#include "entities/entity.h"
+#include "levels.h"
 #include "text.h"
 #include "textures.h"
 #include <SDL.h>
@@ -31,18 +32,31 @@ void init() {
     plancheSprites = SDL_LoadBMP("./sprites.bmp");
     SDL_SetColorKey(plancheSprites, true, 0);
 
+    load_level("levels/1.level");
+
     Point ballPosition = {win_surf->w / 2, win_surf->h / 2};
     ball = create_ball(ballPosition);
     Point vausPosition = {win_surf->w / 2, win_surf->h - 32};
     vaus = create_VAUS(vausPosition);
 }
 
-void draw() {
-    for (int j = 0; j < win_surf->h; j += 64) {
-        for (int i = 0; i < win_surf->w; i += 48) {
-            draw_texture(win_surf, BackgroundTile, i, j, false);
+void draw_background() {
+    Level *level = get_level();
+    LevelTheme level_theme = level->theme;
+    Textures theme_texture = BackgroundTheme1 + level_theme;
+    int level_theme_position_ignore, level_theme_width, level_theme_height;
+    get_texture_dimensions(theme_texture, &level_theme_position_ignore,
+                           &level_theme_position_ignore, &level_theme_width,
+                           &level_theme_height);
+    for (int j = 0; j < win_surf->h; j += level_theme_height) {
+        for (int i = 0; i < win_surf->w; i += level_theme_width) {
+            draw_texture(win_surf, theme_texture, i, j, false);
         }
     }
+}
+
+void draw() {
+    draw_background();
 
     draw_texture(win_surf, BallTexture, ball.hit_box.origin.x,
                  ball.hit_box.origin.y, true);
@@ -65,10 +79,25 @@ void draw() {
         ball.hit_box.origin.y += ball_movement.y;
     }
 
-    draw_vaus(win_surf, vaus.hit_box.origin, vaus.expand_size);
+    draw_vaus(win_surf, vaus);
     draw_text(win_surf, "Arkanoid", 10, 10);
     int fps_text_width = draw_text(win_surf, "FPS: ", 10, 40);
     draw_integer(win_surf, (int) get_current_fps(), 10 + fps_text_width, 40);
+
+    Level *level = get_level();
+    int offset_x = (win_surf->w - LEVEL_WIDTH * 32) / 2;
+    int offset_y = 150;
+    for (int y = level->offset; y < level->height + level->offset; y++) {
+        for (int x = 0; x < LEVEL_WIDTH; x++) {
+            if (level->bricks[y][x].type != EMPTY) {
+                int brick_x = offset_x + x * 32;
+                int brick_y = offset_y + y * 16;
+                draw_brick(win_surf, level->bricks[y][x].type,
+                           level->bricks[y][x].current_animation, brick_x,
+                           brick_y);
+            }
+        }
+    }
 }
 
 int main(int argc, char **argv) {
