@@ -75,17 +75,33 @@ void update_ball() {
     rotate_by_angle(ball.velocity * get_delta_time_target(), ball.direction,
                     &ball_movement);
     ball.hit_box.origin.x += ball_movement.x;
-    bool collide_with_vaus = rect_circle_collision(vaus.hit_box, ball.hit_box);
-    if (ball_collides_with_vertical_border() || collide_with_vaus) {
+    const bool collide_with_vaus_x =
+        rect_circle_collision(vaus.hit_box, ball.hit_box);
+    if (ball_collides_with_vertical_border() || collide_with_vaus_x) {
         ball.direction = fmod(180 - ball.direction, 360);
         ball.hit_box.origin.x -= ball_movement.x;
     }
 
     ball.hit_box.origin.y -= ball_movement.y;
-    collide_with_vaus = rect_circle_collision(vaus.hit_box, ball.hit_box);
-    if (ball_collides_with_horizontal_border() || collide_with_vaus) {
+    const bool collide_with_vaus_y =
+        rect_circle_collision(vaus.hit_box, ball.hit_box);
+    if (ball_collides_with_horizontal_border() || collide_with_vaus_y) {
         ball.direction = fmod(360 - ball.direction, 360);
         ball.hit_box.origin.y += ball_movement.y;
+    }
+
+    if (collide_with_vaus_x || collide_with_vaus_y) {
+        const bool is_moving_opposite =
+            vaus.moving_direction == LEFT && ball_movement.x > 0 ||
+            vaus.moving_direction == RIGHT && ball_movement.x > 0;
+        const bool is_moving_same =
+            vaus.moving_direction == LEFT && ball_movement.x < 0 ||
+            vaus.moving_direction == RIGHT && ball_movement.x < 0;
+        if (is_moving_opposite) {
+            ball.direction += BALL_EFFECT;
+        } else if (is_moving_same) {
+            ball.direction -= BALL_EFFECT;
+        }
     }
 }
 void update() { update_ball(); }
@@ -105,10 +121,13 @@ int main(int argc, char **argv) {
 
         SDL_PumpEvents();
         const Uint8 *keys = SDL_GetKeyboardState(NULL);
+        vaus.moving_direction = NONE;
         if (keys[SDL_SCANCODE_LEFT]) {
+            vaus.moving_direction = LEFT;
             move_VAUS(-10);
         }
         if (keys[SDL_SCANCODE_RIGHT]) {
+            vaus.moving_direction = RIGHT;
             move_VAUS(10);
         }
 

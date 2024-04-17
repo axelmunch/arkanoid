@@ -21,6 +21,11 @@ typedef enum {
     HARMFUL_2,
     HARMFUL_3
 } SpecificType;
+typedef enum {
+    LEFT,
+    RIGHT,
+    NONE,
+} HMovingDirection;
 
 struct AnimatedEntity {
     int max_animation;
@@ -43,6 +48,7 @@ struct VAUS {
     int expand_size;
     Rectangle hit_box;
     SpecificType active_powerup;
+    HMovingDirection moving_direction;
 };
 
 AnimatedEntity create_entity(SpecificType type, Point position);

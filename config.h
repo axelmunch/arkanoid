@@ -11,4 +11,6 @@
 #define VAUS_MAX_SIZE      8
 #define ANIMATION_TIMER_MS 150
 
+#define BALL_EFFECT 25
+
 #endif // ARKANOID_CONFIG_H

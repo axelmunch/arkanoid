@@ -68,6 +68,7 @@ VAUS create_VAUS(Point position) {
     vaus.hit_box.origin = position;
     vaus.hit_box.origin.x -= vaus.hit_box.width / 2;
     vaus.hit_box.origin.y -= vaus.hit_box.height;
+    vaus.moving_direction = NONE;
     return vaus;
 }
 
