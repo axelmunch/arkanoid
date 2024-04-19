@@ -21,7 +21,9 @@ add_executable(${PROJECT_NAME}
         textures.c
         textures.h
         levels.c
-        levels.h)
+        levels.h
+        entities/entities_spawner.c
+        entities/entities_spawner.h)
 target_sources(${PROJECT_NAME} PRIVATE arkanoid.c)
 
 target_link_libraries(${PROJECT_NAME} PRIVATE m)

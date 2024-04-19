@@ -1,5 +1,6 @@
 #include "config.h"
 #include "delta_time.h"
+#include "entities/entities_spawner.h"
 #include "entities/entity.h"
 #include "levels.h"
 #include "math/collisions.h"
@@ -51,6 +52,7 @@ void init() {
     SDL_SetColorKey(plancheSprites, true, 0);
 
     load_level("levels/1.level");
+    init_spawner();
 
     Point ballPosition = {win_surf->w / 2, win_surf->h / 2};
     ball = create_ball(ballPosition);
@@ -62,9 +64,8 @@ void draw_background() {
     Level *level = get_level();
     LevelTheme level_theme = level->theme;
     Textures theme_texture = BackgroundTheme1 + level_theme;
-    int level_theme_position_ignore, level_theme_width, level_theme_height;
-    get_texture_dimensions(theme_texture, &level_theme_position_ignore,
-                           &level_theme_position_ignore, &level_theme_width,
+    int mock, level_theme_width, level_theme_height;
+    get_texture_dimensions(theme_texture, &mock, &mock, &level_theme_width,
                            &level_theme_height);
     for (int j = 0; j < win_surf->h; j += level_theme_height) {
         for (int i = 0; i < win_surf->w; i += level_theme_width) {
@@ -73,16 +74,7 @@ void draw_background() {
     }
 }
 
-void draw() {
-    draw_background();
-
-    draw_texture(win_surf, BallTexture, ball.hit_box.origin.x,
-                 ball.hit_box.origin.y, true);
-    draw_vaus(win_surf, vaus);
-    draw_text(win_surf, "Arkanoid", 10, 10);
-    int fps_text_width = draw_text(win_surf, "FPS: ", 10, 40);
-    draw_integer(win_surf, (int) get_current_fps(), 10 + fps_text_width, 40);
-
+void draw_level() {
     Level *level = get_level();
     int offset_x = (win_surf->w - LEVEL_WIDTH * 32) / 2;
     int offset_y = 150;
@@ -97,6 +89,30 @@ void draw() {
             }
         }
     }
+}
+
+void draw_entities() {
+    SpawnedEntities *entities = get_entities();
+    for (int i = 0; i < entities->current_entitiesCount; i++) {
+        draw_entity(win_surf, entities->entities[i]);
+    }
+}
+
+void draw() {
+    draw_background();
+
+    draw_level();
+
+    draw_vaus(win_surf, vaus);
+
+    draw_texture(win_surf, BallTexture, ball.hit_box.origin.x,
+                 ball.hit_box.origin.y, true);
+
+    draw_entities();
+
+    draw_text(win_surf, "Arkanoid", 10, 10);
+    int fps_text_width = draw_text(win_surf, "FPS: ", 10, 40);
+    draw_integer(win_surf, (int) get_current_fps(), 10 + fps_text_width, 40);
 }
 
 void update_ball() {
@@ -127,7 +143,48 @@ void update_ball() {
         }
     }
 }
-void update() { update_ball(); }
+
+void update_entities() {
+    SpawnedEntities *entities = get_entities();
+    for (int i = 0; i < entities->current_entitiesCount; i++) {
+        AnimatedEntity *entity = &entities->entities[i];
+
+        entity->time_before_next_animation -= get_delta_time() * 1000;
+        if (entity->time_before_next_animation <= 0) {
+            entity->time_before_next_animation = ANIMATION_TIMER_MS;
+            entity->current_animation =
+                fmod(entity->current_animation + 1, entity->max_animation);
+        }
+
+        if (entity->type == EXPLOSION) {
+            if (entity->current_animation == entity->max_animation - 1) {
+                remove_entity(i);
+            }
+            continue;
+        }
+
+        entity->hit_box.origin.y += 1;
+
+        if (entity->hit_box.origin.y > win_surf->h) {
+            remove_entity(i);
+            continue;
+        }
+
+        // Collision
+        if (rect_circle_collision(entity->hit_box, ball.hit_box) ||
+            rect_rect_collision(entity->hit_box, vaus.hit_box)) {
+
+            explode_entity(i);
+        }
+    }
+}
+
+void update() {
+    update_ball();
+    update_spawner();
+    update_entities();
+}
+
 int main(int argc, char **argv) {
     if (SDL_Init(SDL_INIT_VIDEO | SDL_INIT_AUDIO) != 0) {
         return 1;

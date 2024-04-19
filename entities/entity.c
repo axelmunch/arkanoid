@@ -10,7 +10,7 @@ AnimatedEntity create_entity(SpecificType type, Point position) {
     case CAPSULE_LASER:
     case CAPSULE_BREAK:
     case CAPSULE_ADDITION: {
-        entity = create_capsule();
+        entity = create_capsule(type);
         break;
     }
     case HARMFUL_1:
@@ -19,18 +19,24 @@ AnimatedEntity create_entity(SpecificType type, Point position) {
         entity = create_harmful(type);
         break;
     }
+    case EXPLOSION_TYPE: {
+        entity = create_explosion(position);
+        break;
+    }
     }
     entity.time_before_next_animation = ANIMATION_TIMER_MS;
     entity.velocity = 1.5;
     entity.direction = 270; // corresponds to -90 deg
-    entity.current_animation = 1;
+    entity.current_animation = 0;
     entity.specific_type = type;
     entity.hit_box.origin = position;
     return entity;
 }
+
 AnimatedEntity create_harmful(SpecificType harmfulType) {
     AnimatedEntity harmful;
     harmful.type = HARMFUL;
+    harmful.specific_type = harmfulType;
     switch (harmfulType) {
     case HARMFUL_1:
         harmful.max_animation = 8;
@@ -46,14 +52,27 @@ AnimatedEntity create_harmful(SpecificType harmfulType) {
     harmful.hit_box.height = 32;
     return harmful;
 }
-AnimatedEntity create_capsule() {
+
+AnimatedEntity create_capsule(SpecificType capsuleType) {
     AnimatedEntity capsule;
     capsule.type = CAPSULE;
+    capsule.specific_type = capsuleType;
     capsule.max_animation = 8;
     capsule.hit_box.width = 32;
     capsule.hit_box.height = 16;
     return capsule;
 }
+
+AnimatedEntity create_explosion(Point position) {
+    AnimatedEntity explosion;
+    explosion.type = EXPLOSION;
+    explosion.max_animation = 7;
+    explosion.hit_box.origin = position;
+    explosion.hit_box.width = 32;
+    explosion.hit_box.height = 32;
+    return explosion;
+}
+
 Ball create_ball(Point position) {
     Ball ball;
     ball.hit_box.origin = position;
@@ -62,6 +81,7 @@ Ball create_ball(Point position) {
     ball.direction = 42;
     return ball;
 }
+
 VAUS create_VAUS(Point position) {
     VAUS vaus;
     update_VAUS_size(&vaus, 5);
@@ -81,9 +101,7 @@ void update_VAUS_size(VAUS *vaus, int size) {
         vaus->expand_size = 1;
     }
     Textures VAUS_texture = vaus->expand_size + VausSize1 - 1;
-    int mock;
-    int width;
-    int height;
+    int mock, width, height;
     get_texture_dimensions(VAUS_texture, &mock, &mock, &width, &height);
     vaus->hit_box.width = width;
     vaus->hit_box.height = height;

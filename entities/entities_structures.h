@@ -18,7 +18,8 @@ typedef enum {
     CAPSULE_ADDITION,
     HARMFUL_1,
     HARMFUL_2,
-    HARMFUL_3
+    HARMFUL_3,
+    EXPLOSION_TYPE
 } SpecificType;
 typedef enum {
     LEFT,
@@ -50,4 +51,4 @@ struct VAUS {
     HMovingDirection moving_direction;
 };
 
-#endif //ARKANOID_ENTITIES_STRUCTURES_H
+#endif // ARKANOID_ENTITIES_STRUCTURES_H

@@ -16,4 +16,6 @@
 #define LEVEL_WIDTH  13
 #define LEVEL_HEIGHT 14
 
+#define MAX_ENTITIES 50
+
 #endif // ARKANOID_CONFIG_H
