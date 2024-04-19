@@ -163,7 +163,12 @@ void update_entities() {
             continue;
         }
 
-        entity->hit_box.origin.y += 1;
+        // Move
+        Vector entity_movement;
+        rotate_by_angle(entity->velocity * get_delta_time_target(),
+                        entity->direction, &entity_movement);
+        entity->hit_box.origin.x += entity_movement.x;
+        entity->hit_box.origin.y -= entity_movement.y;
 
         if (entity->hit_box.origin.y > win_surf->h) {
             remove_entity(i);
