@@ -22,7 +22,7 @@ void update_spawner() {
         if (spawnedEntities.current_entitiesCount < MAX_ENTITIES) {
             Point spawn_position = {x_spawn_position, y_spawn_position};
             spawnedEntities.entities[spawnedEntities.current_entitiesCount] =
-                create_entity(HARMFUL_2, spawn_position);
+                create_entity(HARMFUL_3, spawn_position);
             spawnedEntities.current_entitiesCount++;
         }
     }

@@ -76,7 +76,7 @@ AnimatedEntity create_explosion(Point position) {
 Ball create_ball(Point position) {
     Ball ball;
     ball.hit_box.origin = position;
-    ball.hit_box.radius = 8;
+    ball.hit_box.radius = 7;
     ball.velocity = 2.0;
     ball.direction = 42;
     return ball;
