@@ -144,7 +144,9 @@ void update_ball() {
                         printf("Collide with (%f,%f) %d\tDurability: %d\n",
                                brick_hitbox.origin.x, brick_hitbox.origin.y,
                                brick.type, brick.durability);
-                        brick.durability--;
+                        if (brick.type != GOLD) {
+                            brick.durability--;
+                        }
                         if (brick.durability == 0) {
                             level->bricks[y][x] =
                                 create_brick(EMPTY, CAPSULE_EMPTY);

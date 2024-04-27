@@ -8,8 +8,12 @@ Brick create_brick(BrickType type, SpecificType capsule_reward) {
     brick.current_animation = 0;
     brick.capsule_reward = capsule_reward;
 
-    if (type == METAL || type == GOLD) {
+    if (type == METAL) {
         brick.durability = 8;
+        brick.max_animation = 6;
+
+    } else if (type == GOLD) {
+        brick.durability = -1;
         brick.max_animation = 6;
     } else {
         brick.durability = 1;
