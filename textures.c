@@ -50,8 +50,8 @@ void get_texture_dimensions(Textures texture, int *pos_x, int *pos_y,
         *height = 64;
         break;
     case BallTexture:
-        *pos_x = 80;
-        *pos_y = 64;
+        *pos_x = 192;
+        *pos_y = 0;
         *width = 16;
         *height = 16;
         break;
@@ -107,9 +107,32 @@ void get_texture_dimensions(Textures texture, int *pos_x, int *pos_y,
     if (texture >= BrickWhite && texture <= BrickGold6) {
         *pos_x = ((texture - BrickWhite) % 6) * 32;
         *pos_y = ((texture - BrickWhite) / 6) * 16;
-
         *width = 32;
         *height = 16;
+    }
+    if (texture >= EntityHarmful1_1 && texture <= EntityHarmful1_8) {
+        *pos_x = (texture - EntityHarmful1_1) * 32;
+        *pos_y = 256;
+        *width = 32;
+        *height = 32;
+    }
+    if (texture >= EntityHarmful2_1 && texture <= EntityHarmful2_11) {
+        *pos_x = (texture - EntityHarmful2_1) * 32;
+        *pos_y = 288;
+        *width = 32;
+        *height = 32;
+    }
+    if (texture >= EntityHarmful3_1 && texture <= EntityHarmful3_24) {
+        *pos_x = ((texture - EntityHarmful3_1) % 16) * 32;
+        *pos_y = 320 + ((texture - EntityHarmful3_1) / 16) * 32;
+        *width = 32;
+        *height = 32;
+    }
+    if (texture >= Explosion_1 && texture <= Explosion_6) {
+        *pos_x = (texture - Explosion_1) * 32;
+        *pos_y = 384;
+        *width = 32;
+        *height = 32;
     }
 }
 
@@ -146,4 +169,31 @@ void draw_vaus(SDL_Surface *surface, VAUS vaus) {
     Textures normalizedVausTexture = vaus.expand_size + VausSize1 - 1;
     draw_texture(surface, normalizedVausTexture, (int) vaus.hit_box.origin.x,
                  (int) vaus.hit_box.origin.y, false);
+}
+
+void draw_entity(SDL_Surface *surface, AnimatedEntity entity) {
+    Textures entityTexture;
+    switch (entity.type) {
+    case HARMFUL:
+        switch (entity.specific_type) {
+        case HARMFUL_1:
+            entityTexture = EntityHarmful1_1 + entity.current_animation;
+            break;
+        case HARMFUL_2:
+            entityTexture = EntityHarmful2_1 + entity.current_animation;
+            break;
+        case HARMFUL_3:
+            entityTexture = EntityHarmful3_1 + entity.current_animation;
+            break;
+        }
+        break;
+    case CAPSULE:
+        entityTexture = EntityHarmful1_1;
+        break;
+    case EXPLOSION:
+        entityTexture = Explosion_1 + entity.current_animation;
+        break;
+    }
+    draw_texture(surface, entityTexture, (int) entity.hit_box.origin.x,
+                 (int) entity.hit_box.origin.y, false);
 }

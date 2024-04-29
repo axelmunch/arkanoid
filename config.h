@@ -19,4 +19,6 @@
 #define BRICK_WIDTH  32
 #define BRICK_HEIGHT 16
 
+#define MAX_ENTITIES 50
+
 #endif // ARKANOID_CONFIG_H
