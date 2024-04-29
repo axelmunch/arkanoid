@@ -1,6 +1,7 @@
 #include "levels.h"
 
 Level level;
+int current_level = 0;
 
 Brick create_brick(BrickType type, SpecificType capsule_reward) {
     Brick brick;
@@ -32,6 +33,14 @@ void reset_level() {
         for (int x = 0; x < LEVEL_WIDTH; x++) {
             level.bricks[y][x] = create_brick(EMPTY, CAPSULE_EMPTY);
         }
+    }
+}
+void load_next_level() {
+    current_level++;
+    if (current_level <= MAX_LEVELS) {
+        char filename[20];
+        sprintf(filename, "levels/%d.level", current_level);
+        load_level(filename);
     }
 }
 

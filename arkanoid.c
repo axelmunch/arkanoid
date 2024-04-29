@@ -12,7 +12,6 @@
 
 Ball ball;
 VAUS vaus;
-uint8_t level_number;
 
 SDL_Window *pWindow = NULL;
 SDL_Surface *win_surf = NULL;
@@ -91,8 +90,7 @@ void init() {
     plancheSprites = SDL_LoadBMP("./sprites.bmp");
     SDL_SetColorKey(plancheSprites, true, 0);
 
-    load_level("levels/1.level");
-    level_number = 1;
+    load_next_level();
     init_spawner();
 
     Point ballPosition = {win_surf->w / 2, win_surf->h / 2};
@@ -246,12 +244,7 @@ void update_level() {
         }
     }
     if (is_level_completed()) {
-        level_number++;
-        if (level_number <= MAX_LEVELS) {
-            char filename[20];
-            sprintf(filename, "levels/%d.level", level_number);
-            load_level(filename);
-        }
+        load_next_level();
     }
 }
 
