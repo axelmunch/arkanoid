@@ -10,7 +10,7 @@ void init_spawner() { reset_spawner(); }
 
 void reset_spawner() {
     spawnedEntities.current_entitiesCount = 0;
-    float time_since_last_spawn = 0.0;
+    time_since_last_spawn = 0.0;
 }
 
 void update_spawner() {
