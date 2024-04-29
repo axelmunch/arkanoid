@@ -74,10 +74,11 @@ void load_level(const char *filename) {
     }
 }
 
-bool is_level_empty() {
+bool is_level_completed() {
     for (int y = level.offset; y < level.height + level.offset; y++) {
         for (int x = 0; x < LEVEL_WIDTH; x++) {
-            if (level.bricks[y][x].type != EMPTY) {
+            if (level.bricks[y][x].type != EMPTY &&
+                level.bricks[y][x].type != GOLD) {
                 return false;
             }
         }

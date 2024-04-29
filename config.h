@@ -13,6 +13,8 @@
 
 #define BALL_EFFECT 25
 
+#define MAX_LEVELS 5
+
 #define LEVEL_OFFSET_Y 150
 #define LEVEL_WIDTH    13
 #define LEVEL_HEIGHT   16
