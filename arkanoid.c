@@ -26,6 +26,37 @@ bool ball_collides_with_vertical_border() {
            (ball.hit_box.origin.x > (win_surf->w - ball.hit_box.radius));
 }
 
+bool ball_collides_with_brick() {
+    Level *level = get_level();
+    int offset_x = (win_surf->w - LEVEL_WIDTH * 32) / 2;
+    int offset_y = 150;
+    for (int y = level->offset; y < level->height + level->offset; y++) {
+        for (int x = 0; x < LEVEL_WIDTH; x++) {
+            Brick brick = level->bricks[y][x];
+            if (brick.type != EMPTY) {
+                Rectangle brick_hitbox;
+                brick_hitbox.origin.x = offset_x + x * BRICK_WIDTH;
+                brick_hitbox.origin.y = offset_y + y * BRICK_HEIGHT;
+                brick_hitbox.height = BRICK_HEIGHT;
+                brick_hitbox.width = BRICK_WIDTH;
+                if (rect_circle_collision(brick_hitbox, ball.hit_box)) {
+                    if (brick.type != GOLD) {
+                        brick.durability--;
+                    }
+                    if (brick.durability == 0) {
+                        level->bricks[y][x] =
+                            create_brick(EMPTY, CAPSULE_EMPTY);
+                    } else {
+                        level->bricks[y][x] = brick;
+                    }
+                    return true;
+                }
+            }
+        }
+    }
+    return false;
+}
+
 void move_VAUS(double distance) {
     vaus.hit_box.origin.x += distance * get_delta_time_target();
     if (vaus.hit_box.origin.x < 0) {
@@ -116,83 +147,31 @@ void draw() {
 }
 
 void update_ball() {
-    Level *level = get_level();
-    int offset_x = (win_surf->w - LEVEL_WIDTH * 32) / 2;
-    int offset_y = 150;
     Vector ball_movement;
     rotate_by_angle(ball.velocity * get_delta_time_target(), ball.direction,
                     &ball_movement);
     ball.hit_box.origin.x += ball_movement.x;
     const bool collide_with_vaus_x =
         rect_circle_collision(vaus.hit_box, ball.hit_box);
-    if (ball_collides_with_vertical_border() || collide_with_vaus_x) {
+    if (ball_collides_with_vertical_border() || collide_with_vaus_x ||
+        ball_collides_with_brick()) {
         ball.direction = fmod(180 - ball.direction, 360);
         ball.hit_box.origin.x -= ball_movement.x;
-    }
-    for (int y = level->offset; y < level->height + level->offset; y++) {
-        for (int x = 0; x < LEVEL_WIDTH; x++) {
-            Brick brick = level->bricks[y][x];
-            if (brick.type != EMPTY) {
-                Rectangle brick_hitbox;
-                brick_hitbox.origin.x = offset_x + x * BRICK_WIDTH;
-                brick_hitbox.origin.y = offset_y + y * BRICK_HEIGHT;
-                brick_hitbox.height = BRICK_HEIGHT;
-                brick_hitbox.width = BRICK_WIDTH;
-                if (rect_circle_collision(brick_hitbox, ball.hit_box)) {
-                    ball.direction = fmod(180 - ball.direction, 360);
-                    ball.hit_box.origin.x -= ball_movement.x;
-                    if (brick.type != GOLD) {
-                        brick.durability--;
-                    }
-                    if (brick.durability == 0) {
-                        level->bricks[y][x] =
-                            create_brick(EMPTY, CAPSULE_EMPTY);
-                    } else {
-                        level->bricks[y][x] = brick;
-                    }
-                }
-            }
-        }
     }
 
     ball.hit_box.origin.y -= ball_movement.y;
     const bool collide_with_vaus_y =
         rect_circle_collision(vaus.hit_box, ball.hit_box);
-    if (ball_collides_with_horizontal_border() || collide_with_vaus_y) {
+    if (ball_collides_with_horizontal_border() || collide_with_vaus_y ||
+        ball_collides_with_brick()) {
         ball.direction = fmod(360 - ball.direction, 360);
         ball.hit_box.origin.y += ball_movement.y;
     }
-    for (int y = level->offset; y < level->height + level->offset; y++) {
-        for (int x = 0; x < LEVEL_WIDTH; x++) {
-            Brick brick = level->bricks[y][x];
-            if (brick.type != EMPTY) {
-                Rectangle brick_hitbox;
-                brick_hitbox.origin.x = offset_x + x * BRICK_WIDTH;
-                brick_hitbox.origin.y = offset_y + y * BRICK_HEIGHT;
-                brick_hitbox.height = BRICK_HEIGHT;
-                brick_hitbox.width = BRICK_WIDTH;
-                if (rect_circle_collision(brick_hitbox, ball.hit_box)) {
-                    ball.direction = fmod(360 - ball.direction, 360);
-                    ball.hit_box.origin.y += ball_movement.y;
-                    if (brick.type != GOLD) {
-                        brick.durability--;
-                    }
-                    if (brick.durability == 0) {
-                        level->bricks[y][x] =
-                            create_brick(EMPTY, CAPSULE_EMPTY);
-                    } else {
-                        level->bricks[y][x] = brick;
-                    }
-                }
-            }
-        }
-
-        if (collide_with_vaus_x || collide_with_vaus_y) {
-            if (vaus.moving_direction == LEFT) {
-                ball.direction = fmod(ball.direction + BALL_EFFECT, 360);
-            } else if (vaus.moving_direction == RIGHT) {
-                ball.direction = fmod(ball.direction - BALL_EFFECT, 360);
-            }
+    if (collide_with_vaus_x || collide_with_vaus_y) {
+        if (vaus.moving_direction == LEFT) {
+            ball.direction = fmod(ball.direction + BALL_EFFECT, 360);
+        } else if (vaus.moving_direction == RIGHT) {
+            ball.direction = fmod(ball.direction - BALL_EFFECT, 360);
         }
     }
 }
