@@ -7,6 +7,7 @@ Brick create_brick(BrickType type, SpecificType capsule_reward) {
     brick.type = type;
     brick.current_animation = 0;
     brick.capsule_reward = capsule_reward;
+    brick.time_before_next_animation = 0;
 
     if (type == METAL) {
         brick.durability = 8;
