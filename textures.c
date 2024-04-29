@@ -134,6 +134,12 @@ void get_texture_dimensions(Textures texture, int *pos_x, int *pos_y,
         *width = 32;
         *height = 32;
     }
+    if (texture >= CapsuleSlow_1 && texture <= CapsuleAddition_8) {
+        *pos_x = 256 + ((texture - CapsuleSlow_1) % 8) * 32;
+        *pos_y = ((texture - CapsuleSlow_1) / 8) * 16;
+        *width = 32;
+        *height = 16;
+    }
 }
 
 void draw_texture(SDL_Surface *surface, Textures texture, int x, int y,
@@ -153,6 +159,10 @@ void draw_texture(SDL_Surface *surface, Textures texture, int x, int y,
 
 void draw_brick(SDL_Surface *surface, BrickType type, int brick_animation,
                 int x, int y) {
+    if (type == EMPTY) {
+        return;
+    }
+
     Textures brickTexture = type - 1 + BrickWhite;
 
     if (type == METAL) {
@@ -177,18 +187,44 @@ void draw_entity(SDL_Surface *surface, AnimatedEntity entity) {
     case HARMFUL:
         switch (entity.specific_type) {
         case HARMFUL_1:
-            entityTexture = EntityHarmful1_1 + entity.current_animation;
+            entityTexture = EntityHarmful1_1;
             break;
         case HARMFUL_2:
-            entityTexture = EntityHarmful2_1 + entity.current_animation;
+            entityTexture = EntityHarmful2_1;
             break;
         case HARMFUL_3:
-            entityTexture = EntityHarmful3_1 + entity.current_animation;
+            entityTexture = EntityHarmful3_1;
             break;
         }
+        entityTexture += entity.current_animation;
         break;
     case CAPSULE:
-        entityTexture = EntityHarmful1_1;
+        switch (entity.specific_type) {
+        case CAPSULE_EMPTY:
+            return;
+        case CAPSULE_SLOW:
+            entityTexture = CapsuleSlow_1;
+            break;
+        case CAPSULE_CATCH:
+            entityTexture = CapsuleCatch_1;
+            break;
+        case CAPSULE_EXPAND:
+            entityTexture = CapsuleExpand_1;
+            break;
+        case CAPSULE_DIVIDE:
+            entityTexture = CapsuleDivide_1;
+            break;
+        case CAPSULE_LASER:
+            entityTexture = CapsuleLaser_1;
+            break;
+        case CAPSULE_BREAK:
+            entityTexture = CapsuleBreak_1;
+            break;
+        case CAPSULE_ADDITION:
+            entityTexture = CapsuleAddition_1;
+            break;
+        }
+        entityTexture += entity.current_animation;
         break;
     case EXPLOSION:
         entityTexture = Explosion_1 + entity.current_animation;
