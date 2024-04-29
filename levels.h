@@ -40,8 +40,9 @@ typedef enum {
 struct Brick {
     BrickType type;
     int durability;
-    int current_animation;
     int max_animation;
+    int current_animation;
+    int time_before_next_animation;
     SpecificType capsule_reward;
 };
 

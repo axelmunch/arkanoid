@@ -39,15 +39,24 @@ bool ball_collides_with_brick() {
                 brick_hitbox.height = BRICK_HEIGHT;
                 brick_hitbox.width = BRICK_WIDTH;
                 if (rect_circle_collision(brick_hitbox, ball.hit_box)) {
+                    // Animation
+                    if (brick.type == METAL || brick.type == GOLD) {
+                        brick.current_animation = 1;
+                        brick.time_before_next_animation = ANIMATION_TIMER_MS;
+                        level->bricks[y][x] = brick;
+                    }
+
                     if (brick.type != GOLD) {
                         brick.durability--;
                     }
+
                     if (brick.durability == 0) {
                         level->bricks[y][x] =
                             create_brick(EMPTY, CAPSULE_EMPTY);
                     } else {
                         level->bricks[y][x] = brick;
                     }
+
                     return true;
                 }
             }
@@ -214,10 +223,33 @@ void update_entities() {
     }
 }
 
+void update_level() {
+    Level *level = get_level();
+    for (int y = level->offset; y < level->height + level->offset; y++) {
+        for (int x = 0; x < LEVEL_WIDTH; x++) {
+            Brick brick = level->bricks[y][x];
+
+            if (brick.type == METAL || brick.type == GOLD) {
+                if (brick.current_animation > 0) {
+                    brick.time_before_next_animation -= get_delta_time() * 1000;
+                    if (brick.time_before_next_animation <= 0) {
+                        brick.time_before_next_animation = ANIMATION_TIMER_MS;
+                        brick.current_animation = fmod(
+                            brick.current_animation + 1, brick.max_animation);
+                    }
+                }
+
+                level->bricks[y][x] = brick;
+            }
+        }
+    }
+}
+
 void update() {
     update_ball();
     update_spawner();
     update_entities();
+    update_level();
 }
 
 int main(int argc, char **argv) {
