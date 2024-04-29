@@ -28,15 +28,14 @@ bool ball_collides_with_vertical_border() {
 
 bool ball_collides_with_brick() {
     Level *level = get_level();
-    int offset_x = (win_surf->w - LEVEL_WIDTH * 32) / 2;
-    int offset_y = 150;
+    const int offset_x = (win_surf->w - LEVEL_WIDTH * 32) / 2;
     for (int y = level->offset; y < level->height + level->offset; y++) {
         for (int x = 0; x < LEVEL_WIDTH; x++) {
             Brick brick = level->bricks[y][x];
             if (brick.type != EMPTY) {
                 Rectangle brick_hitbox;
                 brick_hitbox.origin.x = offset_x + x * BRICK_WIDTH;
-                brick_hitbox.origin.y = offset_y + y * BRICK_HEIGHT;
+                brick_hitbox.origin.y = LEVEL_OFFSET_Y + y * BRICK_HEIGHT;
                 brick_hitbox.height = BRICK_HEIGHT;
                 brick_hitbox.width = BRICK_WIDTH;
                 if (rect_circle_collision(brick_hitbox, ball.hit_box)) {
@@ -106,14 +105,13 @@ void draw_background() {
 }
 
 void draw_level() {
-    Level *level = get_level();
-    int offset_x = (win_surf->w - LEVEL_WIDTH * 32) / 2;
-    int offset_y = 150;
+    const Level *level = get_level();
+    const int offset_x = (win_surf->w - LEVEL_WIDTH * 32) / 2;
     for (int y = level->offset; y < level->height + level->offset; y++) {
         for (int x = 0; x < LEVEL_WIDTH; x++) {
             if (level->bricks[y][x].type != EMPTY) {
                 int brick_x = offset_x + x * BRICK_WIDTH;
-                int brick_y = offset_y + y * BRICK_HEIGHT;
+                int brick_y = LEVEL_OFFSET_Y + y * BRICK_HEIGHT;
                 draw_brick(win_surf, level->bricks[y][x].type,
                            level->bricks[y][x].current_animation, brick_x,
                            brick_y);
