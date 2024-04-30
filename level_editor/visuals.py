@@ -49,9 +49,9 @@ class Capsules(Enum):
     EMPTY = 0
     SLOW = 1
     CATCH = 2
+    LASER = 5
     EXPAND = 3
     DIVIDE = 4
-    LASER = 5
     BREAK = 6
     ADDITION = 7
 
@@ -162,9 +162,9 @@ def load_visuals():
             )
         )
 
-    capsules_sprites[Capsules.EXPAND] = []
+        capsules_sprites[Capsules.LASER] = []
     for i in range(ANIMATED_CAPSULE_ANIMATION_FRAMES):
-        capsules_sprites[Capsules.EXPAND].append(
+        capsules_sprites[Capsules.LASER].append(
             sprites.subsurface(
                 256 + CAPSULE_WIDTH * i,
                 CAPSULE_HEIGHT * 2,
@@ -173,9 +173,9 @@ def load_visuals():
             )
         )
 
-    capsules_sprites[Capsules.DIVIDE] = []
+    capsules_sprites[Capsules.EXPAND] = []
     for i in range(ANIMATED_CAPSULE_ANIMATION_FRAMES):
-        capsules_sprites[Capsules.DIVIDE].append(
+        capsules_sprites[Capsules.EXPAND].append(
             sprites.subsurface(
                 256 + CAPSULE_WIDTH * i,
                 CAPSULE_HEIGHT * 3,
@@ -184,9 +184,9 @@ def load_visuals():
             )
         )
 
-    capsules_sprites[Capsules.LASER] = []
+    capsules_sprites[Capsules.DIVIDE] = []
     for i in range(ANIMATED_CAPSULE_ANIMATION_FRAMES):
-        capsules_sprites[Capsules.LASER].append(
+        capsules_sprites[Capsules.DIVIDE].append(
             sprites.subsurface(
                 256 + CAPSULE_WIDTH * i,
                 CAPSULE_HEIGHT * 4,

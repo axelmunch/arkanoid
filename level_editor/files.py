@@ -15,9 +15,7 @@ def select_file_load():
 
 def select_file_save():
     file_path = filedialog.asksaveasfilename(
-        title="(SAVE) Select a level",
-        filetypes=[("Arkanoid level", "*.level")],
-        defaultextension=".png",
+        title="(SAVE) Select a level", filetypes=[("Arkanoid level", "*.level")]
     )
 
     return file_path
