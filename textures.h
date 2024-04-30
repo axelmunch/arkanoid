@@ -90,6 +90,8 @@ typedef enum {
     EntityHarmful3_22,
     EntityHarmful3_23,
     EntityHarmful3_24,
+    EntityLaser_1,
+    EntityLaser_2,
     Explosion_1,
     Explosion_2,
     Explosion_3,

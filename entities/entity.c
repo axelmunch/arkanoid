@@ -19,6 +19,18 @@ AnimatedEntity create_entity(SpecificType type, Point position) {
         entity = create_harmful(type);
         break;
     }
+    case LASER_TYPE: {
+        entity.type = LASER;
+        entity.hit_box.width = 14;
+        entity.hit_box.height = 20;
+        break;
+    }
+    case LASER_EXPLOSION: {
+        entity.type = LASER;
+        entity.hit_box.width = 14;
+        entity.hit_box.height = 20;
+        break;
+    }
     case EXPLOSION_TYPE: {
         entity = create_explosion(position);
         break;

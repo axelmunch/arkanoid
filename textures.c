@@ -103,6 +103,18 @@ void get_texture_dimensions(Textures texture, int *pos_x, int *pos_y,
         *width = 128;
         *height = 16;
         break;
+    case EntityLaser_1:
+        *pos_x = 0;
+        *pos_y = 80;
+        *width = 14;
+        *height = 20;
+        break;
+    case EntityLaser_2:
+        *pos_x = 0;
+        *pos_y = 111;
+        *width = 14;
+        *height = 9;
+        break;
     }
     if (texture >= BrickWhite && texture <= BrickGold6) {
         *pos_x = ((texture - BrickWhite) % 6) * 32;
@@ -225,6 +237,16 @@ void draw_entity(SDL_Surface *surface, AnimatedEntity entity) {
             break;
         }
         entityTexture += entity.current_animation;
+        break;
+    case LASER:
+        switch (entity.specific_type) {
+        case LASER_TYPE:
+            entityTexture = EntityLaser_1;
+            break;
+        case LASER_EXPLOSION:
+            entityTexture = EntityLaser_2;
+            break;
+        }
         break;
     case EXPLOSION:
         entityTexture = Explosion_1 + entity.current_animation;
