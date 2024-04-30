@@ -51,6 +51,10 @@ bool ball_collides_with_brick() {
                     }
 
                     if (brick.durability == 0) {
+                        if (brick.capsule_reward != CAPSULE_EMPTY) {
+                            add_entity(create_entity(brick.capsule_reward,
+                                                     brick_hitbox.origin));
+                        }
                         level->bricks[y][x] =
                             create_brick(EMPTY, CAPSULE_EMPTY);
                     } else {
@@ -217,8 +221,9 @@ void update_entities() {
         // Collision
         if (rect_circle_collision(entity->hit_box, ball.hit_box) ||
             rect_rect_collision(entity->hit_box, vaus.hit_box)) {
-
-            explode_entity(i);
+            if (entity->type == HARMFUL) {
+                explode_entity(i);
+            }
         }
     }
 }

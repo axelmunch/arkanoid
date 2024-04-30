@@ -13,6 +13,11 @@ void reset_spawner() {
     time_since_last_spawn = 0.0;
 }
 
+void add_entity(const AnimatedEntity entity) {
+    spawnedEntities.entities[spawnedEntities.current_entitiesCount] = entity;
+    spawnedEntities.current_entitiesCount++;
+}
+
 void update_spawner() {
     time_since_last_spawn += get_delta_time();
 
@@ -20,10 +25,8 @@ void update_spawner() {
     if (time_since_last_spawn >= time_between_spawn) {
         time_since_last_spawn = 0.0;
         if (spawnedEntities.current_entitiesCount < MAX_ENTITIES) {
-            Point spawn_position = {x_spawn_position, y_spawn_position};
-            spawnedEntities.entities[spawnedEntities.current_entitiesCount] =
-                create_entity(HARMFUL_3, spawn_position);
-            spawnedEntities.current_entitiesCount++;
+            const Point spawn_position = {x_spawn_position, y_spawn_position};
+            add_entity(create_entity(HARMFUL_3, spawn_position));
         }
     }
 }

@@ -10,7 +10,7 @@ AnimatedEntity create_entity(SpecificType type, Point position) {
     case CAPSULE_LASER:
     case CAPSULE_BREAK:
     case CAPSULE_ADDITION: {
-        entity = create_capsule(type);
+        entity = create_capsule(type, position);
         break;
     }
     case HARMFUL_1:
@@ -53,13 +53,14 @@ AnimatedEntity create_harmful(SpecificType harmfulType) {
     return harmful;
 }
 
-AnimatedEntity create_capsule(SpecificType capsuleType) {
+AnimatedEntity create_capsule(SpecificType capsuleType, Point position) {
     AnimatedEntity capsule;
     capsule.type = CAPSULE;
     capsule.specific_type = capsuleType;
     capsule.max_animation = 8;
     capsule.hit_box.width = 32;
     capsule.hit_box.height = 16;
+    capsule.hit_box.origin = position;
     return capsule;
 }
 
