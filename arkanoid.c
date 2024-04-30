@@ -1,11 +1,13 @@
 #include "config.h"
 #include "delta_time.h"
+#include "entities/capsule.h"
 #include "entities/entities_spawner.h"
 #include "entities/entity.h"
 #include "levels.h"
 #include "math/collisions.h"
 #include "text.h"
 #include "textures.h"
+
 #include <SDL.h>
 #include <stdbool.h>
 #include <stdio.h>
@@ -223,6 +225,17 @@ void update_entities() {
             rect_rect_collision(entity->hit_box, vaus.hit_box)) {
             if (entity->type == HARMFUL) {
                 explode_entity(i);
+            }
+        }
+
+        if (rect_rect_collision(entity->hit_box, vaus.hit_box)) {
+            switch (entity->specific_type) {
+            case CAPSULE_EXPAND:
+                apply_expand_capsule(&vaus);
+                remove_entity(i);
+                break;
+            default:
+                break;
             }
         }
     }

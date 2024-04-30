@@ -26,7 +26,7 @@ void update_spawner() {
         time_since_last_spawn = 0.0;
         if (spawnedEntities.current_entitiesCount < MAX_ENTITIES) {
             const Point spawn_position = {x_spawn_position, y_spawn_position};
-            add_entity(create_entity(HARMFUL_3, spawn_position));
+            add_entity(create_entity(CAPSULE_EXPAND, spawn_position));
         }
     }
 }
