@@ -235,11 +235,17 @@ void update_entities() {
             switch (entity->specific_type) {
             case CAPSULE_EXPAND:
                 apply_expand_capsule(&vaus);
-                remove_entity(i);
+                break;
+            case CAPSULE_SLOW:
+                apply_slow_capsule(&ball);
+                break;
+            case CAPSULE_BREAK:
+                load_next();
                 break;
             default:
                 break;
             }
+            remove_entity(i);
         }
     }
 }
