@@ -55,8 +55,9 @@ struct Level {
 
 Brick create_brick(BrickType type, SpecificType capsule_reward);
 void reset_level();
+void load_next_level();
 void load_level(const char *filename);
-bool is_level_empty();
+bool is_level_completed();
 Level *get_level();
 
 #endif // ARKANOID_LEVELS_H
