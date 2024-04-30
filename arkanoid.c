@@ -88,6 +88,15 @@ void move_VAUS(double distance) {
     }
 }
 
+void load_next() {
+    load_next_level();
+    init_spawner();
+    Point ballPosition = {win_surf->w / 2, win_surf->h / 2};
+    ball = create_ball(ballPosition);
+    Point vausPosition = {win_surf->w / 2, win_surf->h - 32};
+    vaus = create_VAUS(vausPosition);
+}
+
 void init() {
     pWindow = SDL_CreateWindow("Arknoid", SDL_WINDOWPOS_UNDEFINED,
                                SDL_WINDOWPOS_UNDEFINED, SCREEN_WIDTH,
@@ -96,13 +105,7 @@ void init() {
     plancheSprites = SDL_LoadBMP("./sprites.bmp");
     SDL_SetColorKey(plancheSprites, true, 0);
 
-    load_next_level();
-    init_spawner();
-
-    Point ballPosition = {win_surf->w / 2, win_surf->h / 2};
-    ball = create_ball(ballPosition);
-    Point vausPosition = {win_surf->w / 2, win_surf->h - 32};
-    vaus = create_VAUS(vausPosition);
+    load_next();
 }
 
 void draw_background() {
@@ -262,7 +265,7 @@ void update_level() {
         }
     }
     if (is_level_completed()) {
-        load_next_level();
+        load_next();
     }
 }
 
