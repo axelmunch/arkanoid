@@ -96,7 +96,7 @@ void init() {
     plancheSprites = SDL_LoadBMP("./sprites.bmp");
     SDL_SetColorKey(plancheSprites, true, 0);
 
-    load_level("levels/1.level");
+    load_next_level();
     init_spawner();
 
     Point ballPosition = {win_surf->w / 2, win_surf->h / 2};
@@ -260,6 +260,9 @@ void update_level() {
                 level->bricks[y][x] = brick;
             }
         }
+    }
+    if (is_level_completed()) {
+        load_next_level();
     }
 }
 
