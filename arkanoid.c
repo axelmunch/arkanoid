@@ -153,6 +153,25 @@ void draw() {
     draw_integer(win_surf, (int) get_current_fps(), 10 + fps_text_width, 40);
 }
 
+bool apply_ball_effect(double ball_direction, bool add_effect) {
+    double margin = BALL_EFFECT * 1.5;
+
+    if (add_effect) {
+        if (ball_direction > 360 - margin ||
+            (ball_direction < 180 && ball_direction > 180 - margin)) {
+            return false;
+        }
+
+    } else {
+        if (ball_direction < margin ||
+            (ball_direction > 180 && ball_direction < 180 + margin)) {
+            return false;
+        }
+    }
+
+    return true;
+}
+
 void update_ball() {
     Vector ball_movement;
     rotate_by_angle(ball.velocity * get_delta_time_target(), ball.direction,
@@ -176,9 +195,13 @@ void update_ball() {
     }
     if (collide_with_vaus_x || collide_with_vaus_y) {
         if (vaus.moving_direction == LEFT) {
-            ball.direction = fmod(ball.direction + BALL_EFFECT, 360);
+            if (apply_ball_effect(ball.direction, true)) {
+                ball.direction = fmod(ball.direction + BALL_EFFECT, 360);
+            }
         } else if (vaus.moving_direction == RIGHT) {
-            ball.direction = fmod(ball.direction - BALL_EFFECT, 360);
+            if (apply_ball_effect(ball.direction, false)) {
+                ball.direction = fmod(ball.direction - BALL_EFFECT, 360);
+            }
         }
     }
 }
