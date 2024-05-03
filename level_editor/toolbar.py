@@ -81,11 +81,13 @@ def update_toolbar(
 
             # Select brick
             for i, brick in enumerate(Bricks):
-                x = elements_start_x + i % elements_by_line * (
-                    BRICK_WIDTH + elements_space_x
+                x = int(
+                    elements_start_x
+                    + i % elements_by_line * (BRICK_WIDTH + elements_space_x)
                 )
-                y = bricks_start_y + i // elements_by_line * (
-                    BRICK_HEIGHT + elements_space_y
+                y = int(
+                    bricks_start_y
+                    + i // elements_by_line * (BRICK_HEIGHT + elements_space_y)
                 )
                 if is_mouse_hovering_rect(
                     mouse_position, (x, y, BRICK_WIDTH, BRICK_HEIGHT)
