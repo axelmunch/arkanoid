@@ -18,12 +18,13 @@ SDL_Surface *win_surf = NULL;
 SDL_Surface *plancheSprites = NULL;
 
 bool ball_collides_with_horizontal_border() {
-    return (ball.hit_box.origin.y < ball.hit_box.radius) ||
+    return (ball.hit_box.origin.y < ball.hit_box.radius + GAME_BORDER_TOP) ||
            (ball.hit_box.origin.y > (win_surf->h - ball.hit_box.radius));
 }
 bool ball_collides_with_vertical_border() {
-    return (ball.hit_box.origin.x < ball.hit_box.radius) ||
-           (ball.hit_box.origin.x > (win_surf->w - ball.hit_box.radius));
+    return (ball.hit_box.origin.x < ball.hit_box.radius + GAME_BORDER_X) ||
+           (ball.hit_box.origin.x >
+            (win_surf->w - GAME_BORDER_X - ball.hit_box.radius));
 }
 
 bool ball_collides_with_brick() {
@@ -67,10 +68,12 @@ bool ball_collides_with_brick() {
 
 void move_VAUS(double distance) {
     vaus.hit_box.origin.x += distance * get_delta_time_target();
-    if (vaus.hit_box.origin.x < 0) {
-        vaus.hit_box.origin.x = 0;
-    } else if (vaus.hit_box.origin.x + vaus.hit_box.width > win_surf->w) {
-        vaus.hit_box.origin.x = win_surf->w - vaus.hit_box.width;
+    if (vaus.hit_box.origin.x < GAME_BORDER_X) {
+        vaus.hit_box.origin.x = GAME_BORDER_X;
+    } else if (vaus.hit_box.origin.x + vaus.hit_box.width >
+               win_surf->w - GAME_BORDER_X) {
+        vaus.hit_box.origin.x =
+            win_surf->w - GAME_BORDER_X - vaus.hit_box.width;
     }
 
     if (rect_circle_collision(vaus.hit_box, ball.hit_box)) {

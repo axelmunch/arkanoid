@@ -4,15 +4,16 @@ from .files import select_file_load, select_file_save
 from .text import text
 from .visuals import BRICK_HEIGHT, BRICK_WIDTH, Bricks, Capsules, Theme, draw_brick
 
-GAME_BOARD_WIDTH = 600
-GAME_BOARD_HEIGHT = 600
-GAME_BOARD_MARGIN_TOP = 150
-GAME_BOARD_MARGIN_BOTTOM = 200
-GAME_BOARD_MARGIN_LEFT = 10
-GAME_BOARD_MARGIN_RIGHT = 10
 
 LEVEL_WIDTH = 13
 LEVEL_HEIGHT = 16
+
+GAME_BOARD_WIDTH = 600
+GAME_BOARD_HEIGHT = 600
+GAME_BOARD_MARGIN_TOP = 50
+GAME_BOARD_MARGIN_BOTTOM = 0
+GAME_BOARD_MARGIN_LEFT = (GAME_BOARD_WIDTH - LEVEL_WIDTH * BRICK_WIDTH) / 2
+GAME_BOARD_MARGIN_RIGHT = (GAME_BOARD_WIDTH - LEVEL_WIDTH * BRICK_WIDTH) / 2
 
 game_board = pygame.Surface((GAME_BOARD_WIDTH, GAME_BOARD_HEIGHT))
 
@@ -119,42 +120,44 @@ def is_mouse_hovering(mouse_position: tuple[int, int]) -> bool:
 
 
 def is_mouse_hovering_rect(
-        mouse_position: tuple[int, int], rect: tuple[int, int, int, int]
+    mouse_position: tuple[int, int], rect: tuple[int, int, int, int]
 ) -> bool:
     return (
-            mouse_position[0] >= rect[0]
-            and mouse_position[0] < rect[0] + rect[2]
-            and mouse_position[1] >= rect[1]
-            and mouse_position[1] < rect[1] + rect[3]
+        mouse_position[0] >= rect[0]
+        and mouse_position[0] < rect[0] + rect[2]
+        and mouse_position[1] >= rect[1]
+        and mouse_position[1] < rect[1] + rect[3]
     )
 
 
 def update_game_board(
-        mouse_position: tuple[int, int],
-        left_click: bool,
-        right_click: bool,
-        middle_click: bool,
-        selected_brick,
-        selected_capsule,
-        level: Level,
-        frame_count,
+    mouse_position: tuple[int, int],
+    left_click: bool,
+    right_click: bool,
+    middle_click: bool,
+    selected_brick,
+    selected_capsule,
+    level: Level,
+    frame_count,
 ):
     if is_mouse_hovering(mouse_position):
         x_center = (
-                GAME_BOARD_MARGIN_LEFT
-                + (GAME_BOARD_WIDTH - GAME_BOARD_MARGIN_LEFT - GAME_BOARD_MARGIN_RIGHT) // 2
+            GAME_BOARD_MARGIN_LEFT
+            + (GAME_BOARD_WIDTH - GAME_BOARD_MARGIN_LEFT - GAME_BOARD_MARGIN_RIGHT) // 2
         )
         y_center = (
-                GAME_BOARD_MARGIN_TOP
-                + (GAME_BOARD_HEIGHT - GAME_BOARD_MARGIN_TOP - GAME_BOARD_MARGIN_BOTTOM)
-                // 2
+            GAME_BOARD_MARGIN_TOP
+            + (GAME_BOARD_HEIGHT - GAME_BOARD_MARGIN_TOP - GAME_BOARD_MARGIN_BOTTOM)
+            // 2
         )
-        x = (
-                    mouse_position[0] - x_center + LEVEL_WIDTH * BRICK_WIDTH // 2
-            ) // BRICK_WIDTH
-        y = (
-                    mouse_position[1] - y_center + LEVEL_HEIGHT * BRICK_HEIGHT // 2
-            ) // BRICK_HEIGHT
+        x = int(
+            (mouse_position[0] - x_center + LEVEL_WIDTH * BRICK_WIDTH // 2)
+            / BRICK_WIDTH
+        )
+        y = int(
+            (mouse_position[1] - y_center + LEVEL_HEIGHT * BRICK_HEIGHT // 2)
+            / BRICK_HEIGHT
+        )
         if left_click:
             # Place brick
             if 0 <= x < LEVEL_WIDTH and 0 <= y < LEVEL_HEIGHT:
@@ -186,12 +189,12 @@ def draw_game_board(level, frame_count):
 
     # Grid
     x_center = (
-            GAME_BOARD_MARGIN_LEFT
-            + (GAME_BOARD_WIDTH - GAME_BOARD_MARGIN_LEFT - GAME_BOARD_MARGIN_RIGHT) // 2
+        GAME_BOARD_MARGIN_LEFT
+        + (GAME_BOARD_WIDTH - GAME_BOARD_MARGIN_LEFT - GAME_BOARD_MARGIN_RIGHT) // 2
     )
     y_center = (
-            GAME_BOARD_MARGIN_TOP
-            + (GAME_BOARD_HEIGHT - GAME_BOARD_MARGIN_TOP - GAME_BOARD_MARGIN_BOTTOM) // 2
+        GAME_BOARD_MARGIN_TOP
+        + (GAME_BOARD_HEIGHT - GAME_BOARD_MARGIN_TOP - GAME_BOARD_MARGIN_BOTTOM) // 2
     )
     for x in range(LEVEL_WIDTH):
         pygame.draw.line(
