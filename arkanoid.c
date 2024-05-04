@@ -66,6 +66,19 @@ bool ball_collides_with_brick() {
     return false;
 }
 
+bool ball_collides_with_entity() {
+    SpawnedEntities *entities = get_entities();
+    for (int i = 0; i < entities->current_entities_count; i++) {
+        if (entities->entities[i].type == HARMFUL &&
+            rect_circle_collision(entities->entities[i].hit_box,
+                                  ball.hit_box)) {
+            explode_entity(i);
+            return true;
+        }
+    }
+    return false;
+}
+
 void move_VAUS(double distance) {
     vaus.hit_box.origin.x += distance * get_delta_time_target();
     if (vaus.hit_box.origin.x < GAME_BORDER_X) {
@@ -183,7 +196,7 @@ void update_ball() {
     const bool collide_with_vaus_x =
         rect_circle_collision(vaus.hit_box, ball.hit_box);
     if (ball_collides_with_vertical_border() || collide_with_vaus_x ||
-        ball_collides_with_brick()) {
+        ball_collides_with_brick() || ball_collides_with_entity()) {
         ball.direction = fmod(180 - ball.direction, 360);
         ball.hit_box.origin.x -= ball_movement.x;
     }
@@ -192,10 +205,11 @@ void update_ball() {
     const bool collide_with_vaus_y =
         rect_circle_collision(vaus.hit_box, ball.hit_box);
     if (ball_collides_with_horizontal_border() || collide_with_vaus_y ||
-        ball_collides_with_brick()) {
+        ball_collides_with_brick() || ball_collides_with_entity()) {
         ball.direction = fmod(360 - ball.direction, 360);
         ball.hit_box.origin.y += ball_movement.y;
     }
+
     if (collide_with_vaus_x || collide_with_vaus_y) {
         if (vaus.moving_direction == LEFT) {
             if (apply_ball_effect(ball.direction, true)) {
