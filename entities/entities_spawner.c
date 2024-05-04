@@ -1,7 +1,7 @@
 #include "entities_spawner.h"
 
 SpawnedEntities spawned_entities;
-int x_spawn_position = 150;
+int x_spawn_position = 200;
 int y_spawn_position = 50;
 float time_between_spawn = 3;
 float time_since_last_spawn = 0.0;
@@ -20,9 +20,11 @@ void update_spawner() {
     if (time_since_last_spawn >= time_between_spawn) {
         time_since_last_spawn = 0.0;
         if (spawned_entities.current_entities_count < MAX_ENTITIES) {
-            Point spawn_position = {x_spawn_position, y_spawn_position};
+            Point spawn_position = {x_spawn_position * (rand() % 2 + 1) - 16,
+                                    y_spawn_position};
+            SpecificType entity_to_spawn = HARMFUL_1 + rand() % 3;
             spawned_entities.entities[spawned_entities.current_entities_count] =
-                create_entity(HARMFUL_3, spawn_position);
+                create_entity(entity_to_spawn, spawn_position);
             spawned_entities.current_entities_count++;
         }
     }
