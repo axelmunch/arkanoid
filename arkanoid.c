@@ -134,7 +134,7 @@ void draw_level() {
 
 void draw_entities() {
     SpawnedEntities *entities = get_entities();
-    for (int i = 0; i < entities->current_entitiesCount; i++) {
+    for (int i = 0; i < entities->current_entities_count; i++) {
         draw_entity(win_surf, entities->entities[i]);
     }
 }
@@ -211,7 +211,7 @@ void update_ball() {
 
 void update_entities() {
     SpawnedEntities *entities = get_entities();
-    for (int i = 0; i < entities->current_entitiesCount; i++) {
+    for (int i = 0; i < entities->current_entities_count; i++) {
         AnimatedEntity *entity = &entities->entities[i];
 
         entity->time_before_next_animation -= get_delta_time() * 1000;

@@ -1,6 +1,6 @@
 #include "entities_spawner.h"
 
-SpawnedEntities spawnedEntities;
+SpawnedEntities spawned_entities;
 int x_spawn_position = 150;
 int y_spawn_position = 50;
 float time_between_spawn = 3;
@@ -9,7 +9,7 @@ float time_since_last_spawn = 0.0;
 void init_spawner() { reset_spawner(); }
 
 void reset_spawner() {
-    spawnedEntities.current_entitiesCount = 0;
+    spawned_entities.current_entities_count = 0;
     time_since_last_spawn = 0.0;
 }
 
@@ -19,30 +19,30 @@ void update_spawner() {
     // Spawn
     if (time_since_last_spawn >= time_between_spawn) {
         time_since_last_spawn = 0.0;
-        if (spawnedEntities.current_entitiesCount < MAX_ENTITIES) {
+        if (spawned_entities.current_entities_count < MAX_ENTITIES) {
             Point spawn_position = {x_spawn_position, y_spawn_position};
-            spawnedEntities.entities[spawnedEntities.current_entitiesCount] =
+            spawned_entities.entities[spawned_entities.current_entities_count] =
                 create_entity(HARMFUL_3, spawn_position);
-            spawnedEntities.current_entitiesCount++;
+            spawned_entities.current_entities_count++;
         }
     }
 }
 
 void remove_entity(int index) {
-    spawnedEntities.current_entitiesCount--;
-    for (int i = index; i < spawnedEntities.current_entitiesCount; i++) {
-        spawnedEntities.entities[i] = spawnedEntities.entities[i + 1];
+    spawned_entities.current_entities_count--;
+    for (int i = index; i < spawned_entities.current_entities_count; i++) {
+        spawned_entities.entities[i] = spawned_entities.entities[i + 1];
     }
 }
 
 void explode_entity(int index) {
-    Point position = spawnedEntities.entities[index].hit_box.origin;
+    Point position = spawned_entities.entities[index].hit_box.origin;
 
     remove_entity(index);
 
-    spawnedEntities.entities[spawnedEntities.current_entitiesCount] =
+    spawned_entities.entities[spawned_entities.current_entities_count] =
         create_entity(EXPLOSION_TYPE, position);
-    spawnedEntities.current_entitiesCount++;
+    spawned_entities.current_entities_count++;
 }
 
-SpawnedEntities *get_entities() { return &spawnedEntities; }
+SpawnedEntities *get_entities() { return &spawned_entities; }
