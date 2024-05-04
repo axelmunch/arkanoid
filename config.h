@@ -8,8 +8,9 @@
 #define SCREEN_WIDTH  600
 #define SCREEN_HEIGHT 600
 
-#define VAUS_MAX_SIZE      8
-#define ANIMATION_TIMER_MS 150
+#define VAUS_MAX_SIZE             8
+#define ANIMATION_TIMER_MS        150
+#define DIRECTION_CHANGE_TIMER_MS 500
 
 #define BALL_EFFECT 25
 
