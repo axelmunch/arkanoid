@@ -9,6 +9,7 @@
 #include <SDL.h>
 #include <stdbool.h>
 #include <stdio.h>
+#include <stdlib.h>
 
 Ball ball;
 VAUS vaus;
@@ -61,6 +62,19 @@ bool ball_collides_with_brick() {
                     return true;
                 }
             }
+        }
+    }
+    return false;
+}
+
+bool ball_collides_with_entity() {
+    SpawnedEntities *entities = get_entities();
+    for (int i = 0; i < entities->current_entities_count; i++) {
+        if (entities->entities[i].type == HARMFUL &&
+            rect_circle_collision(entities->entities[i].hit_box,
+                                  ball.hit_box)) {
+            explode_entity(i);
+            return true;
         }
     }
     return false;
@@ -134,7 +148,7 @@ void draw_level() {
 
 void draw_entities() {
     SpawnedEntities *entities = get_entities();
-    for (int i = 0; i < entities->current_entitiesCount; i++) {
+    for (int i = 0; i < entities->current_entities_count; i++) {
         draw_entity(win_surf, entities->entities[i]);
     }
 }
@@ -183,7 +197,7 @@ void update_ball() {
     const bool collide_with_vaus_x =
         rect_circle_collision(vaus.hit_box, ball.hit_box);
     if (ball_collides_with_vertical_border() || collide_with_vaus_x ||
-        ball_collides_with_brick()) {
+        ball_collides_with_brick() || ball_collides_with_entity()) {
         ball.direction = fmod(180 - ball.direction, 360);
         ball.hit_box.origin.x -= ball_movement.x;
     }
@@ -192,10 +206,11 @@ void update_ball() {
     const bool collide_with_vaus_y =
         rect_circle_collision(vaus.hit_box, ball.hit_box);
     if (ball_collides_with_horizontal_border() || collide_with_vaus_y ||
-        ball_collides_with_brick()) {
+        ball_collides_with_brick() || ball_collides_with_entity()) {
         ball.direction = fmod(360 - ball.direction, 360);
         ball.hit_box.origin.y += ball_movement.y;
     }
+
     if (collide_with_vaus_x || collide_with_vaus_y) {
         if (vaus.moving_direction == LEFT) {
             if (apply_ball_effect(ball.direction, true)) {
@@ -211,7 +226,7 @@ void update_ball() {
 
 void update_entities() {
     SpawnedEntities *entities = get_entities();
-    for (int i = 0; i < entities->current_entitiesCount; i++) {
+    for (int i = 0; i < entities->current_entities_count; i++) {
         AnimatedEntity *entity = &entities->entities[i];
 
         entity->time_before_next_animation -= get_delta_time() * 1000;
@@ -228,12 +243,32 @@ void update_entities() {
             continue;
         }
 
+        // Change direction
+        entity->time_before_direction_change -= get_delta_time() * 1000;
+        if (entity->time_before_direction_change <= 0) {
+            entity->time_before_direction_change = DIRECTION_CHANGE_TIMER_MS;
+            entity->direction =
+                fmod(entity->direction + (rand() % 90) - 45, 360);
+        }
+
         // Move
         Vector entity_movement;
         rotate_by_angle(entity->velocity * get_delta_time_target(),
                         entity->direction, &entity_movement);
-        entity->hit_box.origin.x += entity_movement.x;
-        entity->hit_box.origin.y -= entity_movement.y;
+        entity_movement.y -= get_delta_time() * 5;
+        if (entity->hit_box.origin.x + entity_movement.x > GAME_BORDER_X &&
+            entity->hit_box.origin.x + entity_movement.x +
+                    entity->hit_box.width <
+                win_surf->w - GAME_BORDER_X) {
+            entity->hit_box.origin.x += entity_movement.x;
+        } else {
+            entity->direction = fmod(entity->direction + 180, 360);
+        }
+        if (entity->hit_box.origin.y - entity_movement.y > GAME_BORDER_TOP) {
+            entity->hit_box.origin.y -= entity_movement.y;
+        } else {
+            entity->direction = fmod(entity->direction + 180, 360);
+        }
 
         if (entity->hit_box.origin.y > win_surf->h) {
             remove_entity(i);

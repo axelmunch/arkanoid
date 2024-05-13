@@ -31,6 +31,7 @@ struct AnimatedEntity {
     int max_animation;
     int current_animation;
     int time_before_next_animation;
+    int time_before_direction_change;
     double velocity;
     double direction;
     EntityType type;

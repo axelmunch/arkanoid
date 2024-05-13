@@ -25,6 +25,7 @@ AnimatedEntity create_entity(SpecificType type, Point position) {
     }
     }
     entity.time_before_next_animation = ANIMATION_TIMER_MS;
+    entity.time_before_direction_change = DIRECTION_CHANGE_TIMER_MS;
     entity.velocity = 1.5;
     entity.direction = 270; // corresponds to -90 deg
     entity.current_animation = 0;
