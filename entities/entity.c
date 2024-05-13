@@ -13,14 +13,8 @@ AnimatedEntity create_entity(SpecificType type, Point position) {
         entity = create_capsule(type);
         break;
     }
-    case HARMFUL_1: {
-        entity = create_harmful(type);
-        break;
-    }
-    case HARMFUL_2: {
-        entity = create_harmful(type);
-        break;
-    }
+    case HARMFUL_1:
+    case HARMFUL_2:
     case HARMFUL_3: {
         entity = create_harmful(type);
         break;
