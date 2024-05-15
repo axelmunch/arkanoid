@@ -100,6 +100,7 @@ void load_next() {
     load_next_level();
     init_spawner();
     Point ballPosition = {win_surf->w / 2, win_surf->h / 2};
+    reset_balls();
     add_ball(create_ball(ballPosition));
     Point vausPosition = {win_surf->w / 2, win_surf->h - 32};
     vaus = create_VAUS(vausPosition);
@@ -244,8 +245,8 @@ void update_entities() {
 
         // Collision
         Balls *balls = get_balls();
-        for (int i = 0; i < balls->current_balls_count; i++) {
-            Ball *ball = &balls->spawned_balls[i];
+        for (int j = 0; j < balls->current_balls_count; j++) {
+            Ball *ball = &balls->spawned_balls[j];
             if (rect_circle_collision(entity->hit_box, ball->hit_box) ||
                 rect_rect_collision(entity->hit_box, vaus.hit_box)) {
                 if (entity->type == HARMFUL) {
