@@ -8,8 +8,9 @@
 #define SCREEN_WIDTH  600
 #define SCREEN_HEIGHT 600
 
-#define VAUS_MAX_SIZE      8
-#define ANIMATION_TIMER_MS 150
+#define VAUS_MAX_SIZE             8
+#define ANIMATION_TIMER_MS        150
+#define DIRECTION_CHANGE_TIMER_MS 500
 
 #define BALL_EFFECT 25
 #define BALL_SPEED  7.0
@@ -22,6 +23,9 @@
 
 #define BRICK_WIDTH  32
 #define BRICK_HEIGHT 16
+
+#define GAME_BORDER_TOP 50
+#define GAME_BORDER_X   (SCREEN_WIDTH - BRICK_WIDTH * LEVEL_WIDTH) / 2
 
 #define MAX_ENTITIES 50
 

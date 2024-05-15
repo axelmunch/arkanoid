@@ -154,6 +154,12 @@ typedef enum {
     CapsuleAddition_6,
     CapsuleAddition_7,
     CapsuleAddition_8,
+    BorderSide,
+    BorderCornerLeft,
+    BorderCornerRight,
+    BorderTop,
+    BorderTopBigger,
+    BlackBackground
 } Textures;
 
 void init_texture();

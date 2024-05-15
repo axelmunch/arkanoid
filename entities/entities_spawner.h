@@ -4,14 +4,16 @@
 #include "../config.h"
 #include "../delta_time.h"
 #include "../math/math.h"
+#include "../textures.h"
 #include "entities_structures.h"
 #include "entity.h"
+#include <stdlib.h>
 
 typedef struct SpawnedEntities SpawnedEntities;
 
 struct SpawnedEntities {
     AnimatedEntity entities[MAX_ENTITIES];
-    int current_entitiesCount;
+    int current_entities_count;
 };
 
 void init_spawner();

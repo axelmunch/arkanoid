@@ -115,6 +115,42 @@ void get_texture_dimensions(Textures texture, int *pos_x, int *pos_y,
         *width = 14;
         *height = 9;
         break;
+    case BorderSide:
+        *pos_x = 32;
+        *pos_y = 80;
+        *width = 8;
+        *height = 40;
+        break;
+    case BorderCornerLeft:
+        *pos_x = 44;
+        *pos_y = 80;
+        *width = 8;
+        *height = 8;
+        break;
+    case BorderCornerRight:
+        *pos_x = 64;
+        *pos_y = 80;
+        *width = 8;
+        *height = 8;
+        break;
+    case BorderTop:
+        *pos_x = 44;
+        *pos_y = 92;
+        *width = 16;
+        *height = 8;
+        break;
+    case BorderTopBigger:
+        *pos_x = 44;
+        *pos_y = 104;
+        *width = 25;
+        *height = 8;
+        break;
+    case BlackBackground:
+        *pos_x = 76;
+        *pos_y = 80;
+        *width = 40;
+        *height = 40;
+        break;
     }
     if (texture >= BrickWhite && texture <= BrickGold6) {
         *pos_x = ((texture - BrickWhite) % 6) * 32;
