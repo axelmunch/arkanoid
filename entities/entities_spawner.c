@@ -5,10 +5,13 @@ int x_spawn_position = 200;
 int y_spawn_position = 50;
 float time_between_spawn = 3;
 float time_since_last_spawn = 0.0;
+int entity_offset;
 
 void init_spawner() { reset_spawner(); }
 
 void reset_spawner() {
+    int mock;
+    get_texture_dimensions(HARMFUL_1, &mock, &mock, &entity_offset, &mock);
     spawned_entities.current_entities_count = 0;
     time_since_last_spawn = 0.0;
 }
@@ -20,7 +23,8 @@ void update_spawner() {
     if (time_since_last_spawn >= time_between_spawn) {
         time_since_last_spawn = 0.0;
         if (spawned_entities.current_entities_count < MAX_ENTITIES) {
-            Point spawn_position = {x_spawn_position * (rand() % 2 + 1) - 16,
+            Point spawn_position = {x_spawn_position * (rand() % 2 + 1) -
+                                        entity_offset / 2,
                                     y_spawn_position};
             SpecificType entity_to_spawn = HARMFUL_1 + rand() % 3;
             spawned_entities.entities[spawned_entities.current_entities_count] =

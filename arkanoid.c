@@ -128,6 +128,74 @@ void draw_background() {
             draw_texture(win_surf, theme_texture, i, j, false);
         }
     }
+
+    // Black background
+    int black_background_width, black_background_height;
+    get_texture_dimensions(BlackBackground, &mock, &mock,
+                           &black_background_width, &black_background_height);
+    for (int i = GAME_BORDER_X - black_background_width;
+         i > -black_background_width; i -= 32) {
+        for (int j = 0; j < win_surf->h; j += black_background_height) {
+            draw_texture(win_surf, BlackBackground, i, j, false);
+        }
+    }
+    for (int i = win_surf->w - GAME_BORDER_X; i < win_surf->w;
+         i += black_background_width) {
+        for (int j = 0; j < win_surf->h; j += black_background_height) {
+            draw_texture(win_surf, BlackBackground, i, j, false);
+        }
+    }
+    for (int i = GAME_BORDER_X; i < win_surf->w - GAME_BORDER_X;
+         i += black_background_width) {
+        for (int j = GAME_BORDER_TOP - black_background_height;
+             j > -black_background_height; j -= black_background_height) {
+            draw_texture(win_surf, BlackBackground, i, j, false);
+        }
+    }
+
+    // Borders
+    int border_side_width, border_side_height;
+    get_texture_dimensions(BorderSide, &mock, &mock, &border_side_width,
+                           &border_side_height);
+    for (int i = GAME_BORDER_TOP; i < win_surf->h; i += border_side_height) {
+        draw_texture(win_surf, BorderSide, GAME_BORDER_X - border_side_width, i,
+                     false);
+        draw_texture(win_surf, BorderSide, win_surf->w - GAME_BORDER_X, i,
+                     false);
+    }
+
+    int border_top_width, border_top_height;
+    get_texture_dimensions(BorderTop, &mock, &mock, &border_top_width,
+                           &border_top_height);
+    for (int i = GAME_BORDER_X;
+         i < win_surf->w - GAME_BORDER_X - border_top_width;
+         i += border_top_width) {
+        draw_texture(win_surf, BorderTop, i,
+                     GAME_BORDER_TOP - border_top_height, false);
+    }
+    draw_texture(win_surf, BorderTop,
+                 win_surf->w - GAME_BORDER_X - border_top_width,
+                 GAME_BORDER_TOP - border_top_height, false);
+
+    int border_top_bigger_width, border_top_bigger_height;
+    get_texture_dimensions(BorderTopBigger, &mock, &mock,
+                           &border_top_bigger_width, &border_top_bigger_height);
+
+    draw_texture(win_surf, BorderTopBigger,
+                 win_surf->w / 3 - border_top_bigger_width / 2,
+                 GAME_BORDER_TOP - border_top_bigger_height, false);
+    draw_texture(win_surf, BorderTopBigger,
+                 win_surf->w / 3 * 2 - border_top_bigger_width / 2,
+                 GAME_BORDER_TOP - border_top_bigger_height, false);
+
+    int border_corner_width, border_corner_height;
+    get_texture_dimensions(BorderCornerLeft, &mock, &mock, &border_corner_width,
+                           &border_corner_height);
+    draw_texture(win_surf, BorderCornerLeft,
+                 GAME_BORDER_X - border_corner_width,
+                 GAME_BORDER_TOP - border_corner_height, false);
+    draw_texture(win_surf, BorderCornerRight, win_surf->w - GAME_BORDER_X,
+                 GAME_BORDER_TOP - border_corner_height, false);
 }
 
 void draw_level() {
