@@ -290,7 +290,7 @@ void update_balls() {
         const bool collide_with_vaus_x =
             rect_circle_collision(vaus.hit_box, ball->hit_box);
         if (ball_collides_with_vertical_border(ball) || collide_with_vaus_x ||
-            ball_collides_with_brick(ball)) {
+            ball_collides_with_brick(ball) || ball_collides_with_entity(ball)) {
             ball->direction = fmod(180 - ball->direction, 360);
             ball->hit_box.origin.x -= ball_movement.x;
         }
