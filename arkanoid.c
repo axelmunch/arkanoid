@@ -129,12 +129,6 @@ void draw_background() {
         }
     }
 
-    // Borders
-    // GAME_BORDER_TOP
-    // GAME_BORDER_X
-    draw_texture(win_surf, BlackBackground, 5, 0, false);
-    draw_texture(win_surf, BorderSide, 5, 0, false);
-
     // Black background
     int black_background_width, black_background_height;
     get_texture_dimensions(BlackBackground, &mock, &mock,
