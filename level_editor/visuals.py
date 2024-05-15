@@ -49,9 +49,9 @@ class Capsules(Enum):
     EMPTY = 0
     SLOW = 1
     CATCH = 2
-    LASER = 5
-    EXPAND = 3
-    DIVIDE = 4
+    LASER = 3
+    EXPAND = 4
+    DIVIDE = 5
     BREAK = 6
     ADDITION = 7
 
