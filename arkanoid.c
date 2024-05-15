@@ -8,27 +8,27 @@
 #include "text.h"
 #include "textures.h"
 
+#include "entities/ball.h"
 #include <SDL.h>
 #include <stdbool.h>
 #include <stdio.h>
 
-Ball ball;
 VAUS vaus;
 
 SDL_Window *pWindow = NULL;
 SDL_Surface *win_surf = NULL;
 SDL_Surface *plancheSprites = NULL;
 
-bool ball_collides_with_horizontal_border() {
-    return (ball.hit_box.origin.y < ball.hit_box.radius) ||
-           (ball.hit_box.origin.y > (win_surf->h - ball.hit_box.radius));
+bool ball_collides_with_horizontal_border(const Ball *ball) {
+    return (ball->hit_box.origin.y < ball->hit_box.radius) ||
+           (ball->hit_box.origin.y > (win_surf->h - ball->hit_box.radius));
 }
-bool ball_collides_with_vertical_border() {
-    return (ball.hit_box.origin.x < ball.hit_box.radius) ||
-           (ball.hit_box.origin.x > (win_surf->w - ball.hit_box.radius));
+bool ball_collides_with_vertical_border(const Ball *ball) {
+    return (ball->hit_box.origin.x < ball->hit_box.radius) ||
+           (ball->hit_box.origin.x > (win_surf->w - ball->hit_box.radius));
 }
 
-bool ball_collides_with_brick() {
+bool ball_collides_with_brick(const Ball *ball) {
     Level *level = get_level();
     const int offset_x = (win_surf->w - LEVEL_WIDTH * 32) / 2;
     for (int y = level->offset; y < level->height + level->offset; y++) {
@@ -40,7 +40,7 @@ bool ball_collides_with_brick() {
                 brick_hitbox.origin.y = LEVEL_OFFSET_Y + y * BRICK_HEIGHT;
                 brick_hitbox.height = BRICK_HEIGHT;
                 brick_hitbox.width = BRICK_WIDTH;
-                if (rect_circle_collision(brick_hitbox, ball.hit_box)) {
+                if (rect_circle_collision(brick_hitbox, ball->hit_box)) {
                     // Animation
                     if (brick.type == METAL || brick.type == GOLD) {
                         brick.current_animation = 1;
@@ -79,11 +79,16 @@ void move_VAUS(double distance) {
         vaus.hit_box.origin.x = win_surf->w - vaus.hit_box.width;
     }
 
-    if (rect_circle_collision(vaus.hit_box, ball.hit_box)) {
-        ball.hit_box.origin.x += distance * get_delta_time_target();
-        if (ball_collides_with_vertical_border()) {
-            ball.hit_box.origin.x -= distance * get_delta_time_target();
-            ball.hit_box.origin.y = vaus.hit_box.origin.y - ball.hit_box.radius;
+    Balls *balls = get_balls();
+    for (int i = 0; i < balls->current_balls_count; i++) {
+        Ball *ball = &balls->spawned_balls[i];
+        if (rect_circle_collision(vaus.hit_box, ball->hit_box)) {
+            ball->hit_box.origin.x += distance * get_delta_time_target();
+            if (ball_collides_with_vertical_border(ball)) {
+                ball->hit_box.origin.x -= distance * get_delta_time_target();
+                ball->hit_box.origin.y =
+                    vaus.hit_box.origin.y - ball->hit_box.radius;
+            }
         }
     }
 }
@@ -92,7 +97,7 @@ void load_next() {
     load_next_level();
     init_spawner();
     Point ballPosition = {win_surf->w / 2, win_surf->h / 2};
-    ball = create_ball(ballPosition);
+    add_ball(create_ball(ballPosition));
     Point vausPosition = {win_surf->w / 2, win_surf->h - 32};
     vaus = create_VAUS(vausPosition);
 }
@@ -152,8 +157,12 @@ void draw() {
 
     draw_vaus(win_surf, vaus);
 
-    draw_texture(win_surf, BallTexture, ball.hit_box.origin.x,
-                 ball.hit_box.origin.y, true);
+    Balls *balls = get_balls();
+    for (int i = 0; i < balls->current_balls_count; i++) {
+        Ball *ball = &balls->spawned_balls[i];
+        draw_texture(win_surf, BallTexture, ball->hit_box.origin.x,
+                     ball->hit_box.origin.y, true);
+    }
 
     draw_entities();
 
@@ -162,32 +171,36 @@ void draw() {
     draw_integer(win_surf, (int) get_current_fps(), 10 + fps_text_width, 40);
 }
 
-void update_ball() {
-    Vector ball_movement;
-    rotate_by_angle(ball.velocity * get_delta_time_target(), ball.direction,
-                    &ball_movement);
-    ball.hit_box.origin.x += ball_movement.x;
-    const bool collide_with_vaus_x =
-        rect_circle_collision(vaus.hit_box, ball.hit_box);
-    if (ball_collides_with_vertical_border() || collide_with_vaus_x ||
-        ball_collides_with_brick()) {
-        ball.direction = fmod(180 - ball.direction, 360);
-        ball.hit_box.origin.x -= ball_movement.x;
-    }
+void update_balls() {
+    Balls *balls = get_balls();
+    for (int i = 0; i < balls->current_balls_count; i++) {
+        Ball *ball = &balls->spawned_balls[i];
+        Vector ball_movement;
+        rotate_by_angle(ball->velocity * get_delta_time_target(),
+                        ball->direction, &ball_movement);
+        ball->hit_box.origin.x += ball_movement.x;
+        const bool collide_with_vaus_x =
+            rect_circle_collision(vaus.hit_box, ball->hit_box);
+        if (ball_collides_with_vertical_border(ball) || collide_with_vaus_x ||
+            ball_collides_with_brick(ball)) {
+            ball->direction = fmod(180 - ball->direction, 360);
+            ball->hit_box.origin.x -= ball_movement.x;
+        }
 
-    ball.hit_box.origin.y -= ball_movement.y;
-    const bool collide_with_vaus_y =
-        rect_circle_collision(vaus.hit_box, ball.hit_box);
-    if (ball_collides_with_horizontal_border() || collide_with_vaus_y ||
-        ball_collides_with_brick()) {
-        ball.direction = fmod(360 - ball.direction, 360);
-        ball.hit_box.origin.y += ball_movement.y;
-    }
-    if (collide_with_vaus_x || collide_with_vaus_y) {
-        if (vaus.moving_direction == LEFT) {
-            ball.direction = fmod(ball.direction + BALL_EFFECT, 360);
-        } else if (vaus.moving_direction == RIGHT) {
-            ball.direction = fmod(ball.direction - BALL_EFFECT, 360);
+        ball->hit_box.origin.y -= ball_movement.y;
+        const bool collide_with_vaus_y =
+            rect_circle_collision(vaus.hit_box, ball->hit_box);
+        if (ball_collides_with_horizontal_border(ball) || collide_with_vaus_y ||
+            ball_collides_with_brick(ball)) {
+            ball->direction = fmod(360 - ball->direction, 360);
+            ball->hit_box.origin.y += ball_movement.y;
+        }
+        if (collide_with_vaus_x || collide_with_vaus_y) {
+            if (vaus.moving_direction == LEFT) {
+                ball->direction = fmod(ball->direction + BALL_EFFECT, 360);
+            } else if (vaus.moving_direction == RIGHT) {
+                ball->direction = fmod(ball->direction - BALL_EFFECT, 360);
+            }
         }
     }
 }
@@ -224,10 +237,14 @@ void update_entities() {
         }
 
         // Collision
-        if (rect_circle_collision(entity->hit_box, ball.hit_box) ||
-            rect_rect_collision(entity->hit_box, vaus.hit_box)) {
-            if (entity->type == HARMFUL) {
-                explode_entity(i);
+        Balls *balls = get_balls();
+        for (int i = 0; i < balls->current_balls_count; i++) {
+            Ball *ball = &balls->spawned_balls[i];
+            if (rect_circle_collision(entity->hit_box, ball->hit_box) ||
+                rect_rect_collision(entity->hit_box, vaus.hit_box)) {
+                if (entity->type == HARMFUL) {
+                    explode_entity(i);
+                }
             }
         }
 
@@ -237,10 +254,13 @@ void update_entities() {
                 apply_expand_capsule(&vaus);
                 break;
             case CAPSULE_SLOW:
-                apply_slow_capsule(&ball);
+                apply_slow_capsule();
                 break;
             case CAPSULE_BREAK:
                 load_next();
+                break;
+            case CAPSULE_DIVIDE:
+                apply_divide_capsule();
                 break;
             default:
                 break;
@@ -276,7 +296,7 @@ void update_level() {
 }
 
 void update() {
-    update_ball();
+    update_balls();
     update_spawner();
     update_entities();
     update_level();
