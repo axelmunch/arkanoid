@@ -3,6 +3,8 @@
 
 #include "../math/math.h"
 
+#include <stdbool.h>
+
 typedef struct AnimatedEntity AnimatedEntity;
 typedef struct Ball Ball;
 typedef struct VAUS VAUS;

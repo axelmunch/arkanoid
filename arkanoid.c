@@ -91,6 +91,9 @@ void move_VAUS(double distance) {
             }
         }
     }
+    if (get_active_capsule() == CAPSULE_CATCH) {
+        attach_ball_to_vaus(vaus.hit_box);
+    }
 }
 
 void load_next() {
@@ -201,6 +204,9 @@ void update_balls() {
             } else if (vaus.moving_direction == RIGHT) {
                 ball->direction = fmod(ball->direction - BALL_EFFECT, 360);
             }
+            if (get_active_capsule() == CAPSULE_CATCH) {
+                catch_ball(ball);
+            }
         }
     }
 }
@@ -261,6 +267,10 @@ void update_entities() {
                 break;
             case CAPSULE_DIVIDE:
                 apply_divide_capsule();
+                break;
+            case CAPSULE_CATCH:
+                apply_capsule_catch();
+                attach_ball_to_vaus(vaus.hit_box);
                 break;
             default:
                 break;
@@ -326,6 +336,9 @@ int main(int argc, char **argv) {
         if (keys[SDL_SCANCODE_RIGHT]) {
             vaus.moving_direction = RIGHT;
             move_VAUS(10);
+        }
+        if (keys[SDL_SCANCODE_SPACE]) {
+            shoot();
         }
 
         SDL_Event event;
