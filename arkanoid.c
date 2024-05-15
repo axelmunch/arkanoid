@@ -76,7 +76,8 @@ bool ball_collides_with_brick(const Ball *ball) {
 bool ball_collides_with_entity(Ball *ball) {
     SpawnedEntities *entities = get_entities();
     for (int i = 0; i < entities->current_entities_count; i++) {
-        if (entities->entities[i].type == HARMFUL &&
+        if ((entities->entities[i].type == HARMFUL ||
+             entities->entities[i].type == MINI_VAUS) &&
             rect_circle_collision(entities->entities[i].hit_box,
                                   ball->hit_box)) {
             explode_entity(i);
@@ -354,7 +355,9 @@ void update_entities() {
         Vector entity_movement;
         rotate_by_angle(entity->velocity * get_delta_time_target(),
                         entity->direction, &entity_movement);
-        entity_movement.y -= get_delta_time() * 5;
+        if (entity->type == HARMFUL) {
+            entity_movement.y -= get_delta_time() * 5;
+        }
         if ((entity->hit_box.origin.x + entity_movement.x > GAME_BORDER_X &&
              entity->hit_box.origin.x + entity_movement.x +
                      entity->hit_box.width <
@@ -377,15 +380,9 @@ void update_entities() {
         }
 
         // Collision
-        Balls *balls = get_balls();
-        for (int j = 0; j < balls->current_balls_count; j++) {
-            Ball *ball = &balls->spawned_balls[j];
-            if (rect_circle_collision(entity->hit_box, ball->hit_box) ||
-                rect_rect_collision(entity->hit_box, vaus.hit_box)) {
-                if (entity->type == HARMFUL) {
-                    explode_entity(i);
-                }
-            }
+        if (entity->type == HARMFUL &&
+            rect_rect_collision(entity->hit_box, vaus.hit_box)) {
+            explode_entity(i);
         }
 
         // Capsules

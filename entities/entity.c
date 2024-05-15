@@ -19,22 +19,26 @@ AnimatedEntity create_entity(SpecificType type, Point position) {
         entity = create_harmful(type);
         break;
     }
-    case LASER_TYPE: {
-        entity.type = LASER;
-        entity.hit_box.width = 14;
-        entity.hit_box.height = 20;
-        break;
-    }
+    case LASER_TYPE:
     case LASER_EXPLOSION: {
         entity.type = LASER;
-        entity.hit_box.width = 14;
-        entity.hit_box.height = 20;
+        int mock, width, height;
+        get_texture_dimensions(EntityLaser_1, &mock, &mock, &width, &height);
+        entity.hit_box.width = width;
+        entity.hit_box.height = height;
         break;
     }
     case EXPLOSION_TYPE: {
         entity = create_explosion(position);
         break;
     }
+    case MINI_VAUS_TYPE:
+        entity.type = MINI_VAUS;
+        int mock, width, height;
+        get_texture_dimensions(EntityMiniVaus, &mock, &mock, &width, &height);
+        entity.hit_box.width = width;
+        entity.hit_box.height = height;
+        break;
     }
     entity.time_before_next_animation = ANIMATION_TIMER_MS;
     entity.time_before_direction_change = DIRECTION_CHANGE_TIMER_MS;

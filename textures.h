@@ -98,6 +98,7 @@ typedef enum {
     Explosion_4,
     Explosion_5,
     Explosion_6,
+    EntityMiniVaus,
     CapsuleSlow_1,
     CapsuleSlow_2,
     CapsuleSlow_3,

@@ -29,8 +29,8 @@ void update_spawner() {
         time_since_last_spawn = 0.0;
         if (spawned_entities.current_entities_count < MAX_ENTITIES) {
             const Point spawn_position = {x_spawn_position * (rand() % 2 + 1) -
-                                        entity_offset / 2,
-                                    y_spawn_position};
+                                              entity_offset / 2,
+                                          y_spawn_position};
             SpecificType entity_to_spawn = HARMFUL_1 + rand() % 3;
             add_entity(create_entity(entity_to_spawn, spawn_position));
         }

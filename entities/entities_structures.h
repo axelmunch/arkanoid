@@ -8,7 +8,7 @@
 typedef struct AnimatedEntity AnimatedEntity;
 typedef struct Ball Ball;
 typedef struct VAUS VAUS;
-typedef enum { HARMFUL, CAPSULE, LASER, EXPLOSION } EntityType;
+typedef enum { HARMFUL, CAPSULE, LASER, EXPLOSION, MINI_VAUS } EntityType;
 typedef enum {
     CAPSULE_EMPTY,
     CAPSULE_SLOW,
@@ -23,7 +23,8 @@ typedef enum {
     HARMFUL_3,
     LASER_TYPE,
     LASER_EXPLOSION,
-    EXPLOSION_TYPE
+    EXPLOSION_TYPE,
+    MINI_VAUS_TYPE
 } SpecificType;
 typedef enum {
     LEFT,

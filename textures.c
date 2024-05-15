@@ -115,6 +115,12 @@ void get_texture_dimensions(Textures texture, int *pos_x, int *pos_y,
         *width = 14;
         *height = 9;
         break;
+    case EntityMiniVaus:
+        *pos_x = 384;
+        *pos_y = 123;
+        *width = 32;
+        *height = 5;
+        break;
     case BorderSide:
         *pos_x = 32;
         *pos_y = 80;
@@ -286,6 +292,9 @@ void draw_entity(SDL_Surface *surface, AnimatedEntity entity) {
         break;
     case EXPLOSION:
         entityTexture = Explosion_1 + entity.current_animation;
+        break;
+    case MINI_VAUS:
+        entityTexture = EntityMiniVaus;
         break;
     }
     draw_texture(surface, entityTexture, (int) entity.hit_box.origin.x,
