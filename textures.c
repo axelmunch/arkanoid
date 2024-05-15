@@ -117,9 +117,9 @@ void get_texture_dimensions(Textures texture, int *pos_x, int *pos_y,
         break;
     case EntityMiniVaus:
         *pos_x = 384;
-        *pos_y = 123;
+        *pos_y = 120;
         *width = 32;
-        *height = 5;
+        *height = 8;
         break;
     case BorderSide:
         *pos_x = 32;
