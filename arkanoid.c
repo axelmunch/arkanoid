@@ -340,11 +340,14 @@ void update_entities() {
         }
 
         // Change direction
-        entity->time_before_direction_change -= get_delta_time() * 1000;
-        if (entity->time_before_direction_change <= 0) {
-            entity->time_before_direction_change = DIRECTION_CHANGE_TIMER_MS;
-            entity->direction =
-                fmod(entity->direction + (rand() % 90) - 45, 360);
+        if (entity->type == HARMFUL) {
+            entity->time_before_direction_change -= get_delta_time() * 1000;
+            if (entity->time_before_direction_change <= 0) {
+                entity->time_before_direction_change =
+                    DIRECTION_CHANGE_TIMER_MS;
+                entity->direction =
+                    fmod(entity->direction + (rand() % 90) - 45, 360);
+            }
         }
 
         // Move
@@ -352,15 +355,17 @@ void update_entities() {
         rotate_by_angle(entity->velocity * get_delta_time_target(),
                         entity->direction, &entity_movement);
         entity_movement.y -= get_delta_time() * 5;
-        if (entity->hit_box.origin.x + entity_movement.x > GAME_BORDER_X &&
-            entity->hit_box.origin.x + entity_movement.x +
-                    entity->hit_box.width <
-                win_surf->w - GAME_BORDER_X) {
+        if ((entity->hit_box.origin.x + entity_movement.x > GAME_BORDER_X &&
+             entity->hit_box.origin.x + entity_movement.x +
+                     entity->hit_box.width <
+                 win_surf->w - GAME_BORDER_X) ||
+            entity->type == CAPSULE) {
             entity->hit_box.origin.x += entity_movement.x;
         } else {
             entity->direction = fmod(entity->direction + 180, 360);
         }
-        if (entity->hit_box.origin.y - entity_movement.y > GAME_BORDER_TOP) {
+        if (entity->hit_box.origin.y - entity_movement.y > GAME_BORDER_TOP ||
+            entity->type == CAPSULE) {
             entity->hit_box.origin.y -= entity_movement.y;
         } else {
             entity->direction = fmod(entity->direction + 180, 360);
@@ -383,6 +388,7 @@ void update_entities() {
             }
         }
 
+        // Capsules
         if (rect_rect_collision(entity->hit_box, vaus.hit_box)) {
             switch (entity->specific_type) {
             case CAPSULE_EXPAND:
