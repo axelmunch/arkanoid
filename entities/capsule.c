@@ -10,15 +10,18 @@ void apply_expand_capsule(VAUS *vaus) {
     update_active_capsule(CAPSULE_EXPAND);
 }
 
-void apply_slow_capsule() {
+void update_balls_velocity(float velocity) {
     Balls *balls = get_balls();
     for (int i = 0; i < balls->current_balls_count; i++) {
         Ball *ball = &balls->spawned_balls[i];
-        if (ball->velocity / 2 > 2) {
-            ball->velocity /= 2;
-        };
+        if (velocity > 2.0) {
+            ball->velocity = velocity;
+        }
     }
+}
+void apply_slow_capsule() {
     update_active_capsule(CAPSULE_SLOW);
+    update_balls_velocity(BALL_SPEED / 2);
 }
 void apply_divide_capsule() {
     Ball originBall = get_balls()->spawned_balls[0];
@@ -52,6 +55,7 @@ void update_active_capsule(SpecificType capsule_type) {
     bool capsule_twice = (active_capsule == capsule_type);
     if (!capsule_twice) {
         shoot();
+        update_balls_velocity(BALL_SPEED);
     }
     active_capsule = capsule_type;
 }

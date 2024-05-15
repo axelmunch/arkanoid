@@ -12,6 +12,7 @@
 #define ANIMATION_TIMER_MS 150
 
 #define BALL_EFFECT 25
+#define BALL_SPEED  7.0
 
 #define MAX_LEVELS 5
 
