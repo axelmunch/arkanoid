@@ -4,6 +4,7 @@
 #include "../config.h"
 #include "../delta_time.h"
 #include "../math/math.h"
+#include "../textures.h"
 #include "entities_structures.h"
 #include "entity.h"
 #include <stdlib.h>
