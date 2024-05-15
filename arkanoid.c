@@ -270,9 +270,11 @@ void update_entities() {
                 apply_divide_capsule();
                 break;
             case CAPSULE_CATCH:
-                apply_capsule_catch();
+                update_active_capsule(CAPSULE_CATCH);
                 attach_ball_to_vaus(vaus.hit_box);
                 break;
+            case CAPSULE_LASER:
+                update_active_capsule(CAPSULE_LASER);
             default:
                 break;
             }
@@ -339,7 +341,13 @@ int main(int argc, char **argv) {
             move_VAUS(10);
         }
         if (keys[SDL_SCANCODE_SPACE]) {
-            shoot();
+            int mock, laser_height;
+            get_texture_dimensions(EntityLaser_1, &mock, &mock, &mock,
+                                   &laser_height);
+            const Point shooting_origin = {
+                vaus.hit_box.origin.x + vaus.hit_box.width / 2,
+                vaus.hit_box.origin.y - laser_height};
+            shoot(shooting_origin);
         }
 
         SDL_Event event;

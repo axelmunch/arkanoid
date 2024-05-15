@@ -1,5 +1,6 @@
 #include "capsule.h"
 
+#include "entities_spawner.h"
 #include "entity.h"
 
 SpecificType active_capsule = CAPSULE_EMPTY;
@@ -35,7 +36,6 @@ void apply_divide_capsule() {
     add_ball(ball_two);
     update_active_capsule(CAPSULE_DIVIDE);
 }
-void apply_capsule_catch() { update_active_capsule(CAPSULE_CATCH); }
 
 void catch_ball(Ball *ball) {
     if (!catched_ball.catched) {
@@ -45,16 +45,29 @@ void catch_ball(Ball *ball) {
         catched_ball.ball = ball;
     }
 }
-void shoot() {
-    if (active_capsule == CAPSULE_CATCH && catched_ball.catched) {
+void shoot_ball() {
+    if (catched_ball.catched) {
         catched_ball.ball->velocity = 7.0;
         catched_ball.catched = false;
+    }
+}
+void shoot_laser(const Point shoot_origin) {
+    AnimatedEntity laser = create_entity(LASER_TYPE, shoot_origin);
+    laser.velocity = 15.0;
+    laser.direction = 90;
+    add_entity(laser);
+}
+void shoot(const Point shoot_origin) {
+    if (active_capsule == CAPSULE_CATCH) {
+        shoot_ball();
+    } else if (active_capsule == CAPSULE_LASER) {
+        shoot_laser(shoot_origin);
     }
 }
 void update_active_capsule(SpecificType capsule_type) {
     bool capsule_twice = (active_capsule == capsule_type);
     if (!capsule_twice) {
-        shoot();
+        shoot_ball();
         update_balls_velocity(BALL_SPEED);
     }
     active_capsule = capsule_type;
