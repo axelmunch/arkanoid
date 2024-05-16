@@ -123,8 +123,9 @@ void draw_background() {
     int mock, level_theme_width, level_theme_height;
     get_texture_dimensions(theme_texture, &mock, &mock, &level_theme_width,
                            &level_theme_height);
-    for (int j = 0; j < win_surf->h; j += level_theme_height) {
-        for (int i = 0; i < win_surf->w; i += level_theme_width) {
+    for (int j = GAME_BORDER_TOP; j < win_surf->h; j += level_theme_height) {
+        for (int i = GAME_BORDER_X; i < win_surf->w - GAME_BORDER_X;
+             i += level_theme_width) {
             draw_texture(win_surf, theme_texture, i, j, false);
         }
     }
