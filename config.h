@@ -28,4 +28,6 @@
 
 #define MAX_ENTITIES 50
 
+#define DISPLAY_SHADOWS true
+
 #endif // ARKANOID_CONFIG_H

@@ -178,16 +178,78 @@ void get_texture_dimensions(Textures texture, int *pos_x, int *pos_y,
     }
 }
 
+Uint32 get_pixel(SDL_Surface *surface, int x, int y) {
+    if (x < 0 || y < 0 || x >= surface->w || y >= surface->h) {
+        return 0;
+    }
+
+    Uint32 *pixels = (Uint32 *) surface->pixels;
+    // return pixels[y * surface->w + x];
+    return pixels[y * surface->pitch / sizeof(Uint32) + x];
+}
+
+bool is_transparent_texture(int x, int y) {
+    Uint32 pixel = get_pixel(texture_bitmap, x, y);
+
+    // Color key value
+    Uint32 colorkey = SDL_MapRGB(texture_bitmap->format, 0, 0, 0);
+
+    if (pixel == colorkey) {
+        return true;
+    } else {
+        return false;
+    }
+}
+
+void put_pixel(SDL_Surface *surface, int x, int y, Uint32 pixel) {
+    if (x < 0 || y < 0 || x >= surface->w || y >= surface->h) {
+        return;
+    }
+
+    Uint32 *pixels = (Uint32 *) surface->pixels;
+    // pixels[y * surface->w + x] = pixel;
+    pixels[y * surface->pitch / sizeof(Uint32) + x] = pixel;
+}
+
 void draw_texture(SDL_Surface *surface, Textures texture, int x, int y,
                   bool centered) {
+    int shadow_offset = 5;
+    float shadow_opacity = 0.6;
+
     int pos_x, pos_y, width, height;
     get_texture_dimensions(texture, &pos_x, &pos_y, &width, &height);
 
+    // Define source and destination rectangles for texture
     SDL_Rect src = {pos_x, pos_y, width, height};
     SDL_Rect dst = {x, y, 0, 0};
     if (centered) {
         dst.x -= width / 2;
         dst.y -= height / 2;
+    }
+
+    // Shadow
+    if (DISPLAY_SHADOWS &&
+        (texture != BlackBackground && texture != BorderCornerLeft &&
+         texture != BorderCornerRight && texture != BorderSide &&
+         texture != BorderTop && texture != BorderTopBigger &&
+         (texture < BackgroundTheme1 || texture > BackgroundTheme6))) {
+        for (int i = 0; i < width; i++) {
+            for (int j = 0; j < height; j++) {
+                if (!is_transparent_texture(pos_x + i, pos_y + j)) {
+                    // Surface color
+                    Uint32 pixel = get_pixel(surface, x + i + shadow_offset,
+                                             y + j + shadow_offset);
+                    Uint8 r, g, b;
+                    SDL_GetRGB(pixel, surface->format, &r, &g, &b);
+                    r = (int) (r * shadow_opacity);
+                    g = (int) (g * shadow_opacity);
+                    b = (int) (b * shadow_opacity);
+                    pixel = SDL_MapRGB(surface->format, r, g, b);
+                    put_pixel(surface, x + i + shadow_offset,
+                              y + j + shadow_offset, pixel);
+                }
+            }
+        }
     }
 
     SDL_BlitSurface(texture_bitmap, &src, surface, &dst);

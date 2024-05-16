@@ -1,6 +1,7 @@
 #ifndef ARKANOID_TEXTURES_H
 #define ARKANOID_TEXTURES_H
 
+#include "config.h"
 #include "entities/entities_structures.h"
 #include "levels.h"
 #include "math/math.h"
