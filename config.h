@@ -11,6 +11,7 @@
 #define VAUS_MAX_SIZE             8
 #define ANIMATION_TIMER_MS        150
 #define DIRECTION_CHANGE_TIMER_MS 500
+#define LASER_RELOAD_TIME_MS      1200
 
 #define BALL_EFFECT 25
 #define BALL_SPEED  7.0

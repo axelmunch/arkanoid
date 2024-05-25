@@ -11,25 +11,38 @@ AnimatedEntity create_entity(SpecificType type, Point position) {
     case CAPSULE_BREAK:
     case CAPSULE_ADDITION: {
         entity = create_capsule(type, position);
+        entity.velocity = 1.5;
         break;
     }
     case HARMFUL_1:
     case HARMFUL_2:
     case HARMFUL_3: {
         entity = create_harmful(type);
+        entity.velocity = 1.5;
         break;
     }
-    case LASER_TYPE:
+    case LASER_TYPE: {
+        entity.type = LASER;
+        int mock, width, height;
+        get_texture_dimensions(EntityLaser_1, &mock, &mock, &width, &height);
+        entity.hit_box.width = width;
+        entity.hit_box.height = height;
+        entity.velocity = 1.5;
+        break;
+    }
     case LASER_EXPLOSION: {
         entity.type = LASER;
         int mock, width, height;
         get_texture_dimensions(EntityLaser_1, &mock, &mock, &width, &height);
         entity.hit_box.width = width;
         entity.hit_box.height = height;
+        entity.velocity = 0;
+        entity.max_animation = 2;
         break;
     }
     case EXPLOSION_TYPE: {
         entity = create_explosion(position);
+        entity.velocity = 1.5;
         break;
     }
     case MINI_VAUS_TYPE:
@@ -38,11 +51,11 @@ AnimatedEntity create_entity(SpecificType type, Point position) {
         get_texture_dimensions(EntityMiniVaus, &mock, &mock, &width, &height);
         entity.hit_box.width = width;
         entity.hit_box.height = height;
+        entity.velocity = 0;
         break;
     }
     entity.time_before_next_animation = ANIMATION_TIMER_MS;
     entity.time_before_direction_change = DIRECTION_CHANGE_TIMER_MS;
-    entity.velocity = 1.5;
     entity.direction = 270; // corresponds to -90 deg
     entity.current_animation = 0;
     entity.specific_type = type;

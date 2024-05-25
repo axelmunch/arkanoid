@@ -73,11 +73,53 @@ bool ball_collides_with_brick(const Ball *ball) {
     return false;
 }
 
+bool laser_collides_with_brick(const AnimatedEntity *entity) {
+    Level *level = get_level();
+    const int offset_x = (win_surf->w - LEVEL_WIDTH * 32) / 2;
+    for (int y = level->offset; y < level->height + level->offset; y++) {
+        for (int x = 0; x < LEVEL_WIDTH; x++) {
+            Brick brick = level->bricks[y][x];
+            if (brick.type != EMPTY) {
+                Rectangle brick_hitbox;
+                brick_hitbox.origin.x = offset_x + x * BRICK_WIDTH;
+                brick_hitbox.origin.y = LEVEL_OFFSET_Y + y * BRICK_HEIGHT;
+                brick_hitbox.height = BRICK_HEIGHT;
+                brick_hitbox.width = BRICK_WIDTH;
+                if (rect_rect_collision(brick_hitbox, entity->hit_box)) {
+                    // Animation
+                    if (brick.type == METAL || brick.type == GOLD) {
+                        brick.current_animation = 1;
+                        brick.time_before_next_animation = ANIMATION_TIMER_MS;
+                        level->bricks[y][x] = brick;
+                    }
+
+                    if (brick.type != GOLD) {
+                        brick.durability--;
+                    }
+
+                    if (brick.durability == 0) {
+                        if (brick.capsule_reward != CAPSULE_EMPTY) {
+                            add_entity(create_entity(brick.capsule_reward,
+                                                     brick_hitbox.origin));
+                        }
+                        level->bricks[y][x] =
+                            create_brick(EMPTY, CAPSULE_EMPTY);
+                    } else {
+                        level->bricks[y][x] = brick;
+                    }
+
+                    return true;
+                }
+            }
+        }
+    }
+    return false;
+}
+
 bool ball_collides_with_entity(Ball *ball) {
     SpawnedEntities *entities = get_entities();
     for (int i = 0; i < entities->current_entities_count; i++) {
-        if ((entities->entities[i].type == HARMFUL ||
-             entities->entities[i].type == MINI_VAUS) &&
+        if (entities->entities[i].type == HARMFUL &&
             rect_circle_collision(entities->entities[i].hit_box,
                                   ball->hit_box)) {
             explode_entity(i);
@@ -333,7 +375,8 @@ void update_entities() {
                 fmod(entity->current_animation + 1, entity->max_animation);
         }
 
-        if (entity->type == EXPLOSION) {
+        if (entity->type == EXPLOSION ||
+            entity->specific_type == LASER_EXPLOSION) {
             if (entity->current_animation == entity->max_animation - 1) {
                 remove_entity(i);
             }
@@ -371,6 +414,10 @@ void update_entities() {
             entity->type == CAPSULE) {
             entity->hit_box.origin.y -= entity_movement.y;
         } else {
+            if (entity->type == LASER) {
+                remove_entity(i);
+                continue;
+            }
             entity->direction = fmod(entity->direction + 180, 360);
         }
 
@@ -383,6 +430,13 @@ void update_entities() {
         if (entity->type == HARMFUL &&
             rect_rect_collision(entity->hit_box, vaus.hit_box)) {
             explode_entity(i);
+        }
+        if (entity->type == LASER) {
+            if (laser_collides_with_brick(entity)) {
+                add_entity(
+                    create_entity(LASER_EXPLOSION, entity->hit_box.origin));
+                remove_entity(i);
+            }
         }
 
         // Capsules
@@ -405,7 +459,11 @@ void update_entities() {
                 attach_ball_to_vaus(vaus.hit_box);
                 break;
             case CAPSULE_LASER:
-                update_active_capsule(CAPSULE_LASER);
+                apply_laser_capsule();
+                break;
+            case CAPSULE_ADDITION:
+                apply_addition_capsule();
+                break;
             default:
                 break;
             }
@@ -440,6 +498,7 @@ void update_level() {
 }
 
 void update() {
+    update_laser_reload_time();
     update_balls();
     update_spawner();
     update_entities();
