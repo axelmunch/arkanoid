@@ -21,5 +21,6 @@ void shoot_ball();
 void update_active_capsule(SpecificType capsule_type);
 void update_laser_reload_time();
 void attach_ball_to_vaus(Rectangle vaus_hitbox);
+void reset_capsules();
 SpecificType get_active_capsule();
 #endif // CAPSULE_H

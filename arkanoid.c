@@ -161,6 +161,7 @@ void load_next() {
     init_spawner();
     Point ballPosition = {win_surf->w / 2, win_surf->h / 2};
     reset_balls();
+    reset_capsules();
     add_ball(create_ball(ballPosition));
     Point vausPosition = {win_surf->w / 2, win_surf->h - 32};
     vaus = create_VAUS(vausPosition);
@@ -298,6 +299,10 @@ void draw() {
 
     draw_entities();
 
+    Point active_capsule_point = {500, 500};
+    AnimatedEntity active_capsule_display =
+        create_capsule(get_active_capsule(), active_capsule_point);
+    draw_entity(win_surf, active_capsule_display);
     draw_text(win_surf, "Arkanoid", 10, 10);
     int fps_text_width = draw_text(win_surf, "FPS: ", 10, 40);
     draw_integer(win_surf, (int) get_current_fps(), 10 + fps_text_width, 40);

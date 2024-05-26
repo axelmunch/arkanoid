@@ -107,6 +107,12 @@ void attach_ball_to_vaus(const Rectangle vaus_hitbox) {
         catched_ball.ball->hit_box.origin = ball_position;
     }
 }
+void reset_capsules() {
+    active_capsule = CAPSULE_EMPTY;
+    spawned_mini_vaus = 0;
+    time_before_next_shoot = 0.0;
+    catched_ball.catched = false;
+}
 
 void update_laser_reload_time() {
     if (get_active_capsule() == CAPSULE_LASER) {
