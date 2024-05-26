@@ -4,6 +4,7 @@
 #include "entities/entity.h"
 #include "levels.h"
 #include "math/collisions.h"
+#include "score.h"
 #include "text.h"
 #include "textures.h"
 #include <SDL.h>
@@ -53,6 +54,7 @@ bool ball_collides_with_brick() {
                     }
 
                     if (brick.durability == 0) {
+                        break_brick(brick.type);
                         level->bricks[y][x] =
                             create_brick(EMPTY, CAPSULE_EMPTY);
                     } else {
@@ -74,6 +76,7 @@ bool ball_collides_with_entity() {
             rect_circle_collision(entities->entities[i].hit_box,
                                   ball.hit_box)) {
             explode_entity(i);
+            add_score(150);
             return true;
         }
     }
@@ -221,6 +224,12 @@ void draw_entities() {
     }
 }
 
+void draw_score() {
+    draw_text(win_surf, "Score", 300, 10);
+    int score = get_score();
+    draw_integer(win_surf, score, 300, 40);
+}
+
 void draw() {
     draw_background();
 
@@ -232,6 +241,8 @@ void draw() {
                  ball.hit_box.origin.y, true);
 
     draw_entities();
+
+    draw_score();
 
     draw_text(win_surf, "Arkanoid", 10, 10);
     int fps_text_width = draw_text(win_surf, "FPS: ", 10, 40);
@@ -346,8 +357,8 @@ void update_entities() {
         // Collision
         if (rect_circle_collision(entity->hit_box, ball.hit_box) ||
             rect_rect_collision(entity->hit_box, vaus.hit_box)) {
-
             explode_entity(i);
+            add_score(150);
         }
     }
 }
