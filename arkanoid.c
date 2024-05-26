@@ -225,9 +225,10 @@ void draw_entities() {
 }
 
 void draw_score() {
-    draw_text(win_surf, "Score", 300, 10);
-    int score = get_score();
-    draw_integer(win_surf, score, 300, 40);
+    int score_text_width =
+        draw_text(win_surf, "Score: ", GAME_BORDER_X - 10, 5);
+    draw_integer(win_surf, get_score(), GAME_BORDER_X - 10 + score_text_width,
+                 5);
 }
 
 void draw() {
@@ -244,9 +245,8 @@ void draw() {
 
     draw_score();
 
-    draw_text(win_surf, "Arkanoid", 10, 10);
-    int fps_text_width = draw_text(win_surf, "FPS: ", 10, 40);
-    draw_integer(win_surf, (int) get_current_fps(), 10 + fps_text_width, 40);
+    draw_text(win_surf, "FPS", 10, win_surf->h - 74);
+    draw_integer(win_surf, (int) get_current_fps(), 10, win_surf->h - 42);
 }
 
 bool apply_ball_effect(double ball_direction, bool add_effect) {
