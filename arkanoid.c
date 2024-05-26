@@ -16,7 +16,6 @@ VAUS vaus;
 
 SDL_Window *pWindow = NULL;
 SDL_Surface *win_surf = NULL;
-SDL_Surface *plancheSprites = NULL;
 
 bool ball_collides_with_horizontal_border() {
     return (ball.hit_box.origin.y < ball.hit_box.radius + GAME_BORDER_TOP) ||
@@ -104,8 +103,6 @@ void init() {
                                SDL_WINDOWPOS_UNDEFINED, SCREEN_WIDTH,
                                SCREEN_HEIGHT, SDL_WINDOW_SHOWN);
     win_surf = SDL_GetWindowSurface(pWindow);
-    plancheSprites = SDL_LoadBMP("./sprites.bmp");
-    SDL_SetColorKey(plancheSprites, true, 0);
 
     load_next_level();
     init_spawner();
