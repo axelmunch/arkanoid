@@ -150,19 +150,11 @@ void draw_background() {
             draw_texture(win_surf, BlackBackground, i, j, false);
         }
     }
+}
 
-    // Borders
-    int border_side_width, border_side_height;
-    get_texture_dimensions(BorderSide, &mock, &mock, &border_side_width,
-                           &border_side_height);
-    for (int i = GAME_BORDER_TOP; i < win_surf->h; i += border_side_height) {
-        draw_texture(win_surf, BorderSide, GAME_BORDER_X - border_side_width, i,
-                     false);
-        draw_texture(win_surf, BorderSide, win_surf->w - GAME_BORDER_X, i,
-                     false);
-    }
-
-    int border_top_width, border_top_height;
+void draw_borders_1() {
+    // Top
+    int mock, border_top_width, border_top_height;
     get_texture_dimensions(BorderTop, &mock, &mock, &border_top_width,
                            &border_top_height);
     for (int i = GAME_BORDER_X;
@@ -175,6 +167,7 @@ void draw_background() {
                  win_surf->w - GAME_BORDER_X - border_top_width,
                  GAME_BORDER_TOP - border_top_height, false);
 
+    // Top bigger
     int border_top_bigger_width, border_top_bigger_height;
     get_texture_dimensions(BorderTopBigger, &mock, &mock,
                            &border_top_bigger_width, &border_top_bigger_height);
@@ -186,6 +179,7 @@ void draw_background() {
                  win_surf->w / 3 * 2 - border_top_bigger_width / 2,
                  GAME_BORDER_TOP - border_top_bigger_height, false);
 
+    // Top corners
     int border_corner_width, border_corner_height;
     get_texture_dimensions(BorderCornerLeft, &mock, &mock, &border_corner_width,
                            &border_corner_height);
@@ -194,6 +188,26 @@ void draw_background() {
                  GAME_BORDER_TOP - border_corner_height, false);
     draw_texture(win_surf, BorderCornerRight, win_surf->w - GAME_BORDER_X,
                  GAME_BORDER_TOP - border_corner_height, false);
+
+    int border_side_width, border_side_height;
+    get_texture_dimensions(BorderSide, &mock, &mock, &border_side_width,
+                           &border_side_height);
+    for (int i = GAME_BORDER_TOP; i < win_surf->h; i += border_side_height) {
+        // Left
+        draw_texture(win_surf, BorderSide, GAME_BORDER_X - border_side_width, i,
+                     false);
+    }
+}
+
+void draw_borders_2() {
+    int mock, border_side_width, border_side_height;
+    get_texture_dimensions(BorderSide, &mock, &mock, &border_side_width,
+                           &border_side_height);
+    for (int i = GAME_BORDER_TOP; i < win_surf->h; i += border_side_height) {
+        // Right
+        draw_texture(win_surf, BorderSide, win_surf->w - GAME_BORDER_X, i,
+                     false);
+    }
 }
 
 void draw_level() {
@@ -222,14 +236,18 @@ void draw_entities() {
 void draw() {
     draw_background();
 
+    draw_borders_1();
+
     draw_level();
 
-    draw_vaus(win_surf, vaus);
+    draw_entities();
 
     draw_texture(win_surf, BallTexture, ball.hit_box.origin.x,
                  ball.hit_box.origin.y, true);
 
-    draw_entities();
+    draw_vaus(win_surf, vaus);
+
+    draw_borders_2();
 
     draw_text(win_surf, "Arkanoid", 10, 10);
     int fps_text_width = draw_text(win_surf, "FPS: ", 10, 40);
