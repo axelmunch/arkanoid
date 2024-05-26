@@ -25,6 +25,8 @@ Brick create_brick(BrickType type, SpecificType capsule_reward) {
     return brick;
 }
 
+void restart_level_1() { current_level = 0; }
+
 void reset_level() {
     level.theme = THEME_1;
     level.offset = 0;
@@ -35,6 +37,7 @@ void reset_level() {
         }
     }
 }
+
 void load_next_level() {
     current_level++;
     if (current_level <= MAX_LEVELS) {
