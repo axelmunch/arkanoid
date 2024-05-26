@@ -561,6 +561,7 @@ int main(int argc, char **argv) {
                     vaus.hit_box.origin.y - laser_height};
                 shoot(shooting_origin);
             } else {
+                // TODO Reset the score
                 restart_level_1();
                 load_next();
             }
