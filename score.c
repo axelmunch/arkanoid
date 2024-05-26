@@ -1,10 +1,32 @@
 #include "score.h"
 
+char *high_score_file = "high_score.ark";
+
 int score;
+int high_score;
 
-void reset_score() { score = 0; }
+void init_score() {
+    score = 0;
+    load_high_score();
+}
 
-void add_score(int value) { score += value; }
+void reset_score() {
+    if (score >= high_score) {
+        save_high_score();
+    }
+    score = 0;
+}
+
+void add_score(int value) {
+    score += value;
+    update_score();
+}
+
+void update_score() {
+    if (score > high_score) {
+        high_score = score;
+    }
+}
 
 void break_brick(BrickType brick_type) {
     switch (brick_type) {
@@ -42,3 +64,25 @@ void break_brick(BrickType brick_type) {
 }
 
 int get_score() { return score; }
+
+int get_high_score() { return high_score; }
+
+void load_high_score() {
+    FILE *file = fopen(high_score_file, "r");
+    if (file == NULL) {
+        high_score = 0;
+        return;
+    }
+    fscanf(file, "%d", &high_score);
+    fclose(file);
+}
+
+void save_high_score() {
+    FILE *file = fopen(high_score_file, "w");
+    if (file == NULL) {
+        fprintf(stderr, "Error: Could not open file %s\n", high_score_file);
+        exit(1);
+    }
+    fprintf(file, "%d", high_score);
+    fclose(file);
+}

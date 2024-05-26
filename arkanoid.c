@@ -19,6 +19,9 @@ SDL_Window *pWindow = NULL;
 SDL_Surface *win_surf = NULL;
 SDL_Surface *plancheSprites = NULL;
 
+int high_score_text_width = 0;
+int high_score_value_text_width = 0;
+
 bool ball_collides_with_horizontal_border() {
     return (ball.hit_box.origin.y < ball.hit_box.radius + GAME_BORDER_TOP) ||
            (ball.hit_box.origin.y > (win_surf->h - ball.hit_box.radius));
@@ -110,6 +113,7 @@ void init() {
     plancheSprites = SDL_LoadBMP("./sprites.bmp");
     SDL_SetColorKey(plancheSprites, true, 0);
 
+    init_score();
     load_next_level();
     init_spawner();
 
@@ -225,10 +229,15 @@ void draw_entities() {
 }
 
 void draw_score() {
-    int score_text_width =
-        draw_text(win_surf, "Score: ", GAME_BORDER_X - 10, 5);
-    draw_integer(win_surf, get_score(), GAME_BORDER_X - 10 + score_text_width,
-                 5);
+    int score_text_width = draw_text(win_surf, "SCORE ", 10, 5);
+    draw_integer(win_surf, get_score(), 10 + score_text_width, 5);
+    high_score_text_width = draw_text(
+        win_surf, "HIGH SCORE ",
+        win_surf->w - 10 - high_score_value_text_width - high_score_text_width,
+        5);
+    high_score_value_text_width =
+        draw_integer(win_surf, get_high_score(),
+                     win_surf->w - 10 - high_score_value_text_width, 5);
 }
 
 void draw() {
