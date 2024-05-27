@@ -9,7 +9,8 @@ AnimatedEntity create_entity(SpecificType type, Point position) {
     case CAPSULE_DIVIDE:
     case CAPSULE_LASER:
     case CAPSULE_BREAK:
-    case CAPSULE_ADDITION: {
+    case CAPSULE_ADDITION:
+    case CAPSULE_EMPTY: {
         entity = create_capsule(type, position);
         entity.velocity = 1.5;
         break;

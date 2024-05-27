@@ -342,7 +342,7 @@ void draw() {
     draw_integer(win_surf, (int) get_current_fps(), 10, win_surf->h - 42);
     Point active_capsule_point = {GAME_BORDER_X / 2 - 20, 40};
     AnimatedEntity active_capsule_display =
-        create_capsule(get_active_capsule(), active_capsule_point);
+        create_entity(get_active_capsule(), active_capsule_point);
     draw_entity(win_surf, active_capsule_display);
 
     if (dead) {
