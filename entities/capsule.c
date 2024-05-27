@@ -11,7 +11,6 @@ struct CatchedBall catched_ball;
 
 void apply_expand_capsule(VAUS *vaus) {
     update_VAUS_size(vaus, vaus->expand_size + 1);
-    update_active_capsule(CAPSULE_EXPAND);
 }
 
 void update_balls_velocity(float velocity) {
@@ -37,7 +36,6 @@ void apply_divide_capsule() {
     ball_two.direction = originBall.direction - 5;
     ball_one.velocity = originBall.velocity;
     add_ball(ball_two);
-    update_active_capsule(CAPSULE_DIVIDE);
 }
 
 void apply_addition_capsule() {
