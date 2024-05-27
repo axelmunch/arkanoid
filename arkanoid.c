@@ -124,12 +124,16 @@ bool laser_collides_with_brick(const AnimatedEntity *entity) {
 bool ball_collides_with_entity(Ball *ball) {
     SpawnedEntities *entities = get_entities();
     for (int i = 0; i < entities->current_entities_count; i++) {
-        if (entities->entities[i].type == HARMFUL &&
-            rect_circle_collision(entities->entities[i].hit_box,
+        if (rect_circle_collision(entities->entities[i].hit_box,
                                   ball->hit_box)) {
-            explode_entity(i);
-            add_score(150);
-            return true;
+            if (entities->entities[i].type == HARMFUL) {
+                explode_entity(i);
+                add_score(150);
+                return true;
+            }
+            if (entities->entities[i].type == MINI_VAUS) {
+                return true;
+            }
         }
     }
     return false;
