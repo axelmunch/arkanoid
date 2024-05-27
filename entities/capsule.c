@@ -48,7 +48,8 @@ void apply_addition_capsule() {
     if (existing_mini_vaus_total_width + mini_vaus_width <=
         SCREEN_WIDTH - GAME_BORDER_X) {
         const Point mini_vaus_position = {existing_mini_vaus_total_width,
-                                          SCREEN_HEIGHT - mini_vaus_height};
+                                          SCREEN_HEIGHT -
+                                              mini_vaus_height * 2.5};
         add_entity(create_entity(MINI_VAUS_TYPE, mini_vaus_position));
         spawned_mini_vaus++;
     }
