@@ -1,14 +1,14 @@
 #include "config.h"
 #include "delta_time.h"
+#include "entities/ball.h"
 #include "entities/capsule.h"
 #include "entities/entities_spawner.h"
 #include "entities/entity.h"
 #include "levels.h"
 #include "math/collisions.h"
+#include "score.h"
 #include "text.h"
 #include "textures.h"
-
-#include "entities/ball.h"
 #include <SDL.h>
 #include <stdbool.h>
 #include <stdio.h>
@@ -22,6 +22,8 @@ SDL_Surface *plancheSprites = NULL;
 
 bool dead = false;
 int dead_text_width = 0;
+int high_score_text_width = 0;
+int high_score_value_text_width = 0;
 
 bool ball_collides_with_horizontal_border(const Ball *ball) {
     return ball->hit_box.origin.y < ball->hit_box.radius + GAME_BORDER_TOP;
@@ -61,6 +63,7 @@ bool ball_collides_with_brick(const Ball *ball) {
                             add_entity(create_entity(brick.capsule_reward,
                                                      brick_hitbox.origin));
                         }
+                        break_brick(brick.type);
                         level->bricks[y][x] =
                             create_brick(EMPTY, CAPSULE_EMPTY);
                     } else {
@@ -104,6 +107,7 @@ bool laser_collides_with_brick(const AnimatedEntity *entity) {
                             add_entity(create_entity(brick.capsule_reward,
                                                      brick_hitbox.origin));
                         }
+                        break_brick(brick.type);
                         level->bricks[y][x] =
                             create_brick(EMPTY, CAPSULE_EMPTY);
                     } else {
@@ -125,6 +129,7 @@ bool ball_collides_with_entity(Ball *ball) {
             rect_circle_collision(entities->entities[i].hit_box,
                                   ball->hit_box)) {
             explode_entity(i);
+            add_score(150);
             return true;
         }
     }
@@ -177,7 +182,7 @@ void init() {
     win_surf = SDL_GetWindowSurface(pWindow);
     plancheSprites = SDL_LoadBMP("./sprites.bmp");
     SDL_SetColorKey(plancheSprites, true, 0);
-
+    init_score();
     load_next();
 }
 
@@ -286,6 +291,18 @@ void draw_entities() {
     }
 }
 
+void draw_score() {
+    int score_text_width = draw_text(win_surf, "SCORE ", 10, 5);
+    draw_integer(win_surf, get_score(), 10 + score_text_width, 5);
+    high_score_text_width = draw_text(
+        win_surf, "HIGH SCORE ",
+        win_surf->w - 10 - high_score_value_text_width - high_score_text_width,
+        5);
+    high_score_value_text_width =
+        draw_integer(win_surf, get_high_score(),
+                     win_surf->w - 10 - high_score_value_text_width, 5);
+}
+
 void draw() {
     draw_background();
 
@@ -302,13 +319,14 @@ void draw() {
 
     draw_entities();
 
+    draw_score();
+
+    draw_text(win_surf, "FPS", 10, win_surf->h - 74);
+    draw_integer(win_surf, (int) get_current_fps(), 10, win_surf->h - 42);
     Point active_capsule_point = {500, 500};
     AnimatedEntity active_capsule_display =
         create_capsule(get_active_capsule(), active_capsule_point);
     draw_entity(win_surf, active_capsule_display);
-    draw_text(win_surf, "Arkanoid", 10, 10);
-    int fps_text_width = draw_text(win_surf, "FPS: ", 10, 40);
-    draw_integer(win_surf, (int) get_current_fps(), 10 + fps_text_width, 40);
 
     if (dead) {
         dead_text_width =
@@ -451,6 +469,7 @@ void update_entities() {
         if (entity->type == HARMFUL &&
             rect_rect_collision(entity->hit_box, vaus.hit_box)) {
             explode_entity(i);
+            add_score(150);
         }
         if (entity->type == LASER) {
             if (laser_collides_with_brick(entity)) {
@@ -561,7 +580,7 @@ int main(int argc, char **argv) {
                     vaus.hit_box.origin.y - laser_height};
                 shoot(shooting_origin);
             } else {
-                // TODO Reset the score
+                reset_score();
                 restart_level_1();
                 load_next();
             }
