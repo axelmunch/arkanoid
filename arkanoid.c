@@ -171,12 +171,15 @@ void load_next() {
     dead = false;
     load_next_level();
     init_spawner();
-    Point ballPosition = {win_surf->w / 2, win_surf->h / 2};
     reset_balls();
     reset_capsules();
-    add_ball(create_ball(ballPosition));
     Point vausPosition = {win_surf->w / 2, win_surf->h - 32};
     vaus = create_VAUS(vausPosition);
+    Point ballPosition = {win_surf->w / 2, win_surf->h / 2};
+    add_ball(create_ball(ballPosition));
+    Balls *balls = get_balls();
+    catch_ball(&balls->spawned_balls[balls->current_balls_count - 1],
+               vaus.hit_box);
 }
 
 void init() {

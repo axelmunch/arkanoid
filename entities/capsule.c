@@ -5,7 +5,7 @@
 
 SpecificType active_capsule = CAPSULE_EMPTY;
 uint8_t spawned_mini_vaus = 0;
-float laser_cooldown = 0.0;
+float shoot_cooldown = 0.0;
 float catch_cooldown = 0.0;
 struct CatchedBall catched_ball;
 
@@ -75,24 +75,24 @@ void shoot_ball() {
     }
 }
 void shoot_laser(const Point shoot_origin) {
-    if (laser_cooldown <= 0) {
-        AnimatedEntity laser = create_entity(LASER_TYPE, shoot_origin);
-        laser.velocity = 15.0;
-        laser.direction = 90;
-        add_entity(laser);
-        laser_cooldown = LASER_RELOAD_TIME_MS / 1000;
-    }
+    AnimatedEntity laser = create_entity(LASER_TYPE, shoot_origin);
+    laser.velocity = 15.0;
+    laser.direction = 90;
+    add_entity(laser);
+    shoot_cooldown = LASER_RELOAD_TIME_MS / 1000;
 }
 void shoot(const Point shoot_origin) {
-    if (active_capsule == CAPSULE_CATCH) {
-        shoot_ball();
-    } else if (active_capsule == CAPSULE_LASER) {
-        shoot_laser(shoot_origin);
+    if (shoot_cooldown <= 0) {
+        if (active_capsule == CAPSULE_LASER) {
+            shoot_laser(shoot_origin);
+        } else {
+            shoot_ball();
+        }
     }
 }
 
 void apply_laser_capsule() {
-    laser_cooldown = 0.0;
+    shoot_cooldown = 0.0;
     update_active_capsule(CAPSULE_LASER);
 }
 
@@ -115,19 +115,16 @@ void update_attached_ball(const Rectangle vaus_hitbox) {
 }
 
 void reset_capsules() {
-    active_capsule = CAPSULE_EMPTY;
+    update_active_capsule(CAPSULE_EMPTY);
     spawned_mini_vaus = 0;
-    laser_cooldown = 0.0;
+    shoot_cooldown = 0.7; // 0.7s to prevent from shooting on restart right away
     catch_cooldown = 0.0;
     catched_ball.catched = false;
 }
 
 void update_cooldowns() {
-    if (get_active_capsule() == CAPSULE_LASER) {
-        laser_cooldown -= get_delta_time();
-    } else if (get_active_capsule() == CAPSULE_CATCH) {
-        catch_cooldown -= get_delta_time();
-    }
+    shoot_cooldown -= get_delta_time();
+    catch_cooldown -= get_delta_time();
 }
 
 SpecificType get_active_capsule() { return active_capsule; }
