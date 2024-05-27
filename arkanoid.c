@@ -20,9 +20,11 @@ SDL_Window *pWindow = NULL;
 SDL_Surface *win_surf = NULL;
 SDL_Surface *plancheSprites = NULL;
 
+bool dead = false;
+int dead_text_width = 0;
+
 bool ball_collides_with_horizontal_border(const Ball *ball) {
-    return (ball->hit_box.origin.y < ball->hit_box.radius + GAME_BORDER_TOP) ||
-           (ball->hit_box.origin.y > (win_surf->h - ball->hit_box.radius));
+    return ball->hit_box.origin.y < ball->hit_box.radius + GAME_BORDER_TOP;
 }
 bool ball_collides_with_vertical_border(const Ball *ball) {
     return (ball->hit_box.origin.x < ball->hit_box.radius + GAME_BORDER_X) ||
@@ -157,6 +159,7 @@ void move_VAUS(double distance) {
 }
 
 void load_next() {
+    dead = false;
     load_next_level();
     init_spawner();
     Point ballPosition = {win_surf->w / 2, win_surf->h / 2};
@@ -306,6 +309,12 @@ void draw() {
     draw_text(win_surf, "Arkanoid", 10, 10);
     int fps_text_width = draw_text(win_surf, "FPS: ", 10, 40);
     draw_integer(win_surf, (int) get_current_fps(), 10 + fps_text_width, 40);
+
+    if (dead) {
+        dead_text_width =
+            draw_text(win_surf, "Press SPACE to restart",
+                      win_surf->w / 2 - dead_text_width / 2, win_surf->h / 2);
+    }
 }
 
 bool apply_ball_effect(double ball_direction, bool add_effect) {
@@ -363,6 +372,13 @@ void update_balls() {
             }
             if (get_active_capsule() == CAPSULE_CATCH) {
                 catch_ball(ball);
+            }
+        }
+
+        if (ball->hit_box.origin.y - ball->hit_box.radius > win_surf->h) {
+            remove_ball(i);
+            if (balls->current_balls_count == 0) {
+                dead = true;
             }
         }
     }
@@ -536,13 +552,19 @@ int main(int argc, char **argv) {
             move_VAUS(10);
         }
         if (keys[SDL_SCANCODE_SPACE]) {
-            int mock, laser_height;
-            get_texture_dimensions(EntityLaser_1, &mock, &mock, &mock,
-                                   &laser_height);
-            const Point shooting_origin = {
-                vaus.hit_box.origin.x + vaus.hit_box.width / 2,
-                vaus.hit_box.origin.y - laser_height};
-            shoot(shooting_origin);
+            if (!dead) {
+                int mock, laser_height;
+                get_texture_dimensions(EntityLaser_1, &mock, &mock, &mock,
+                                       &laser_height);
+                const Point shooting_origin = {
+                    vaus.hit_box.origin.x + vaus.hit_box.width / 2,
+                    vaus.hit_box.origin.y - laser_height};
+                shoot(shooting_origin);
+            } else {
+                // TODO Reset the score
+                restart_level_1();
+                load_next();
+            }
         }
 
         SDL_Event event;
