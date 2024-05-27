@@ -4,6 +4,7 @@
 #include "entities/entity.h"
 #include "levels.h"
 #include "math/collisions.h"
+#include "score.h"
 #include "text.h"
 #include "textures.h"
 #include <SDL.h>
@@ -17,6 +18,9 @@ VAUS vaus;
 SDL_Window *pWindow = NULL;
 SDL_Surface *win_surf = NULL;
 SDL_Surface *plancheSprites = NULL;
+
+int high_score_text_width = 0;
+int high_score_value_text_width = 0;
 
 bool ball_collides_with_horizontal_border() {
     return (ball.hit_box.origin.y < ball.hit_box.radius + GAME_BORDER_TOP) ||
@@ -53,6 +57,7 @@ bool ball_collides_with_brick() {
                     }
 
                     if (brick.durability == 0) {
+                        break_brick(brick.type);
                         level->bricks[y][x] =
                             create_brick(EMPTY, CAPSULE_EMPTY);
                     } else {
@@ -74,6 +79,7 @@ bool ball_collides_with_entity() {
             rect_circle_collision(entities->entities[i].hit_box,
                                   ball.hit_box)) {
             explode_entity(i);
+            add_score(150);
             return true;
         }
     }
@@ -107,6 +113,7 @@ void init() {
     plancheSprites = SDL_LoadBMP("./sprites.bmp");
     SDL_SetColorKey(plancheSprites, true, 0);
 
+    init_score();
     load_next_level();
     init_spawner();
 
@@ -221,6 +228,18 @@ void draw_entities() {
     }
 }
 
+void draw_score() {
+    int score_text_width = draw_text(win_surf, "SCORE ", 10, 5);
+    draw_integer(win_surf, get_score(), 10 + score_text_width, 5);
+    high_score_text_width = draw_text(
+        win_surf, "HIGH SCORE ",
+        win_surf->w - 10 - high_score_value_text_width - high_score_text_width,
+        5);
+    high_score_value_text_width =
+        draw_integer(win_surf, get_high_score(),
+                     win_surf->w - 10 - high_score_value_text_width, 5);
+}
+
 void draw() {
     draw_background();
 
@@ -233,9 +252,10 @@ void draw() {
 
     draw_entities();
 
-    draw_text(win_surf, "Arkanoid", 10, 10);
-    int fps_text_width = draw_text(win_surf, "FPS: ", 10, 40);
-    draw_integer(win_surf, (int) get_current_fps(), 10 + fps_text_width, 40);
+    draw_score();
+
+    draw_text(win_surf, "FPS", 10, win_surf->h - 74);
+    draw_integer(win_surf, (int) get_current_fps(), 10, win_surf->h - 42);
 }
 
 bool apply_ball_effect(double ball_direction, bool add_effect) {
@@ -346,8 +366,8 @@ void update_entities() {
         // Collision
         if (rect_circle_collision(entity->hit_box, ball.hit_box) ||
             rect_rect_collision(entity->hit_box, vaus.hit_box)) {
-
             explode_entity(i);
+            add_score(150);
         }
     }
 }

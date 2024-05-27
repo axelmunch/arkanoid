@@ -23,7 +23,9 @@ add_executable(${PROJECT_NAME}
         levels.c
         levels.h
         entities/entities_spawner.c
-        entities/entities_spawner.h)
+        entities/entities_spawner.h
+        score.c
+        score.h)
 target_sources(${PROJECT_NAME} PRIVATE arkanoid.c)
 
 target_link_libraries(${PROJECT_NAME} PRIVATE m)

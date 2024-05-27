@@ -4,3 +4,4 @@ cmake-build-*/
 CMakeFiles/
 build/
 __pycache__/
+high_score.ark
