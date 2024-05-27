@@ -150,6 +150,9 @@ void move_VAUS(double distance) {
         Ball *ball = &balls->spawned_balls[i];
         if (rect_circle_collision(vaus.hit_box, ball->hit_box)) {
             ball->hit_box.origin.x += distance * get_delta_time_target();
+            if (get_active_capsule() == CAPSULE_CATCH) {
+                catch_ball(ball, vaus.hit_box);
+            }
             if (ball_collides_with_vertical_border(ball)) {
                 ball->hit_box.origin.x -= distance * get_delta_time_target();
                 ball->hit_box.origin.y =
@@ -157,9 +160,7 @@ void move_VAUS(double distance) {
             }
         }
     }
-    if (get_active_capsule() == CAPSULE_CATCH) {
-        attach_ball_to_vaus(vaus.hit_box);
-    }
+    update_attached_ball(vaus.hit_box);
 }
 
 void load_next() {
@@ -406,7 +407,7 @@ void update_balls() {
                 }
             }
             if (get_active_capsule() == CAPSULE_CATCH) {
-                catch_ball(ball);
+                catch_ball(ball, vaus.hit_box);
             }
         }
 
@@ -512,8 +513,7 @@ void update_entities() {
                 apply_divide_capsule();
                 break;
             case CAPSULE_CATCH:
-                update_active_capsule(CAPSULE_CATCH);
-                attach_ball_to_vaus(vaus.hit_box);
+                apply_catch_capsule();
                 break;
             case CAPSULE_LASER:
                 apply_laser_capsule();
@@ -555,7 +555,7 @@ void update_level() {
 }
 
 void update() {
-    update_laser_reload_time();
+    update_cooldowns();
     update_balls();
     update_spawner();
     update_entities();

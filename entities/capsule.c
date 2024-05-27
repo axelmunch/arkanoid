@@ -5,7 +5,8 @@
 
 SpecificType active_capsule = CAPSULE_EMPTY;
 uint8_t spawned_mini_vaus = 0;
-float time_before_next_shoot = 0.0;
+float laser_cooldown = 0.0;
+float catch_cooldown = 0.0;
 struct CatchedBall catched_ball;
 
 void apply_expand_capsule(VAUS *vaus) {
@@ -54,28 +55,34 @@ void apply_addition_capsule() {
         spawned_mini_vaus++;
     }
 }
+void apply_catch_capsule() {
+    update_active_capsule(CAPSULE_CATCH);
+    catch_cooldown = 0.0;
+}
 
-void catch_ball(Ball *ball) {
-    if (!catched_ball.catched) {
+void catch_ball(Ball *ball, const Rectangle vaus_hit_box) {
+    if (!catched_ball.catched && catch_cooldown <= 0) {
         ball->velocity = 0.0;
-        ball->direction = 90;
         catched_ball.catched = true;
         catched_ball.ball = ball;
+        update_attached_ball(vaus_hit_box);
     }
 }
 void shoot_ball() {
     if (catched_ball.catched) {
         catched_ball.ball->velocity = 7.0;
+        catched_ball.ball->direction = 90;
         catched_ball.catched = false;
+        catch_cooldown = CATCH_BALL_RELOAD_TIME_MS / 1000;
     }
 }
 void shoot_laser(const Point shoot_origin) {
-    if (time_before_next_shoot <= 0) {
+    if (laser_cooldown <= 0) {
         AnimatedEntity laser = create_entity(LASER_TYPE, shoot_origin);
         laser.velocity = 15.0;
         laser.direction = 90;
         add_entity(laser);
-        time_before_next_shoot = LASER_RELOAD_TIME_MS / 1000;
+        laser_cooldown = LASER_RELOAD_TIME_MS / 1000;
     }
 }
 void shoot(const Point shoot_origin) {
@@ -87,7 +94,7 @@ void shoot(const Point shoot_origin) {
 }
 
 void apply_laser_capsule() {
-    time_before_next_shoot = 0.0;
+    laser_cooldown = 0.0;
     update_active_capsule(CAPSULE_LASER);
 }
 
@@ -99,7 +106,7 @@ void update_active_capsule(SpecificType capsule_type) {
     }
     active_capsule = capsule_type;
 }
-void attach_ball_to_vaus(const Rectangle vaus_hitbox) {
+void update_attached_ball(const Rectangle vaus_hitbox) {
     if (catched_ball.catched) {
         Point ball_position;
         ball_position.x = vaus_hitbox.origin.x + vaus_hitbox.width / 2;
@@ -108,16 +115,20 @@ void attach_ball_to_vaus(const Rectangle vaus_hitbox) {
         catched_ball.ball->hit_box.origin = ball_position;
     }
 }
+
 void reset_capsules() {
     active_capsule = CAPSULE_EMPTY;
     spawned_mini_vaus = 0;
-    time_before_next_shoot = 0.0;
+    laser_cooldown = 0.0;
+    catch_cooldown = 0.0;
     catched_ball.catched = false;
 }
 
-void update_laser_reload_time() {
+void update_cooldowns() {
     if (get_active_capsule() == CAPSULE_LASER) {
-        time_before_next_shoot -= get_delta_time();
+        laser_cooldown -= get_delta_time();
+    } else if (get_active_capsule() == CAPSULE_CATCH) {
+        catch_cooldown -= get_delta_time();
     }
 }
 
