@@ -17,7 +17,6 @@ VAUS vaus;
 
 SDL_Window *pWindow = NULL;
 SDL_Surface *win_surf = NULL;
-SDL_Surface *plancheSprites = NULL;
 
 int high_score_text_width = 0;
 int high_score_value_text_width = 0;
@@ -106,12 +105,10 @@ void move_VAUS(double distance) {
 }
 
 void init() {
-    pWindow = SDL_CreateWindow("Arknoid", SDL_WINDOWPOS_UNDEFINED,
+    pWindow = SDL_CreateWindow("Arkanoid", SDL_WINDOWPOS_UNDEFINED,
                                SDL_WINDOWPOS_UNDEFINED, SCREEN_WIDTH,
                                SCREEN_HEIGHT, SDL_WINDOW_SHOWN);
     win_surf = SDL_GetWindowSurface(pWindow);
-    plancheSprites = SDL_LoadBMP("./sprites.bmp");
-    SDL_SetColorKey(plancheSprites, true, 0);
 
     init_score();
     load_next_level();
@@ -130,8 +127,9 @@ void draw_background() {
     int mock, level_theme_width, level_theme_height;
     get_texture_dimensions(theme_texture, &mock, &mock, &level_theme_width,
                            &level_theme_height);
-    for (int j = 0; j < win_surf->h; j += level_theme_height) {
-        for (int i = 0; i < win_surf->w; i += level_theme_width) {
+    for (int j = GAME_BORDER_TOP; j < win_surf->h; j += level_theme_height) {
+        for (int i = GAME_BORDER_X; i < win_surf->w - GAME_BORDER_X;
+             i += level_theme_width) {
             draw_texture(win_surf, theme_texture, i, j, false);
         }
     }
@@ -159,19 +157,11 @@ void draw_background() {
             draw_texture(win_surf, BlackBackground, i, j, false);
         }
     }
+}
 
-    // Borders
-    int border_side_width, border_side_height;
-    get_texture_dimensions(BorderSide, &mock, &mock, &border_side_width,
-                           &border_side_height);
-    for (int i = GAME_BORDER_TOP; i < win_surf->h; i += border_side_height) {
-        draw_texture(win_surf, BorderSide, GAME_BORDER_X - border_side_width, i,
-                     false);
-        draw_texture(win_surf, BorderSide, win_surf->w - GAME_BORDER_X, i,
-                     false);
-    }
-
-    int border_top_width, border_top_height;
+void draw_borders_1() {
+    // Top
+    int mock, border_top_width, border_top_height;
     get_texture_dimensions(BorderTop, &mock, &mock, &border_top_width,
                            &border_top_height);
     for (int i = GAME_BORDER_X;
@@ -184,6 +174,7 @@ void draw_background() {
                  win_surf->w - GAME_BORDER_X - border_top_width,
                  GAME_BORDER_TOP - border_top_height, false);
 
+    // Top bigger
     int border_top_bigger_width, border_top_bigger_height;
     get_texture_dimensions(BorderTopBigger, &mock, &mock,
                            &border_top_bigger_width, &border_top_bigger_height);
@@ -195,6 +186,7 @@ void draw_background() {
                  win_surf->w / 3 * 2 - border_top_bigger_width / 2,
                  GAME_BORDER_TOP - border_top_bigger_height, false);
 
+    // Top corners
     int border_corner_width, border_corner_height;
     get_texture_dimensions(BorderCornerLeft, &mock, &mock, &border_corner_width,
                            &border_corner_height);
@@ -203,6 +195,26 @@ void draw_background() {
                  GAME_BORDER_TOP - border_corner_height, false);
     draw_texture(win_surf, BorderCornerRight, win_surf->w - GAME_BORDER_X,
                  GAME_BORDER_TOP - border_corner_height, false);
+
+    int border_side_width, border_side_height;
+    get_texture_dimensions(BorderSide, &mock, &mock, &border_side_width,
+                           &border_side_height);
+    for (int i = GAME_BORDER_TOP; i < win_surf->h; i += border_side_height) {
+        // Left
+        draw_texture(win_surf, BorderSide, GAME_BORDER_X - border_side_width, i,
+                     false);
+    }
+}
+
+void draw_borders_2() {
+    int mock, border_side_width, border_side_height;
+    get_texture_dimensions(BorderSide, &mock, &mock, &border_side_width,
+                           &border_side_height);
+    for (int i = GAME_BORDER_TOP; i < win_surf->h; i += border_side_height) {
+        // Right
+        draw_texture(win_surf, BorderSide, win_surf->w - GAME_BORDER_X, i,
+                     false);
+    }
 }
 
 void draw_level() {
@@ -243,14 +255,18 @@ void draw_score() {
 void draw() {
     draw_background();
 
+    draw_borders_1();
+
     draw_level();
 
-    draw_vaus(win_surf, vaus);
+    draw_entities();
 
     draw_texture(win_surf, BallTexture, ball.hit_box.origin.x,
                  ball.hit_box.origin.y, true);
 
-    draw_entities();
+    draw_vaus(win_surf, vaus);
+
+    draw_borders_2();
 
     draw_score();
 

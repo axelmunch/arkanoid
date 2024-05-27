@@ -4,10 +4,47 @@
 char *texture_file = "Arkanoid_sprites.bmp";
 
 SDL_Surface *texture_bitmap = NULL;
+SDL_Surface *texture_bitmap_shadows = NULL;
+
+Uint32 get_pixel(SDL_Surface *surface, int x, int y) {
+    if (x < 0 || y < 0 || x >= surface->w || y >= surface->h) {
+        return 0;
+    }
+
+    Uint32 *pixels = (Uint32 *) surface->pixels;
+    return pixels[y * surface->pitch / sizeof(Uint32) + x];
+}
+
+void put_pixel(SDL_Surface *surface, int x, int y, Uint32 pixel) {
+    if (x < 0 || y < 0 || x >= surface->w || y >= surface->h) {
+        return;
+    }
+
+    Uint32 *pixels = (Uint32 *) surface->pixels;
+    pixels[y * surface->pitch / sizeof(Uint32) + x] = pixel;
+}
+
+bool is_transparent_texture(int x, int y) {
+    return get_pixel(texture_bitmap, x, y) == 0;
+}
 
 void init_texture() {
     texture_bitmap = SDL_LoadBMP(texture_file);
     SDL_SetColorKey(texture_bitmap, true, 0);
+
+    texture_bitmap_shadows =
+        SDL_ConvertSurface(texture_bitmap, texture_bitmap->format, 0);
+
+    // Set shadows black
+    for (int i = 0; i < texture_bitmap_shadows->w; i++) {
+        for (int j = 0; j < texture_bitmap_shadows->h; j++) {
+            if (!is_transparent_texture(i, j)) {
+                put_pixel(
+                    texture_bitmap_shadows, i, j,
+                    SDL_MapRGBA(texture_bitmap_shadows->format, 1, 1, 1, 128));
+            }
+        }
+    }
 }
 
 void get_texture_dimensions(Textures texture, int *pos_x, int *pos_y,
@@ -183,11 +220,20 @@ void draw_texture(SDL_Surface *surface, Textures texture, int x, int y,
     int pos_x, pos_y, width, height;
     get_texture_dimensions(texture, &pos_x, &pos_y, &width, &height);
 
+    // Define source and destination rectangles for texture
     SDL_Rect src = {pos_x, pos_y, width, height};
     SDL_Rect dst = {x, y, 0, 0};
     if (centered) {
         dst.x -= width / 2;
         dst.y -= height / 2;
+    }
+
+    // Shadow
+    if (DISPLAY_SHADOWS &&
+        (texture != BlackBackground && texture != BorderTopBigger &&
+         (texture < BackgroundTheme1 || texture > BackgroundTheme6))) {
+        SDL_Rect dst_shadow = {x + SHADOW_OFFSET, y + SHADOW_OFFSET, 0, 0};
+        SDL_BlitSurface(texture_bitmap_shadows, &src, surface, &dst_shadow);
     }
 
     SDL_BlitSurface(texture_bitmap, &src, surface, &dst);

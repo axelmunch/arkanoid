@@ -38,8 +38,6 @@ else ()
 endif ()
 
 
-file(COPY ${CMAKE_CURRENT_SOURCE_DIR}/sprites.bmp
-    DESTINATION ${CMAKE_CURRENT_BINARY_DIR}/)
 file(COPY ${CMAKE_CURRENT_SOURCE_DIR}/Arkanoid_ascii.bmp
     DESTINATION ${CMAKE_CURRENT_BINARY_DIR}/)
 file(COPY ${CMAKE_CURRENT_SOURCE_DIR}/Arkanoid_sprites.bmp
