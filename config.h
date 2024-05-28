@@ -14,8 +14,8 @@
 #define LASER_RELOAD_TIME_MS      1200
 #define CATCH_BALL_RELOAD_TIME_MS 1000
 
-#define BALL_EFFECT 25
-#define BALL_SPEED  7.0
+#define BALL_EFFECT           25
+#define DEFAULT_BALL_VELOCITY 7.0
 
 #define MAX_LEVELS 5
 

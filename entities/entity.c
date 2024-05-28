@@ -109,7 +109,7 @@ Ball create_ball(Point position) {
     Ball ball;
     ball.hit_box.origin = position;
     ball.hit_box.radius = 7;
-    ball.velocity = BALL_SPEED;
+    ball.velocity = DEFAULT_BALL_VELOCITY;
     ball.direction = 42;
     return ball;
 }

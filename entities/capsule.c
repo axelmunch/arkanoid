@@ -7,6 +7,7 @@ SpecificType active_capsule = CAPSULE_EMPTY;
 uint8_t spawned_mini_vaus = 0;
 float shoot_cooldown = 0.0;
 float catch_cooldown = 0.0;
+float balls_velocity = DEFAULT_BALL_VELOCITY;
 struct CatchedBall catched_ball;
 
 void apply_expand_capsule(VAUS *vaus) {
@@ -14,27 +15,29 @@ void apply_expand_capsule(VAUS *vaus) {
 }
 
 void update_balls_velocity(float velocity) {
-    Balls *balls = get_balls();
-    for (int i = 0; i < balls->current_balls_count; i++) {
-        Ball *ball = &balls->spawned_balls[i];
-        if (velocity > 2.0) {
-            ball->velocity = velocity;
+    if (velocity > 2.0) {
+        balls_velocity = velocity;
+        Balls *balls = get_balls();
+        for (int i = 0; i < balls->current_balls_count; i++) {
+            Ball *ball = &balls->spawned_balls[i];
+            ball->velocity = balls_velocity;
         }
     }
 }
 void apply_slow_capsule() {
     update_active_capsule(CAPSULE_SLOW);
-    update_balls_velocity(BALL_SPEED / 2);
+    update_balls_velocity(balls_velocity / 2);
 }
+
 void apply_divide_capsule() {
     Ball originBall = get_balls()->spawned_balls[0];
     Ball ball_one = create_ball(originBall.hit_box.origin);
     ball_one.direction = originBall.direction + 5;
-    ball_one.velocity = originBall.velocity;
+    ball_one.velocity = balls_velocity;
     add_ball(ball_one);
     Ball ball_two = create_ball(originBall.hit_box.origin);
     ball_two.direction = originBall.direction - 5;
-    ball_one.velocity = originBall.velocity;
+    ball_one.velocity = balls_velocity;
     add_ball(ball_two);
 }
 
@@ -72,6 +75,7 @@ void shoot_ball() {
         catched_ball.ball->direction = 90;
         catched_ball.catched = false;
         catch_cooldown = CATCH_BALL_RELOAD_TIME_MS / 1000;
+        shoot_cooldown = LASER_RELOAD_TIME_MS / 1000;
     }
 }
 void shoot_laser(const Point shoot_origin) {
@@ -100,7 +104,7 @@ void update_active_capsule(SpecificType capsule_type) {
     bool capsule_twice = (active_capsule == capsule_type);
     if (!capsule_twice) {
         shoot_ball();
-        update_balls_velocity(BALL_SPEED);
+        update_balls_velocity(DEFAULT_BALL_VELOCITY);
     }
     active_capsule = capsule_type;
 }
@@ -119,6 +123,7 @@ void reset_capsules() {
     spawned_mini_vaus = 0;
     shoot_cooldown = 0.7; // 0.7s to prevent from shooting on restart right away
     catch_cooldown = 0.0;
+    balls_velocity = DEFAULT_BALL_VELOCITY;
     catched_ball.catched = false;
 }
 
