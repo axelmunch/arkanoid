@@ -28,7 +28,7 @@ void update_balls_velocity(float velocity) {
 
 void apply_slow_capsule() {
     update_active_capsule(CAPSULE_SLOW);
-    update_balls_velocity(DEFAULT_BALL_VELOCITY / 2);
+    update_balls_velocity(DEFAULT_BALL_VELOCITY / 1.5);
 }
 
 void apply_divide_capsule() {
@@ -42,7 +42,7 @@ void apply_divide_capsule() {
         add_ball(ball_one);
         Ball ball_two = create_ball(originBall.hit_box.origin);
         ball_two.direction = originBall.direction - 5;
-        ball_one.velocity = balls_velocity;
+        ball_two.velocity = balls_velocity;
         add_ball(ball_two);
     }
 }
@@ -77,11 +77,11 @@ void catch_ball(Ball *ball, const Rectangle vaus_hit_box) {
 }
 void shoot_ball() {
     if (catched_ball.catched) {
-        catched_ball.ball->velocity = 7.0;
+        catched_ball.ball->velocity = DEFAULT_BALL_VELOCITY;
         catched_ball.ball->direction = 90;
         catched_ball.catched = false;
-        catch_cooldown = CATCH_BALL_RELOAD_TIME_MS / 1000;
-        shoot_cooldown = LASER_RELOAD_TIME_MS / 1000;
+        catch_cooldown = CATCH_BALL_RELOAD_TIME_MS;
+        shoot_cooldown = SHOOT_RELOAD_TIME_MS;
     }
 }
 void shoot_laser(const Point shoot_origin) {
@@ -89,7 +89,7 @@ void shoot_laser(const Point shoot_origin) {
     laser.velocity = 15.0;
     laser.direction = 90;
     add_entity(laser);
-    shoot_cooldown = LASER_RELOAD_TIME_MS / 1000;
+    shoot_cooldown = SHOOT_RELOAD_TIME_MS;
 }
 void shoot(const Point shoot_origin) {
     if (shoot_cooldown <= 0) {
@@ -101,10 +101,7 @@ void shoot(const Point shoot_origin) {
     }
 }
 
-void apply_laser_capsule() {
-    shoot_cooldown = 0.0;
-    update_active_capsule(CAPSULE_LASER);
-}
+void apply_laser_capsule() { update_active_capsule(CAPSULE_LASER); }
 
 void update_active_capsule(SpecificType capsule_type) {
     bool capsule_twice = (active_capsule == capsule_type);
@@ -127,15 +124,15 @@ void update_attached_ball(const Rectangle vaus_hitbox) {
 void reset_capsules() {
     update_active_capsule(CAPSULE_EMPTY);
     spawned_mini_vaus = 0;
-    shoot_cooldown = 0.7; // 0.7s to prevent from shooting on restart right away
+    shoot_cooldown = 200;
     catch_cooldown = 0.0;
     balls_velocity = DEFAULT_BALL_VELOCITY;
     catched_ball.catched = false;
 }
 
 void update_cooldowns() {
-    shoot_cooldown -= get_delta_time();
-    catch_cooldown -= get_delta_time();
+    shoot_cooldown -= get_delta_time() * 1000;
+    catch_cooldown -= get_delta_time() * 1000;
 }
 
 SpecificType get_active_capsule() { return active_capsule; }
