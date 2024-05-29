@@ -15,18 +15,20 @@ void apply_expand_capsule(VAUS *vaus) {
 }
 
 void update_balls_velocity(float velocity) {
-    if (velocity > 2.0) {
-        balls_velocity = velocity;
-        Balls *balls = get_balls();
-        for (int i = 0; i < balls->current_balls_count; i++) {
-            Ball *ball = &balls->spawned_balls[i];
-            ball->velocity = balls_velocity;
-        }
+    if (velocity < 2) {
+        velocity = 2;
+    }
+    balls_velocity = velocity;
+    Balls *balls = get_balls();
+    for (int i = 0; i < balls->current_balls_count; i++) {
+        Ball *ball = &balls->spawned_balls[i];
+        ball->velocity = balls_velocity;
     }
 }
+
 void apply_slow_capsule() {
     update_active_capsule(CAPSULE_SLOW);
-    update_balls_velocity(balls_velocity / 2);
+    update_balls_velocity(DEFAULT_BALL_VELOCITY / 2);
 }
 
 void apply_divide_capsule() {
