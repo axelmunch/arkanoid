@@ -32,15 +32,19 @@ void apply_slow_capsule() {
 }
 
 void apply_divide_capsule() {
-    Ball originBall = get_balls()->spawned_balls[0];
-    Ball ball_one = create_ball(originBall.hit_box.origin);
-    ball_one.direction = originBall.direction + 5;
-    ball_one.velocity = balls_velocity;
-    add_ball(ball_one);
-    Ball ball_two = create_ball(originBall.hit_box.origin);
-    ball_two.direction = originBall.direction - 5;
-    ball_one.velocity = balls_velocity;
-    add_ball(ball_two);
+
+    Balls *balls = get_balls();
+    if (balls->current_balls_count > 0) {
+        Ball originBall = balls->spawned_balls[0];
+        Ball ball_one = create_ball(originBall.hit_box.origin);
+        ball_one.direction = originBall.direction + 5;
+        ball_one.velocity = balls_velocity;
+        add_ball(ball_one);
+        Ball ball_two = create_ball(originBall.hit_box.origin);
+        ball_two.direction = originBall.direction - 5;
+        ball_one.velocity = balls_velocity;
+        add_ball(ball_two);
+    }
 }
 
 void apply_addition_capsule() {
