@@ -1,7 +1,7 @@
 #include "textures.h"
 #include <stdbool.h>
 
-char *texture_file = "Arkanoid_sprites.bmp";
+char *texture_file = "assets/Arkanoid_sprites.bmp";
 
 SDL_Surface *texture_bitmap = NULL;
 SDL_Surface *texture_bitmap_shadows = NULL;

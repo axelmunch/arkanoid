@@ -1,3 +1,4 @@
+#include "audio.h"
 #include "config.h"
 #include "delta_time.h"
 #include "entities/ball.h"
@@ -9,7 +10,7 @@
 #include "score.h"
 #include "text.h"
 #include "textures.h"
-#include <SDL.h>
+#include <SDL2/SDL.h>
 #include <stdbool.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -190,6 +191,10 @@ void init() {
 
     init_score();
     load_next();
+    init_delta_time();
+    init_text();
+    init_texture();
+    start_music();
 }
 
 void draw_background() {
@@ -575,9 +580,6 @@ int main(int argc, char **argv) {
     }
 
     init();
-    init_delta_time();
-    init_text();
-    init_texture();
 
     bool quit = false;
     while (!quit) {
@@ -625,7 +627,7 @@ int main(int argc, char **argv) {
 
         SDL_Delay((Uint32) GAME_FPS_MS);
     }
-
+    stop_music();
     SDL_Quit();
     return 0;
 }
