@@ -54,6 +54,7 @@ struct Level {
 };
 
 Brick create_brick(BrickType type, SpecificType capsule_reward);
+void restart_level_1();
 void reset_level();
 void load_next_level();
 void load_level(const char *filename);

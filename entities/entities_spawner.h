@@ -18,6 +18,7 @@ struct SpawnedEntities {
 
 void init_spawner();
 void reset_spawner();
+void add_entity(AnimatedEntity entity);
 void update_spawner();
 void remove_entity(int index);
 void explode_entity(int index);

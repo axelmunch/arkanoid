@@ -3,23 +3,28 @@
 
 #include "../math/math.h"
 
+#include <stdbool.h>
+
 typedef struct AnimatedEntity AnimatedEntity;
 typedef struct Ball Ball;
 typedef struct VAUS VAUS;
-typedef enum { HARMFUL, CAPSULE, EXPLOSION } EntityType;
+typedef enum { HARMFUL, CAPSULE, LASER, EXPLOSION, MINI_VAUS } EntityType;
 typedef enum {
     CAPSULE_EMPTY,
     CAPSULE_SLOW,
     CAPSULE_CATCH,
+    CAPSULE_LASER,
     CAPSULE_EXPAND,
     CAPSULE_DIVIDE,
-    CAPSULE_LASER,
     CAPSULE_BREAK,
     CAPSULE_ADDITION,
     HARMFUL_1,
     HARMFUL_2,
     HARMFUL_3,
-    EXPLOSION_TYPE
+    LASER_TYPE,
+    LASER_EXPLOSION,
+    EXPLOSION_TYPE,
+    MINI_VAUS_TYPE
 } SpecificType;
 typedef enum {
     LEFT,
