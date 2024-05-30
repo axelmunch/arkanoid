@@ -47,7 +47,7 @@ bool ball_collides_with_brick(const Ball *ball) {
                 brick_hitbox.height = BRICK_HEIGHT;
                 brick_hitbox.width = BRICK_WIDTH;
                 if (rect_circle_collision(brick_hitbox, ball->hit_box)) {
-                    play_bounce_chunk();
+                    play_chunk(0, BOUNCE_C, 0);
                     // Animation
                     if (brick.type == METAL || brick.type == GOLD) {
                         brick.current_animation = 1;
@@ -196,7 +196,7 @@ void init() {
     init_text();
     init_texture();
     init_mixer();
-    start_music();
+    play_music();
 }
 
 void draw_background() {
@@ -629,7 +629,7 @@ int main(int argc, char **argv) {
 
         SDL_Delay((Uint32) GAME_FPS_MS);
     }
-    stop_music();
+    free_mixer();
     SDL_Quit();
     return 0;
 }
