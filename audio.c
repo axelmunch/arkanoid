@@ -22,14 +22,14 @@ void load_assets() {
         printf("Failed to load music: %s\n", Mix_GetError());
     }
 
-    load_chunk("bounce.ogg", bounce_chunk);
+    load_chunk("bounce.ogg", &bounce_chunk);
 }
 
-void load_chunk(const char *chunk_name, const Mix_Chunk *chunk) {
+void load_chunk(const char *chunk_name, Mix_Chunk **chunk) {
     char chunk_path[50];
     snprintf(chunk_path, sizeof(chunk_path), "%s/%s", assets_path, chunk_name);
-    chunk = Mix_LoadWAV(chunk_path);
-    if (chunk == NULL) {
+    *chunk = Mix_LoadWAV(chunk_path);
+    if (*chunk == NULL) {
         printf("Failed to load chunk %s: %s\n", chunk_name, Mix_GetError());
     }
 }
