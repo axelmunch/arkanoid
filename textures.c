@@ -140,6 +140,24 @@ void get_texture_dimensions(Textures texture, int *pos_x, int *pos_y,
         *width = 128;
         *height = 16;
         break;
+    case EntityLaser_1:
+        *pos_x = 0;
+        *pos_y = 80;
+        *width = 14;
+        *height = 20;
+        break;
+    case EntityLaser_2:
+        *pos_x = 0;
+        *pos_y = 111;
+        *width = 14;
+        *height = 9;
+        break;
+    case EntityMiniVaus:
+        *pos_x = 384;
+        *pos_y = 120;
+        *width = 32;
+        *height = 8;
+        break;
     case BorderSide:
         *pos_x = 32;
         *pos_y = 80;
@@ -308,8 +326,21 @@ void draw_entity(SDL_Surface *surface, AnimatedEntity entity) {
         }
         entityTexture += entity.current_animation;
         break;
+    case LASER:
+        switch (entity.specific_type) {
+        case LASER_TYPE:
+            entityTexture = EntityLaser_1;
+            break;
+        case LASER_EXPLOSION:
+            entityTexture = EntityLaser_2;
+            break;
+        }
+        break;
     case EXPLOSION:
         entityTexture = Explosion_1 + entity.current_animation;
+        break;
+    case MINI_VAUS:
+        entityTexture = EntityMiniVaus;
         break;
     }
     draw_texture(surface, entityTexture, (int) entity.hit_box.origin.x,

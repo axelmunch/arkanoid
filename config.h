@@ -11,8 +11,11 @@
 #define VAUS_MAX_SIZE             8
 #define ANIMATION_TIMER_MS        150
 #define DIRECTION_CHANGE_TIMER_MS 500
+#define SHOOT_RELOAD_TIME_MS      500
+#define CATCH_BALL_RELOAD_TIME_MS 200
 
-#define BALL_EFFECT 25
+#define BALL_EFFECT           25
+#define DEFAULT_BALL_VELOCITY 7.0
 
 #define MAX_LEVELS 5
 

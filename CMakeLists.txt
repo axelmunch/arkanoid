@@ -24,6 +24,10 @@ add_executable(${PROJECT_NAME}
         levels.h
         entities/entities_spawner.c
         entities/entities_spawner.h
+        entities/capsule.c
+        entities/capsule.h
+        entities/ball.c
+        entities/ball.h
         score.c
         score.h)
 target_sources(${PROJECT_NAME} PRIVATE arkanoid.c)

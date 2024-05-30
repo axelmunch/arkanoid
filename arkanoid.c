@@ -1,5 +1,7 @@
 #include "config.h"
 #include "delta_time.h"
+#include "entities/ball.h"
+#include "entities/capsule.h"
 #include "entities/entities_spawner.h"
 #include "entities/entity.h"
 #include "levels.h"
@@ -12,26 +14,26 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-Ball ball;
 VAUS vaus;
 
 SDL_Window *pWindow = NULL;
 SDL_Surface *win_surf = NULL;
 
+bool dead = false;
+int dead_text_width = 0;
 int high_score_text_width = 0;
 int high_score_value_text_width = 0;
 
-bool ball_collides_with_horizontal_border() {
-    return (ball.hit_box.origin.y < ball.hit_box.radius + GAME_BORDER_TOP) ||
-           (ball.hit_box.origin.y > (win_surf->h - ball.hit_box.radius));
+bool ball_collides_with_horizontal_border(const Ball *ball) {
+    return ball->hit_box.origin.y < ball->hit_box.radius + GAME_BORDER_TOP;
 }
-bool ball_collides_with_vertical_border() {
-    return (ball.hit_box.origin.x < ball.hit_box.radius + GAME_BORDER_X) ||
-           (ball.hit_box.origin.x >
-            (win_surf->w - GAME_BORDER_X - ball.hit_box.radius));
+bool ball_collides_with_vertical_border(const Ball *ball) {
+    return (ball->hit_box.origin.x < ball->hit_box.radius + GAME_BORDER_X) ||
+           (ball->hit_box.origin.x >
+            (win_surf->w - GAME_BORDER_X - ball->hit_box.radius));
 }
 
-bool ball_collides_with_brick() {
+bool ball_collides_with_brick(const Ball *ball) {
     Level *level = get_level();
     const int offset_x = (win_surf->w - LEVEL_WIDTH * 32) / 2;
     for (int y = level->offset; y < level->height + level->offset; y++) {
@@ -43,7 +45,7 @@ bool ball_collides_with_brick() {
                 brick_hitbox.origin.y = LEVEL_OFFSET_Y + y * BRICK_HEIGHT;
                 brick_hitbox.height = BRICK_HEIGHT;
                 brick_hitbox.width = BRICK_WIDTH;
-                if (rect_circle_collision(brick_hitbox, ball.hit_box)) {
+                if (rect_circle_collision(brick_hitbox, ball->hit_box)) {
                     // Animation
                     if (brick.type == METAL || brick.type == GOLD) {
                         brick.current_animation = 1;
@@ -56,6 +58,10 @@ bool ball_collides_with_brick() {
                     }
 
                     if (brick.durability == 0) {
+                        if (brick.capsule_reward != CAPSULE_EMPTY) {
+                            add_entity(create_entity(brick.capsule_reward,
+                                                     brick_hitbox.origin));
+                        }
                         break_brick(brick.type);
                         level->bricks[y][x] =
                             create_brick(EMPTY, CAPSULE_EMPTY);
@@ -71,15 +77,63 @@ bool ball_collides_with_brick() {
     return false;
 }
 
-bool ball_collides_with_entity() {
+bool laser_collides_with_brick(const AnimatedEntity *entity) {
+    Level *level = get_level();
+    const int offset_x = (win_surf->w - LEVEL_WIDTH * 32) / 2;
+    for (int y = level->offset; y < level->height + level->offset; y++) {
+        for (int x = 0; x < LEVEL_WIDTH; x++) {
+            Brick brick = level->bricks[y][x];
+            if (brick.type != EMPTY) {
+                Rectangle brick_hitbox;
+                brick_hitbox.origin.x = offset_x + x * BRICK_WIDTH;
+                brick_hitbox.origin.y = LEVEL_OFFSET_Y + y * BRICK_HEIGHT;
+                brick_hitbox.height = BRICK_HEIGHT;
+                brick_hitbox.width = BRICK_WIDTH;
+                if (rect_rect_collision(brick_hitbox, entity->hit_box)) {
+                    // Animation
+                    if (brick.type == METAL || brick.type == GOLD) {
+                        brick.current_animation = 1;
+                        brick.time_before_next_animation = ANIMATION_TIMER_MS;
+                        level->bricks[y][x] = brick;
+                    }
+
+                    if (brick.type != GOLD) {
+                        brick.durability--;
+                    }
+
+                    if (brick.durability == 0) {
+                        if (brick.capsule_reward != CAPSULE_EMPTY) {
+                            add_entity(create_entity(brick.capsule_reward,
+                                                     brick_hitbox.origin));
+                        }
+                        break_brick(brick.type);
+                        level->bricks[y][x] =
+                            create_brick(EMPTY, CAPSULE_EMPTY);
+                    } else {
+                        level->bricks[y][x] = brick;
+                    }
+
+                    return true;
+                }
+            }
+        }
+    }
+    return false;
+}
+
+bool ball_collides_with_entity(Ball *ball) {
     SpawnedEntities *entities = get_entities();
     for (int i = 0; i < entities->current_entities_count; i++) {
-        if (entities->entities[i].type == HARMFUL &&
-            rect_circle_collision(entities->entities[i].hit_box,
-                                  ball.hit_box)) {
-            explode_entity(i);
-            add_score(150);
-            return true;
+        if (rect_circle_collision(entities->entities[i].hit_box,
+                                  ball->hit_box)) {
+            if (entities->entities[i].type == HARMFUL) {
+                explode_entity(i);
+                add_score(150);
+                return true;
+            }
+            if (entities->entities[i].type == MINI_VAUS) {
+                return true;
+            }
         }
     }
     return false;
@@ -95,13 +149,37 @@ void move_VAUS(double distance) {
             win_surf->w - GAME_BORDER_X - vaus.hit_box.width;
     }
 
-    if (rect_circle_collision(vaus.hit_box, ball.hit_box)) {
-        ball.hit_box.origin.x += distance * get_delta_time_target();
-        if (ball_collides_with_vertical_border()) {
-            ball.hit_box.origin.x -= distance * get_delta_time_target();
-            ball.hit_box.origin.y = vaus.hit_box.origin.y - ball.hit_box.radius;
+    Balls *balls = get_balls();
+    for (int i = 0; i < balls->current_balls_count; i++) {
+        Ball *ball = &balls->spawned_balls[i];
+        if (rect_circle_collision(vaus.hit_box, ball->hit_box)) {
+            ball->hit_box.origin.x += distance * get_delta_time_target();
+            if (get_active_capsule() == CAPSULE_CATCH) {
+                catch_ball(ball, vaus.hit_box);
+            }
+            if (ball_collides_with_vertical_border(ball)) {
+                ball->hit_box.origin.x -= distance * get_delta_time_target();
+                ball->hit_box.origin.y =
+                    vaus.hit_box.origin.y - ball->hit_box.radius;
+            }
         }
     }
+    update_attached_ball(vaus.hit_box);
+}
+
+void load_next() {
+    dead = false;
+    load_next_level();
+    init_spawner();
+    reset_balls();
+    reset_capsules();
+    Point vausPosition = {win_surf->w / 2, win_surf->h - 32};
+    vaus = create_VAUS(vausPosition);
+    Point ballPosition = {win_surf->w / 2, win_surf->h / 2};
+    add_ball(create_ball(ballPosition));
+    Balls *balls = get_balls();
+    catch_ball(&balls->spawned_balls[balls->current_balls_count - 1],
+               vaus.hit_box);
 }
 
 void init() {
@@ -111,13 +189,7 @@ void init() {
     win_surf = SDL_GetWindowSurface(pWindow);
 
     init_score();
-    load_next_level();
-    init_spawner();
-
-    Point ballPosition = {win_surf->w / 2, win_surf->h / 2};
-    ball = create_ball(ballPosition);
-    Point vausPosition = {win_surf->w / 2, win_surf->h - 32};
-    vaus = create_VAUS(vausPosition);
+    load_next();
 }
 
 void draw_background() {
@@ -261,8 +333,12 @@ void draw() {
 
     draw_entities();
 
-    draw_texture(win_surf, BallTexture, ball.hit_box.origin.x,
-                 ball.hit_box.origin.y, true);
+    Balls *balls = get_balls();
+    for (int i = 0; i < balls->current_balls_count; i++) {
+        Ball *ball = &balls->spawned_balls[i];
+        draw_texture(win_surf, BallTexture, ball->hit_box.origin.x,
+                     ball->hit_box.origin.y, true);
+    }
 
     draw_vaus(win_surf, vaus);
 
@@ -272,6 +348,16 @@ void draw() {
 
     draw_text(win_surf, "FPS", 10, win_surf->h - 74);
     draw_integer(win_surf, (int) get_current_fps(), 10, win_surf->h - 42);
+    Point active_capsule_point = {GAME_BORDER_X / 2 - 20, 40};
+    AnimatedEntity active_capsule_display =
+        create_entity(get_active_capsule(), active_capsule_point);
+    draw_entity(win_surf, active_capsule_display);
+
+    if (dead) {
+        dead_text_width =
+            draw_text(win_surf, "Press SPACE to restart",
+                      win_surf->w / 2 - dead_text_width / 2, win_surf->h / 2);
+    }
 }
 
 bool apply_ball_effect(double ball_direction, bool add_effect) {
@@ -293,36 +379,49 @@ bool apply_ball_effect(double ball_direction, bool add_effect) {
     return true;
 }
 
-void update_ball() {
-    Vector ball_movement;
-    rotate_by_angle(ball.velocity * get_delta_time_target(), ball.direction,
-                    &ball_movement);
-    ball.hit_box.origin.x += ball_movement.x;
-    const bool collide_with_vaus_x =
-        rect_circle_collision(vaus.hit_box, ball.hit_box);
-    if (ball_collides_with_vertical_border() || collide_with_vaus_x ||
-        ball_collides_with_brick() || ball_collides_with_entity()) {
-        ball.direction = fmod(180 - ball.direction, 360);
-        ball.hit_box.origin.x -= ball_movement.x;
-    }
+void update_balls() {
+    Balls *balls = get_balls();
+    for (int i = 0; i < balls->current_balls_count; i++) {
+        Ball *ball = &balls->spawned_balls[i];
+        Vector ball_movement;
+        rotate_by_angle(ball->velocity * get_delta_time_target(),
+                        ball->direction, &ball_movement);
+        ball->hit_box.origin.x += ball_movement.x;
+        const bool collide_with_vaus_x =
+            rect_circle_collision(vaus.hit_box, ball->hit_box);
+        if (ball_collides_with_vertical_border(ball) || collide_with_vaus_x ||
+            ball_collides_with_brick(ball) || ball_collides_with_entity(ball)) {
+            ball->direction = fmod(180 - ball->direction, 360);
+            ball->hit_box.origin.x -= ball_movement.x;
+        }
 
-    ball.hit_box.origin.y -= ball_movement.y;
-    const bool collide_with_vaus_y =
-        rect_circle_collision(vaus.hit_box, ball.hit_box);
-    if (ball_collides_with_horizontal_border() || collide_with_vaus_y ||
-        ball_collides_with_brick() || ball_collides_with_entity()) {
-        ball.direction = fmod(360 - ball.direction, 360);
-        ball.hit_box.origin.y += ball_movement.y;
-    }
-
-    if (collide_with_vaus_x || collide_with_vaus_y) {
-        if (vaus.moving_direction == LEFT) {
-            if (apply_ball_effect(ball.direction, true)) {
-                ball.direction = fmod(ball.direction + BALL_EFFECT, 360);
+        ball->hit_box.origin.y -= ball_movement.y;
+        const bool collide_with_vaus_y =
+            rect_circle_collision(vaus.hit_box, ball->hit_box);
+        if (ball_collides_with_horizontal_border(ball) || collide_with_vaus_y ||
+            ball_collides_with_brick(ball) || ball_collides_with_entity(ball)) {
+            ball->direction = fmod(360 - ball->direction, 360);
+            ball->hit_box.origin.y += ball_movement.y;
+        }
+        if (collide_with_vaus_x || collide_with_vaus_y) {
+            if (vaus.moving_direction == LEFT) {
+                if (apply_ball_effect(ball->direction, true)) {
+                    ball->direction = fmod(ball->direction + BALL_EFFECT, 360);
+                }
+            } else if (vaus.moving_direction == RIGHT) {
+                if (apply_ball_effect(ball->direction, false)) {
+                    ball->direction = fmod(ball->direction - BALL_EFFECT, 360);
+                }
             }
-        } else if (vaus.moving_direction == RIGHT) {
-            if (apply_ball_effect(ball.direction, false)) {
-                ball.direction = fmod(ball.direction - BALL_EFFECT, 360);
+            if (get_active_capsule() == CAPSULE_CATCH) {
+                catch_ball(ball, vaus.hit_box);
+            }
+        }
+
+        if (ball->hit_box.origin.y - ball->hit_box.radius > win_surf->h) {
+            remove_ball(i);
+            if (balls->current_balls_count == 0) {
+                dead = true;
             }
         }
     }
@@ -340,7 +439,8 @@ void update_entities() {
                 fmod(entity->current_animation + 1, entity->max_animation);
         }
 
-        if (entity->type == EXPLOSION) {
+        if (entity->type == EXPLOSION ||
+            entity->specific_type == LASER_EXPLOSION) {
             if (entity->current_animation == entity->max_animation - 1) {
                 remove_entity(i);
             }
@@ -348,29 +448,40 @@ void update_entities() {
         }
 
         // Change direction
-        entity->time_before_direction_change -= get_delta_time() * 1000;
-        if (entity->time_before_direction_change <= 0) {
-            entity->time_before_direction_change = DIRECTION_CHANGE_TIMER_MS;
-            entity->direction =
-                fmod(entity->direction + (rand() % 90) - 45, 360);
+        if (entity->type == HARMFUL) {
+            entity->time_before_direction_change -= get_delta_time() * 1000;
+            if (entity->time_before_direction_change <= 0) {
+                entity->time_before_direction_change =
+                    DIRECTION_CHANGE_TIMER_MS;
+                entity->direction =
+                    fmod(entity->direction + (rand() % 90) - 45, 360);
+            }
         }
 
         // Move
         Vector entity_movement;
         rotate_by_angle(entity->velocity * get_delta_time_target(),
                         entity->direction, &entity_movement);
-        entity_movement.y -= get_delta_time() * 5;
-        if (entity->hit_box.origin.x + entity_movement.x > GAME_BORDER_X &&
-            entity->hit_box.origin.x + entity_movement.x +
-                    entity->hit_box.width <
-                win_surf->w - GAME_BORDER_X) {
+        if (entity->type == HARMFUL) {
+            entity_movement.y -= get_delta_time() * 5;
+        }
+        if ((entity->hit_box.origin.x + entity_movement.x > GAME_BORDER_X &&
+             entity->hit_box.origin.x + entity_movement.x +
+                     entity->hit_box.width <
+                 win_surf->w - GAME_BORDER_X) ||
+            entity->type == CAPSULE) {
             entity->hit_box.origin.x += entity_movement.x;
         } else {
             entity->direction = fmod(entity->direction + 180, 360);
         }
-        if (entity->hit_box.origin.y - entity_movement.y > GAME_BORDER_TOP) {
+        if (entity->hit_box.origin.y - entity_movement.y > GAME_BORDER_TOP ||
+            entity->type == CAPSULE) {
             entity->hit_box.origin.y -= entity_movement.y;
         } else {
+            if (entity->type == LASER) {
+                remove_entity(i);
+                continue;
+            }
             entity->direction = fmod(entity->direction + 180, 360);
         }
 
@@ -380,10 +491,47 @@ void update_entities() {
         }
 
         // Collision
-        if (rect_circle_collision(entity->hit_box, ball.hit_box) ||
+        if (entity->type == HARMFUL &&
             rect_rect_collision(entity->hit_box, vaus.hit_box)) {
             explode_entity(i);
             add_score(150);
+        }
+        if (entity->type == LASER) {
+            if (laser_collides_with_brick(entity)) {
+                add_entity(
+                    create_entity(LASER_EXPLOSION, entity->hit_box.origin));
+                remove_entity(i);
+            }
+        }
+
+        // Capsules
+        if (rect_rect_collision(entity->hit_box, vaus.hit_box)) {
+            switch (entity->specific_type) {
+            case CAPSULE_EXPAND:
+                apply_expand_capsule(&vaus);
+                break;
+            case CAPSULE_SLOW:
+                apply_slow_capsule();
+                break;
+            case CAPSULE_BREAK:
+                load_next();
+                break;
+            case CAPSULE_DIVIDE:
+                apply_divide_capsule();
+                break;
+            case CAPSULE_CATCH:
+                apply_catch_capsule();
+                break;
+            case CAPSULE_LASER:
+                apply_laser_capsule();
+                break;
+            case CAPSULE_ADDITION:
+                apply_addition_capsule();
+                break;
+            default:
+                break;
+            }
+            remove_entity(i);
         }
     }
 }
@@ -409,12 +557,13 @@ void update_level() {
         }
     }
     if (is_level_completed()) {
-        load_next_level();
+        load_next();
     }
 }
 
 void update() {
-    update_ball();
+    update_cooldowns();
+    update_balls();
     update_spawner();
     update_entities();
     update_level();
@@ -444,6 +593,21 @@ int main(int argc, char **argv) {
         if (keys[SDL_SCANCODE_RIGHT]) {
             vaus.moving_direction = RIGHT;
             move_VAUS(10);
+        }
+        if (keys[SDL_SCANCODE_SPACE]) {
+            if (!dead) {
+                int mock, laser_height;
+                get_texture_dimensions(EntityLaser_1, &mock, &mock, &mock,
+                                       &laser_height);
+                const Point shooting_origin = {
+                    vaus.hit_box.origin.x + vaus.hit_box.width / 2,
+                    vaus.hit_box.origin.y - laser_height};
+                shoot(shooting_origin);
+            } else {
+                reset_score();
+                restart_level_1();
+                load_next();
+            }
         }
 
         SDL_Event event;
