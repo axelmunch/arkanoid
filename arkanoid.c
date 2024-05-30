@@ -47,6 +47,7 @@ bool ball_collides_with_brick(const Ball *ball) {
                 brick_hitbox.height = BRICK_HEIGHT;
                 brick_hitbox.width = BRICK_WIDTH;
                 if (rect_circle_collision(brick_hitbox, ball->hit_box)) {
+                    play_bounce_chunk();
                     // Animation
                     if (brick.type == METAL || brick.type == GOLD) {
                         brick.current_animation = 1;
@@ -194,6 +195,7 @@ void init() {
     init_delta_time();
     init_text();
     init_texture();
+    init_mixer();
     start_music();
 }
 
