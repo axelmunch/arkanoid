@@ -7,6 +7,7 @@ int char_height = 32;
 int char_width_in_cell = 18;
 int char_by_line = 16;
 char *font_file = "Arkanoid_ascii.bmp";
+char *red_font_file = "assets/Arkanoid_ascii_red.bmp";
 char *font_characters = " !\"#$%&'()*+,-./"
                         "0123456789:;<=>?"
                         "@ABCDEFGHIJKLMNO"
@@ -15,10 +16,25 @@ char *font_characters = " !\"#$%&'()*+,-./"
                         "pqrstuvwxyz{|}~ ";
 
 SDL_Surface *text_bitmap = NULL;
+SDL_Surface *red_text_bitmap = NULL;
 
 void init_text() {
     text_bitmap = SDL_LoadBMP(font_file);
     SDL_SetColorKey(text_bitmap, true, 0);
+
+    red_text_bitmap = SDL_LoadBMP(red_font_file);
+    SDL_SetColorKey(red_text_bitmap, true, 0);
+}
+
+int draw_red_text(SDL_Surface *surface, char *text, int x, int y) {
+    int text_width = 0;
+
+    for (int i = 0; text[i] != '\0'; i++) {
+        text_width +=
+            draw_char(surface, text[i], x + i * char_width_in_cell, y, true);
+    }
+
+    return text_width;
 }
 
 int draw_text(SDL_Surface *surface, char *text, int x, int y) {
@@ -26,7 +42,7 @@ int draw_text(SDL_Surface *surface, char *text, int x, int y) {
 
     for (int i = 0; text[i] != '\0'; i++) {
         text_width +=
-            draw_char(surface, text[i], x + i * char_width_in_cell, y);
+            draw_char(surface, text[i], x + i * char_width_in_cell, y, false);
     }
 
     return text_width;
@@ -48,12 +64,16 @@ int draw_number(SDL_Surface *surface, double number, int x, int y) {
     return draw_text(surface, number_str, x, y);
 }
 
-int draw_char(SDL_Surface *surface, char c, int x, int y) {
+int draw_char(SDL_Surface *surface, char c, int x, int y, bool color_red) {
     int char_x, char_y;
     char_position_on_sprite(c, &char_x, &char_y);
     SDL_Rect src = {char_x, char_y, char_width_in_cell, char_height};
     SDL_Rect dst = {x, y, 0, 0};
-    SDL_BlitSurface(text_bitmap, &src, surface, &dst);
+    if (color_red) {
+        SDL_BlitSurface(red_text_bitmap, &src, surface, &dst);
+    } else {
+        SDL_BlitSurface(text_bitmap, &src, surface, &dst);
+    }
 
     return char_width_in_cell;
 }

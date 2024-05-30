@@ -241,9 +241,9 @@ void draw_entities() {
 }
 
 void draw_score() {
-    int score_text_width = draw_text(win_surf, "SCORE ", 10, 5);
+    int score_text_width = draw_red_text(win_surf, "SCORE ", 10, 5);
     draw_integer(win_surf, get_score(), 10 + score_text_width, 5);
-    high_score_text_width = draw_text(
+    high_score_text_width = draw_red_text(
         win_surf, "HIGH SCORE ",
         win_surf->w - 10 - high_score_value_text_width - high_score_text_width,
         5);
