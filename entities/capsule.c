@@ -12,7 +12,9 @@ float balls_velocity = DEFAULT_BALL_VELOCITY;
 struct CatchedBall catched_ball[2];
 
 void apply_expand_capsule(VAUS *vaus) {
-    update_VAUS_size(vaus, vaus->expand_size + 1);
+    if (update_VAUS_size(vaus, vaus->expand_size + 1)) {
+        play_chunk(EXPAND);
+    }
 }
 
 void update_balls_velocity(float velocity) {
@@ -30,6 +32,7 @@ void update_balls_velocity(float velocity) {
 void apply_slow_capsule() {
     update_active_capsule(CAPSULE_SLOW);
     update_balls_velocity(DEFAULT_BALL_VELOCITY / 1.5);
+    play_chunk(SLOW_BALL);
 }
 
 void apply_divide_capsule() {
@@ -61,6 +64,7 @@ void apply_addition_capsule() {
                                               mini_vaus_height * 2.5};
         add_entity(create_entity(MINI_VAUS_TYPE, mini_vaus_position));
         spawned_mini_vaus++;
+        play_chunk(ADDITION);
     }
 }
 void apply_catch_capsule() {
@@ -89,7 +93,7 @@ void shoot_ball(int vaus_index) {
         catched_ball[vaus_index].catched = false;
         catch_cooldown[vaus_index] = CATCH_BALL_RELOAD_TIME_MS;
         shoot_cooldown[vaus_index] = SHOOT_RELOAD_TIME_MS;
-        play_chunk(SHOOT_BALL_C);
+        play_chunk(SHOOT_BALL);
     }
 }
 

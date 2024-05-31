@@ -4,22 +4,25 @@
 #include <SDL2/SDL_mixer.h>
 
 typedef enum {
-    BOUNCE_C,
-    POWER_UP_C,
-    LASER_1_C,
-    LASER_2_C,
-    EXPLOSION_1_C,
-    EXPLOSION_2_C,
-    SHOOT_BALL_C,
-} AUDIO;
+    BOUNCE,
+    CAPSULE_CREATED,
+    LASER_1,
+    LASER_2,
+    EXPLOSION_1,
+    EXPLOSION_2,
+    SHOOT_BALL,
+    SLOW_BALL,
+    EXPAND,
+    ADDITION,
+} AUDIO_CHUNKS;
 
 void init_mixer();
 void load_assets();
 void load_music(int level);
 void play_music();
 void free_mixer();
-void load_chunk(const char *filename, const AUDIO chunk_name);
-void play_chunk(AUDIO chunk_name);
+void load_chunk(const char *filename, const AUDIO_CHUNKS chunk_name);
+void play_chunk(AUDIO_CHUNKS chunk_name);
 void play_laser_chunk();
 void play_explosion_chunk();
 #endif // AUDIO_H

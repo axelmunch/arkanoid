@@ -17,13 +17,16 @@ void init_mixer() {
 }
 
 void load_assets() {
-    load_chunk("bounce.ogg", BOUNCE_C);
-    load_chunk("power_up.ogg", POWER_UP_C);
-    load_chunk("laser1.ogg", LASER_1_C);
-    load_chunk("laser2.ogg", LASER_2_C);
-    load_chunk("explosion1.ogg", EXPLOSION_1_C);
-    load_chunk("explosion2.ogg", EXPLOSION_2_C);
-    load_chunk("shoot_ball.ogg", SHOOT_BALL_C);
+    load_chunk("bounce", BOUNCE);
+    load_chunk("capsule", CAPSULE_CREATED);
+    load_chunk("laser1", LASER_1);
+    load_chunk("laser2", LASER_2);
+    load_chunk("explosion1", EXPLOSION_1);
+    load_chunk("explosion2", EXPLOSION_2);
+    load_chunk("shoot_ball", SHOOT_BALL);
+    load_chunk("expand", EXPAND);
+    load_chunk("addition", ADDITION);
+    load_chunk("slow_ball", SLOW_BALL);
 }
 
 void load_music(const int level) {
@@ -38,16 +41,17 @@ void load_music(const int level) {
     }
 }
 
-void load_chunk(const char *filename, const AUDIO chunk_name) {
+void load_chunk(const char *filename, const AUDIO_CHUNKS chunk_name) {
     char chunk_path[50];
-    snprintf(chunk_path, sizeof(chunk_path), "%s/%s", assets_path, filename);
+    snprintf(chunk_path, sizeof(chunk_path), "%s/%s.ogg", assets_path,
+             filename);
     chunks[chunk_name] = Mix_LoadWAV(chunk_path);
     if (chunks[chunk_name] == NULL) {
         printf("Failed to load chunk %s: %s\n", filename, Mix_GetError());
     }
 }
 
-void play_chunk(const AUDIO chunk_name) {
+void play_chunk(const AUDIO_CHUNKS chunk_name) {
     if (Mix_PlayChannel(used_channel, chunks[chunk_name], 0) < 0) {
         printf("%s\n", Mix_GetError());
     }
@@ -56,17 +60,17 @@ void play_chunk(const AUDIO chunk_name) {
 void play_laser_chunk() {
     const uint8_t random_value = rand() % 2;
     if (random_value == 0) {
-        play_chunk(LASER_1_C);
+        play_chunk(LASER_1);
     } else {
-        play_chunk(LASER_2_C);
+        play_chunk(LASER_2);
     }
 }
 void play_explosion_chunk() {
     const uint8_t random_value = rand() % 2;
     if (random_value == 0) {
-        play_chunk(EXPLOSION_1_C);
+        play_chunk(EXPLOSION_1);
     } else {
-        play_chunk(EXPLOSION_2_C);
+        play_chunk(EXPLOSION_2);
     }
 }
 

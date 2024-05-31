@@ -123,7 +123,8 @@ VAUS create_VAUS(Point position) {
     return vaus;
 }
 
-void update_VAUS_size(VAUS *vaus, int size) {
+bool update_VAUS_size(VAUS *vaus, int size) {
+    const uint8_t old_size = vaus->expand_size;
     vaus->expand_size = size;
     if (vaus->expand_size > VAUS_MAX_SIZE) {
         vaus->expand_size = VAUS_MAX_SIZE;
@@ -136,4 +137,5 @@ void update_VAUS_size(VAUS *vaus, int size) {
     get_texture_dimensions(VAUS_texture, &mock, &mock, &width, &height);
     vaus->hit_box.width = width;
     vaus->hit_box.height = height;
+    return old_size != vaus->expand_size;
 }

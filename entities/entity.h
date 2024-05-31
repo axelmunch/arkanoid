@@ -12,6 +12,6 @@ AnimatedEntity create_capsule(SpecificType capsuleType);
 AnimatedEntity create_explosion(Point position);
 Ball create_ball(Point position);
 VAUS create_VAUS(Point position);
-void update_VAUS_size(VAUS *vaus, int size);
+bool update_VAUS_size(VAUS *vaus, int size);
 
 #endif // ARKANOID_ENTITY_H
