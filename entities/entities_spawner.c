@@ -1,5 +1,7 @@
 #include "entities_spawner.h"
 
+#include "../audio.h"
+
 SpawnedEntities spawned_entities;
 int x_spawn_position = 200;
 int y_spawn_position = 50;
@@ -52,6 +54,7 @@ void explode_entity(int index) {
     spawned_entities.entities[spawned_entities.current_entities_count] =
         create_entity(EXPLOSION_TYPE, position);
     spawned_entities.current_entities_count++;
+    play_explosion_chunk();
 }
 
 SpawnedEntities *get_entities() { return &spawned_entities; }

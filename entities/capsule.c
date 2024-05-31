@@ -1,5 +1,6 @@
 #include "capsule.h"
 
+#include "../audio.h"
 #include "entities_spawner.h"
 #include "entity.h"
 
@@ -82,6 +83,7 @@ void shoot_ball() {
         catched_ball.catched = false;
         catch_cooldown = CATCH_BALL_RELOAD_TIME_MS;
         shoot_cooldown = SHOOT_RELOAD_TIME_MS;
+        play_chunk(SHOOT_BALL_C);
     }
 }
 void shoot_laser(const Point shoot_origin) {
@@ -90,6 +92,7 @@ void shoot_laser(const Point shoot_origin) {
     laser.direction = 90;
     add_entity(laser);
     shoot_cooldown = SHOOT_RELOAD_TIME_MS;
+    play_laser_chunk();
 }
 void shoot(const Point shoot_origin) {
     if (shoot_cooldown <= 0) {

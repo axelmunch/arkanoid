@@ -26,6 +26,11 @@ void load_assets() {
 
     load_chunk("bounce.ogg", BOUNCE_C);
     load_chunk("power_up.ogg", POWER_UP_C);
+    load_chunk("laser1.ogg", LASER_1_C);
+    load_chunk("laser2.ogg", LASER_2_C);
+    load_chunk("explosion1.ogg", EXPLOSION_1_C);
+    load_chunk("explosion2.ogg", EXPLOSION_2_C);
+    load_chunk("shoot_ball.ogg", SHOOT_BALL_C);
 }
 
 void load_chunk(const char *chunk_filename, const AUDIO chunk_name) {
@@ -43,6 +48,22 @@ void play_chunk(const AUDIO chunk_name) {
         printf("%s\n", Mix_GetError());
     }
     used_channel = (used_channel + 1) % 4;
+}
+void play_laser_chunk() {
+    const uint8_t random_value = rand() % 2;
+    if (random_value == 0) {
+        play_chunk(LASER_1_C);
+    } else {
+        play_chunk(LASER_2_C);
+    }
+}
+void play_explosion_chunk() {
+    const uint8_t random_value = rand() % 2;
+    if (random_value == 0) {
+        play_chunk(EXPLOSION_1_C);
+    } else {
+        play_chunk(EXPLOSION_2_C);
+    }
 }
 
 void play_music() {
