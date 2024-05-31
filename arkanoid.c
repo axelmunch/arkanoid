@@ -130,8 +130,8 @@ int main(int argc, char **argv) {
         else if(keys[SDL_SCANCODE_4]) {
             if (!cheat_key_press && DEBUG_MODE) {
                 cheat_key_press = true;
-                apply_expand_capsule(&vaus[0]);
-                apply_expand_capsule(&vaus[1]);
+                apply_expand_capsule(win_surf, &vaus[0], 0);
+                apply_expand_capsule(win_surf, &vaus[1], 1);
             }
         }
         else if(keys[SDL_SCANCODE_5]) {

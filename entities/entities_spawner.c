@@ -184,10 +184,10 @@ bool update_entities(SDL_Surface *win_surf) {
             case CAPSULE_EXPAND:
                 if(rect_rect_collision(entity->hit_box, vaus[0].hit_box))
                 {
-                    apply_expand_capsule(&vaus[0]);
+                    apply_expand_capsule(win_surf, &vaus[0], 0);
                 }
                 else {
-                    apply_expand_capsule(&vaus[1]);
+                    apply_expand_capsule(win_surf, &vaus[1], 1);
                 }
                 break;
             case CAPSULE_SLOW:

@@ -10,8 +10,16 @@ float catch_cooldown[2];
 float balls_velocity = DEFAULT_BALL_VELOCITY;
 struct CatchedBall catched_ball[2];
 
-void apply_expand_capsule(VAUS *vaus) {
+void apply_expand_capsule(SDL_Surface *win_surf, VAUS *vaus, int vaus_index) {
     update_VAUS_size(vaus, vaus->expand_size + 1);
+
+    if (vaus->hit_box.origin.x + vaus->hit_box.width >
+               win_surf->w - GAME_BORDER_X) {
+        vaus->hit_box.origin.x =
+            win_surf->w - GAME_BORDER_X - vaus->hit_box.width;
+    }
+
+    update_attached_ball(vaus->hit_box, vaus_index);
 }
 
 void update_balls_velocity(float velocity) {
@@ -120,6 +128,7 @@ void update_active_capsule(SpecificType capsule_type) {
     }
     active_capsule = capsule_type;
 }
+
 void update_attached_ball(const Rectangle vaus_hitbox, int vaus_index) {
     if (catched_ball[vaus_index].catched) {
         Point ball_position;
