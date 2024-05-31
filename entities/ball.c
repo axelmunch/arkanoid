@@ -5,6 +5,9 @@
 Balls balls;
 
 void add_ball(const Ball ball) {
+    if (balls.current_balls_count >= MAX_ENTITIES) {
+        return;
+    }
     balls.spawned_balls[balls.current_balls_count] = ball;
     balls.current_balls_count++;
 }
