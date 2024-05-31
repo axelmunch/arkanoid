@@ -15,7 +15,7 @@ typedef enum {
 
 void init_mixer();
 void load_assets();
-void load_music(const char *filename);
+void load_music(int level);
 void play_music();
 void free_mixer();
 void load_chunk(const char *filename, const AUDIO chunk_name);

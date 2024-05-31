@@ -1,7 +1,7 @@
 #include "audio.h"
 
 const char *assets_path = "assets";
-Mix_Music *main_music;
+Mix_Music *music;
 Mix_Chunk *chunks[CHUNK_COUNT];
 int used_channel = 0;
 
@@ -17,7 +17,6 @@ void init_mixer() {
 }
 
 void load_assets() {
-    load_music("music.mp3");
     load_chunk("bounce.ogg", BOUNCE_C);
     load_chunk("power_up.ogg", POWER_UP_C);
     load_chunk("laser1.ogg", LASER_1_C);
@@ -27,12 +26,15 @@ void load_assets() {
     load_chunk("shoot_ball.ogg", SHOOT_BALL_C);
 }
 
-void load_music(const char *filename) {
-    char chunk_path[50];
-    snprintf(chunk_path, sizeof(chunk_path), "%s/%s", assets_path, filename);
-    main_music = Mix_LoadMUS(chunk_path);
-    if (main_music == NULL) {
+void load_music(const int level) {
+    Mix_FreeMusic(music);
+    char path[50];
+    snprintf(path, sizeof(path), "%s/music%d.mp3", assets_path, level);
+    music = Mix_LoadMUS(path);
+    if (music == NULL) {
         printf("Failed to load music: %s\n", Mix_GetError());
+    } else {
+        play_music();
     }
 }
 
@@ -69,13 +71,13 @@ void play_explosion_chunk() {
 }
 
 void play_music() {
-    if (Mix_PlayMusic(main_music, -1) < 0) {
+    if (Mix_PlayMusic(music, -1) < 0) {
         printf("Failed to play music: %s\n", Mix_GetError());
     }
 }
 
 void free_mixer() {
-    Mix_FreeMusic(main_music);
+    Mix_FreeMusic(music);
     for (int i = 0; i < CHUNK_COUNT; i++) {
         Mix_FreeChunk(chunks[i]);
     }

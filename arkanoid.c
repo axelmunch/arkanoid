@@ -191,14 +191,12 @@ void init() {
                                SDL_WINDOWPOS_UNDEFINED, SCREEN_WIDTH,
                                SCREEN_HEIGHT, SDL_WINDOW_SHOWN);
     win_surf = SDL_GetWindowSurface(pWindow);
-
+    init_mixer();
     init_score();
     load_next();
     init_delta_time();
     init_text();
     init_texture();
-    init_mixer();
-    play_music();
 }
 
 void draw_background() {

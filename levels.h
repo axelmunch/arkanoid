@@ -1,6 +1,7 @@
 #ifndef ARKANOID_LEVELS_H
 #define ARKANOID_LEVELS_H
 
+#include "audio.h"
 #include "config.h"
 #include "entities/entities_structures.h"
 #include <stdbool.h>
