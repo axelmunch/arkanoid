@@ -563,6 +563,7 @@ void update_entities() {
                 break;
             case CAPSULE_BREAK:
                 load_next();
+                play_chunk(BREAK);
                 break;
             case CAPSULE_DIVIDE:
                 apply_divide_capsule();

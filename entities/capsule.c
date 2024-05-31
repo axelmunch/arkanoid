@@ -36,7 +36,6 @@ void apply_slow_capsule() {
 }
 
 void apply_divide_capsule() {
-
     Balls *balls = get_balls();
     if (balls->current_balls_count > 0) {
         Ball originBall = balls->spawned_balls[0];
@@ -48,6 +47,7 @@ void apply_divide_capsule() {
         ball_two.direction = originBall.direction - 5;
         ball_two.velocity = balls_velocity;
         add_ball(ball_two);
+        play_chunk(DIVIDE);
     }
 }
 

@@ -5,7 +5,6 @@
 
 typedef enum {
     BOUNCE,
-    CAPSULE_CREATED,
     LASER_1,
     LASER_2,
     EXPLOSION_1,
@@ -14,6 +13,8 @@ typedef enum {
     SLOW_BALL,
     EXPAND,
     ADDITION,
+    DIVIDE,
+    BREAK,
 } AUDIO_CHUNKS;
 
 void init_mixer();

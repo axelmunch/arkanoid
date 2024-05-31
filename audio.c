@@ -18,7 +18,7 @@ void init_mixer() {
 
 void load_assets() {
     load_chunk("bounce", BOUNCE);
-    load_chunk("capsule", CAPSULE_CREATED);
+    load_chunk("divide", DIVIDE);
     load_chunk("laser1", LASER_1);
     load_chunk("laser2", LASER_2);
     load_chunk("explosion1", EXPLOSION_1);
