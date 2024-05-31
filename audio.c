@@ -11,9 +11,7 @@ void init_mixer() {
         printf("SDL_mixer could not initialize! %s\n", Mix_GetError());
     }
     Mix_AllocateChannels(CHANNEL_COUNT);
-    for (int i = 0; i < CHANNEL_COUNT; ++i) {
-        Mix_Volume(i, CHUNK_VOLUME);
-    }
+    Mix_Volume(-1, CHUNK_VOLUME);
     Mix_VolumeMusic(MUSIC_VOLUME);
     load_assets();
 }
