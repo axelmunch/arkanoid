@@ -49,7 +49,7 @@ bool ball_collides_with_brick(const Ball *ball) {
                 brick_hitbox.height = BRICK_HEIGHT;
                 brick_hitbox.width = BRICK_WIDTH;
                 if (rect_circle_collision(brick_hitbox, ball->hit_box)) {
-                    play_chunk(0, BOUNCE_C, 0);
+                    play_chunk(BOUNCE_C);
                     // Animation
                     if (brick.type == METAL || brick.type == GOLD) {
                         brick.current_animation = 1;
@@ -542,7 +542,7 @@ void update_entities() {
             default:
                 break;
             }
-            play_chunk(1, POWER_UP_C, 0);
+            play_chunk(POWER_UP_C);
             remove_entity(i);
         }
     }

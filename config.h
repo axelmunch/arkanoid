@@ -36,6 +36,10 @@
 #define DISPLAY_SHADOWS true
 #define SHADOW_OFFSET   5
 
-#define AUDIO_COUNT 10
+#define CHUNK_COUNT   10
+#define CHUNK_VOLUME  MIX_MAX_VOLUME / 5
+#define MUSIC_COUNT   1
+#define MUSIC_VOLUME  MIX_MAX_VOLUME / 10
+#define CHANNEL_COUNT 10
 
 #endif // ARKANOID_CONFIG_H
