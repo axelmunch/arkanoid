@@ -407,7 +407,7 @@ void update_balls() {
             rect_circle_collision(vaus[0].hit_box, ball->hit_box);
         const bool collide_with_vaus_2_x =
             rect_circle_collision(vaus[1].hit_box, ball->hit_box);
-        if (ball_collides_with_vertical_border(ball) || collide_with_vaus_1_x || collide_with_vaus_2_x ||
+        if (ball_collides_with_vertical_border(ball) || collide_with_vaus_1_x || (collide_with_vaus_2_x && multiplayer_mode) ||
             ball_collides_with_brick(ball) || ball_collides_with_entity(ball)) {
             ball->direction = fmod(180 - ball->direction, 360);
             ball->hit_box.origin.x -= ball_movement.x;
@@ -418,7 +418,7 @@ void update_balls() {
             rect_circle_collision(vaus[0].hit_box, ball->hit_box);
         const bool collide_with_vaus_2_y =
             rect_circle_collision(vaus[1].hit_box, ball->hit_box);
-        if (ball_collides_with_horizontal_border(ball) || collide_with_vaus_1_y || collide_with_vaus_2_y ||
+        if (ball_collides_with_horizontal_border(ball) || collide_with_vaus_1_y || (collide_with_vaus_2_y && multiplayer_mode) ||
             ball_collides_with_brick(ball) || ball_collides_with_entity(ball)) {
             ball->direction = fmod(360 - ball->direction, 360);
             ball->hit_box.origin.y += ball_movement.y;
@@ -437,7 +437,7 @@ void update_balls() {
                 catch_ball(ball, vaus[0].hit_box, 0);
             }
         }
-        if (collide_with_vaus_2_x || collide_with_vaus_2_y) {
+        if ((collide_with_vaus_2_x || collide_with_vaus_2_y) && multiplayer_mode) {
             if (vaus[1].moving_direction == LEFT) {
                 if (apply_ball_effect(ball->direction, true)) {
                     ball->direction = fmod(ball->direction + BALL_EFFECT, 360);
@@ -672,9 +672,8 @@ int main(int argc, char **argv) {
         else if(keys[SDL_SCANCODE_4]) {
             if (!cheat_key_press && DEBUG_MODE) {
                 cheat_key_press = true;
-                // TODO Change for 2 vaus
-                apply_expand_capsule(&vaus);
-                // apply_expand_capsule(&vaus);
+                apply_expand_capsule(&vaus[0]);
+                apply_expand_capsule(&vaus[1]);
             }
         }
         else if(keys[SDL_SCANCODE_5]) {
