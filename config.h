@@ -36,4 +36,6 @@
 #define DISPLAY_SHADOWS true
 #define SHADOW_OFFSET   5
 
+#define AUDIO_COUNT 10
+
 #endif // ARKANOID_CONFIG_H

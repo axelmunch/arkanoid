@@ -355,8 +355,7 @@ void draw() {
 
     draw_score();
 
-    if(DEBUG_MODE)
-    {
+    if (DEBUG_MODE) {
         draw_text(win_surf, "FPS", 10, win_surf->h - 74);
         draw_integer(win_surf, (int) get_current_fps(), 10, win_surf->h - 42);
     }
@@ -543,6 +542,7 @@ void update_entities() {
             default:
                 break;
             }
+            play_chunk(1, POWER_UP_C, 0);
             remove_entity(i);
         }
     }
@@ -618,60 +618,52 @@ int main(int argc, char **argv) {
                 load_next();
             }
         }
-        
+
         if (keys[SDL_SCANCODE_1]) {
             if (!cheat_key_press && DEBUG_MODE) {
                 cheat_key_press = true;
                 apply_slow_capsule();
             }
-        }
-        else if(keys[SDL_SCANCODE_2]) {
+        } else if (keys[SDL_SCANCODE_2]) {
             if (!cheat_key_press && DEBUG_MODE) {
                 cheat_key_press = true;
                 apply_catch_capsule();
             }
-        }
-        else if(keys[SDL_SCANCODE_3]) {
+        } else if (keys[SDL_SCANCODE_3]) {
             if (!cheat_key_press && DEBUG_MODE) {
                 cheat_key_press = true;
                 apply_laser_capsule();
             }
-        }
-        else if(keys[SDL_SCANCODE_4]) {
+        } else if (keys[SDL_SCANCODE_4]) {
             if (!cheat_key_press && DEBUG_MODE) {
                 cheat_key_press = true;
                 // TODO Change for 2 vaus
                 apply_expand_capsule(&vaus);
                 // apply_expand_capsule(&vaus);
             }
-        }
-        else if(keys[SDL_SCANCODE_5]) {
+        } else if (keys[SDL_SCANCODE_5]) {
             if (!cheat_key_press && DEBUG_MODE) {
                 cheat_key_press = true;
                 apply_divide_capsule();
             }
-        }
-        else if(keys[SDL_SCANCODE_6]) {
+        } else if (keys[SDL_SCANCODE_6]) {
             if (!cheat_key_press && DEBUG_MODE) {
                 cheat_key_press = true;
                 load_next();
             }
-        }
-        else if(keys[SDL_SCANCODE_7]) {
+        } else if (keys[SDL_SCANCODE_7]) {
             if (!cheat_key_press && DEBUG_MODE) {
                 cheat_key_press = true;
                 apply_addition_capsule();
             }
-        }
-        else if(keys[SDL_SCANCODE_8]) {
+        } else if (keys[SDL_SCANCODE_8]) {
             if (!cheat_key_press && DEBUG_MODE) {
                 cheat_key_press = true;
                 reset_score();
                 restart_level_1();
                 load_next();
             }
-        }
-        else {
+        } else {
             cheat_key_press = false;
         }
 
