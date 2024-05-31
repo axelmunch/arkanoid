@@ -5,6 +5,8 @@
 #include "../delta_time.h"
 #include "../math/math.h"
 #include "../textures.h"
+#include "../vaus.h"
+#include "../score.h"
 #include "entities_structures.h"
 #include "entity.h"
 #include <stdlib.h>
@@ -22,6 +24,8 @@ void add_entity(AnimatedEntity entity);
 void update_spawner();
 void remove_entity(int index);
 void explode_entity(int index);
+bool laser_collides_with_brick(const AnimatedEntity *entity, SDL_Surface *win_surf);
+bool update_entities(SDL_Surface *win_surf);
 SpawnedEntities *get_entities();
 
 #endif // ARKANOID_ENTITIES_SPAWNER_H
