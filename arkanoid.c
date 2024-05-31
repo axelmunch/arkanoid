@@ -207,31 +207,6 @@ void update_balls() {
     }
 }
 
-void update_level() {
-    Level *level = get_level();
-    for (int y = level->offset; y < level->height + level->offset; y++) {
-        for (int x = 0; x < LEVEL_WIDTH; x++) {
-            Brick brick = level->bricks[y][x];
-
-            if (brick.type == METAL || brick.type == GOLD) {
-                if (brick.current_animation > 0) {
-                    brick.time_before_next_animation -= get_delta_time() * 1000;
-                    if (brick.time_before_next_animation <= 0) {
-                        brick.time_before_next_animation = ANIMATION_TIMER_MS;
-                        brick.current_animation = fmod(
-                            brick.current_animation + 1, brick.max_animation);
-                    }
-                }
-
-                level->bricks[y][x] = brick;
-            }
-        }
-    }
-    if (is_level_completed()) {
-        load_next();
-    }
-}
-
 void update() {
     update_cooldowns();
     update_balls();
@@ -239,7 +214,10 @@ void update() {
     if(update_entities(win_surf)){
         load_next();
     }
-    update_level();
+    if(update_level())
+    {
+        load_next();
+    }
 }
 
 int main(int argc, char **argv) {
