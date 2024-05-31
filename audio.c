@@ -32,7 +32,7 @@ void load_assets() {
 void load_music(const int level) {
     Mix_FreeMusic(music);
     char path[50];
-    snprintf(path, sizeof(path), "%s/music%d.mp3", assets_path, level);
+    snprintf(path, sizeof(path), "%s/music%d.ogg", assets_path, level);
     music = Mix_LoadMUS(path);
     if (music == NULL) {
         printf("Failed to load music: %s\n", Mix_GetError());

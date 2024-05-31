@@ -35,6 +35,14 @@ target_sources(${PROJECT_NAME} PRIVATE arkanoid.c)
 
 target_link_libraries(${PROJECT_NAME} PRIVATE m)
 
+set(MusicsArchiveFilename "musics.zip")
+if (MUSICS_ARCHIVE_URL)
+    message(STATUS "Downloading custom music archive")
+    file(DOWNLOAD ${MUSICS_ARCHIVE_URL} ${MusicsArchiveFilename})
+    file(ARCHIVE_EXTRACT INPUT ${MusicsArchiveFilename} DESTINATION assets)
+    file(REMOVE ${MusicsArchiveFilename})
+endif ()
+
 if (TARGET SDL2::SDL2 AND TARGET SDL2::SDL2 AND TARGET SDL2_mixer::SDL2_mixer)
     target_link_libraries(${PROJECT_NAME} PRIVATE SDL2::SDL2 SDL2_mixer::SDL2_mixer)
 else ()
