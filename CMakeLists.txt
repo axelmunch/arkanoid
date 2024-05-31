@@ -29,7 +29,9 @@ add_executable(${PROJECT_NAME}
         entities/ball.c
         entities/ball.h
         score.c
-        score.h)
+        score.h
+        vaus.c
+        vaus.h)
 target_sources(${PROJECT_NAME} PRIVATE arkanoid.c)
 
 target_link_libraries(${PROJECT_NAME} PRIVATE m)

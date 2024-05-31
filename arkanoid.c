@@ -9,12 +9,11 @@
 #include "score.h"
 #include "text.h"
 #include "textures.h"
+#include "vaus.h"
 #include <SDL.h>
 #include <stdbool.h>
 #include <stdio.h>
 #include <stdlib.h>
-
-VAUS vaus[2];
 
 SDL_Window *pWindow = NULL;
 SDL_Surface *win_surf = NULL;
@@ -141,47 +140,17 @@ bool ball_collides_with_entity(Ball *ball) {
     return false;
 }
 
-void move_VAUS(double distance, int vaus_index) {
-    vaus[vaus_index].hit_box.origin.x += distance * get_delta_time_target();
-    if (vaus[vaus_index].hit_box.origin.x < GAME_BORDER_X) {
-        vaus[vaus_index].hit_box.origin.x = GAME_BORDER_X;
-    } else if (vaus[vaus_index].hit_box.origin.x + vaus[vaus_index].hit_box.width >
-               win_surf->w - GAME_BORDER_X) {
-        vaus[vaus_index].hit_box.origin.x =
-            win_surf->w - GAME_BORDER_X - vaus[vaus_index].hit_box.width;
-    }
-
-    Balls *balls = get_balls();
-    for (int i = 0; i < balls->current_balls_count; i++) {
-        Ball *ball = &balls->spawned_balls[i];
-        if (rect_circle_collision(vaus[vaus_index].hit_box, ball->hit_box)) {
-            ball->hit_box.origin.x += distance * get_delta_time_target();
-            if (get_active_capsule() == CAPSULE_CATCH) {
-                catch_ball(ball, vaus[vaus_index].hit_box, vaus_index);
-            }
-            if (ball_collides_with_vertical_border(ball)) {
-                ball->hit_box.origin.x -= distance * get_delta_time_target();
-                ball->hit_box.origin.y =
-                    vaus[vaus_index].hit_box.origin.y - ball->hit_box.radius;
-            }
-        }
-    }
-    update_attached_ball(vaus[0].hit_box, 0);
-    update_attached_ball(vaus[1].hit_box, 1);
-}
-
 void load_next() {
     dead = false;
     load_next_level();
     init_spawner();
     reset_balls();
     reset_capsules();
-    Point vausPosition = {win_surf->w / 2, win_surf->h - 32};
-    vaus[0] = create_VAUS(vausPosition);
-    vaus[1] = create_VAUS(vausPosition);
+    reset_vaus();
     Point ballPosition = {win_surf->w / 2, win_surf->h / 2};
     add_ball(create_ball(ballPosition));
     Balls *balls = get_balls();
+    VAUS *vaus = get_vaus();
     catch_ball(&balls->spawned_balls[balls->current_balls_count - 1],
                vaus[0].hit_box, 0);
 }
@@ -192,6 +161,7 @@ void init() {
                                SCREEN_HEIGHT, SDL_WINDOW_SHOWN);
     win_surf = SDL_GetWindowSurface(pWindow);
 
+    init_vaus(win_surf);
     init_score();
     load_next();
 }
@@ -344,6 +314,7 @@ void draw() {
                      ball->hit_box.origin.y, true);
     }
 
+    VAUS *vaus = get_vaus();
     draw_vaus(win_surf, vaus[0]);
     if (multiplayer_mode) {
         draw_vaus(win_surf, vaus[1]);
@@ -397,6 +368,7 @@ bool apply_ball_effect(double ball_direction, bool add_effect) {
 
 void update_balls() {
     Balls *balls = get_balls();
+    VAUS *vaus = get_vaus();
     for (int i = 0; i < balls->current_balls_count; i++) {
         Ball *ball = &balls->spawned_balls[i];
         Vector ball_movement;
@@ -525,6 +497,7 @@ void update_entities() {
         }
 
         // Collision
+        VAUS *vaus = get_vaus();
         if (entity->type == HARMFUL &&
             (rect_rect_collision(entity->hit_box, vaus[0].hit_box)||rect_rect_collision(entity->hit_box, vaus[1].hit_box))) {
             explode_entity(i);
@@ -625,6 +598,7 @@ int main(int argc, char **argv) {
 
         SDL_PumpEvents();
         const Uint8 *keys = SDL_GetKeyboardState(NULL);
+        VAUS *vaus = get_vaus();
         vaus[0].moving_direction = NONE;
         vaus[1].moving_direction = NONE;
         if (keys[SDL_SCANCODE_LEFT]) {
