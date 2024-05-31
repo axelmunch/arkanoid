@@ -17,11 +17,7 @@ void init_mixer() {
 }
 
 void load_assets() {
-    main_music = Mix_LoadMUS("assets/music.mp3");
-    if (main_music == NULL) {
-        printf("Failed to load music: %s\n", Mix_GetError());
-    }
-
+    load_music("music.mp3");
     load_chunk("bounce.ogg", BOUNCE_C);
     load_chunk("power_up.ogg", POWER_UP_C);
     load_chunk("laser1.ogg", LASER_1_C);
@@ -31,13 +27,21 @@ void load_assets() {
     load_chunk("shoot_ball.ogg", SHOOT_BALL_C);
 }
 
-void load_chunk(const char *chunk_filename, const AUDIO chunk_name) {
+void load_music(const char *filename) {
     char chunk_path[50];
-    snprintf(chunk_path, sizeof(chunk_path), "%s/%s", assets_path,
-             chunk_filename);
+    snprintf(chunk_path, sizeof(chunk_path), "%s/%s", assets_path, filename);
+    main_music = Mix_LoadMUS(chunk_path);
+    if (main_music == NULL) {
+        printf("Failed to load music: %s\n", Mix_GetError());
+    }
+}
+
+void load_chunk(const char *filename, const AUDIO chunk_name) {
+    char chunk_path[50];
+    snprintf(chunk_path, sizeof(chunk_path), "%s/%s", assets_path, filename);
     chunks[chunk_name] = Mix_LoadWAV(chunk_path);
     if (chunks[chunk_name] == NULL) {
-        printf("Failed to load chunk %s: %s\n", chunk_filename, Mix_GetError());
+        printf("Failed to load chunk %s: %s\n", filename, Mix_GetError());
     }
 }
 
