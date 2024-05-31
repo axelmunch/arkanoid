@@ -19,6 +19,8 @@ VAUS vaus;
 SDL_Window *pWindow = NULL;
 SDL_Surface *win_surf = NULL;
 
+bool cheat_key_press = false;
+
 bool dead = false;
 int dead_text_width = 0;
 int high_score_text_width = 0;
@@ -346,8 +348,11 @@ void draw() {
 
     draw_score();
 
-    draw_text(win_surf, "FPS", 10, win_surf->h - 74);
-    draw_integer(win_surf, (int) get_current_fps(), 10, win_surf->h - 42);
+    if(DEBUG_MODE)
+    {
+        draw_text(win_surf, "FPS", 10, win_surf->h - 74);
+        draw_integer(win_surf, (int) get_current_fps(), 10, win_surf->h - 42);
+    }
     Point active_capsule_point = {GAME_BORDER_X / 2 - 20, 40};
     AnimatedEntity active_capsule_display =
         create_entity(get_active_capsule(), active_capsule_point);
@@ -608,6 +613,62 @@ int main(int argc, char **argv) {
                 restart_level_1();
                 load_next();
             }
+        }
+        
+        if (keys[SDL_SCANCODE_1]) {
+            if (!cheat_key_press && DEBUG_MODE) {
+                cheat_key_press = true;
+                apply_slow_capsule();
+            }
+        }
+        else if(keys[SDL_SCANCODE_2]) {
+            if (!cheat_key_press && DEBUG_MODE) {
+                cheat_key_press = true;
+                apply_catch_capsule();
+            }
+        }
+        else if(keys[SDL_SCANCODE_3]) {
+            if (!cheat_key_press && DEBUG_MODE) {
+                cheat_key_press = true;
+                apply_laser_capsule();
+            }
+        }
+        else if(keys[SDL_SCANCODE_4]) {
+            if (!cheat_key_press && DEBUG_MODE) {
+                cheat_key_press = true;
+                // TODO Change for 2 vaus
+                apply_expand_capsule(&vaus);
+                // apply_expand_capsule(&vaus);
+            }
+        }
+        else if(keys[SDL_SCANCODE_5]) {
+            if (!cheat_key_press && DEBUG_MODE) {
+                cheat_key_press = true;
+                apply_divide_capsule();
+            }
+        }
+        else if(keys[SDL_SCANCODE_6]) {
+            if (!cheat_key_press && DEBUG_MODE) {
+                cheat_key_press = true;
+                load_next();
+            }
+        }
+        else if(keys[SDL_SCANCODE_7]) {
+            if (!cheat_key_press && DEBUG_MODE) {
+                cheat_key_press = true;
+                apply_addition_capsule();
+            }
+        }
+        else if(keys[SDL_SCANCODE_8]) {
+            if (!cheat_key_press && DEBUG_MODE) {
+                cheat_key_press = true;
+                reset_score();
+                restart_level_1();
+                load_next();
+            }
+        }
+        else {
+            cheat_key_press = false;
         }
 
         SDL_Event event;
