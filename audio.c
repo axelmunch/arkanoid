@@ -51,7 +51,7 @@ void play_chunk(const AUDIO chunk_name) {
     if (Mix_PlayChannel(used_channel, chunks[chunk_name], 0) < 0) {
         printf("%s\n", Mix_GetError());
     }
-    used_channel = (used_channel + 1) % 4;
+    used_channel = (used_channel + 1) % CHANNEL_COUNT;
 }
 void play_laser_chunk() {
     const uint8_t random_value = rand() % 2;
