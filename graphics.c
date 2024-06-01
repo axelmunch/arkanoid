@@ -153,9 +153,9 @@ void draw(SDL_Surface *win_surf, bool multiplayer_mode, bool dead) {
     }
 
     VAUS *vaus = get_vaus();
-    draw_vaus(win_surf, vaus[0]);
+    draw_vaus(win_surf, vaus[0], 0);
     if (multiplayer_mode) {
-        draw_vaus(win_surf, vaus[1]);
+        draw_vaus(win_surf, vaus[1], 1);
         draw_integer(win_surf, 1,
                      vaus[0].hit_box.origin.x + vaus[0].hit_box.width / 2 - 8,
                      vaus[0].hit_box.origin.y);
