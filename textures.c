@@ -3,6 +3,8 @@
 
 char *texture_file = "Arkanoid_sprites.bmp";
 
+float vaus_blink_animation_timer = 0;
+
 SDL_Surface *texture_bitmap = NULL;
 SDL_Surface *texture_bitmap_shadows = NULL;
 
@@ -140,6 +142,18 @@ void get_texture_dimensions(Textures texture, int *pos_x, int *pos_y,
         *width = 128;
         *height = 16;
         break;
+    case VausBlinkingLeft:
+        *pos_x = 422;
+        *pos_y = 112;
+        *width = 4;
+        *height = 16;
+        break;
+    case VausBlinkingRight:
+        *pos_x = 434;
+        *pos_y = 112;
+        *width = 4;
+        *height = 16;
+        break;
     case EntityLaser_1:
         *pos_x = 0;
         *pos_y = 80;
@@ -249,6 +263,7 @@ void draw_texture(SDL_Surface *surface, Textures texture, int x, int y,
     // Shadow
     if (DISPLAY_SHADOWS &&
         (texture != BlackBackground && texture != BorderTopBigger &&
+         texture != VausBlinkingLeft && texture != VausBlinkingRight &&
          (texture < BackgroundTheme1 || texture > BackgroundTheme6))) {
         SDL_Rect dst_shadow = {x + SHADOW_OFFSET, y + SHADOW_OFFSET, 0, 0};
         SDL_BlitSurface(texture_bitmap_shadows, &src, surface, &dst_shadow);
@@ -275,10 +290,23 @@ void draw_brick(SDL_Surface *surface, BrickType type, int brick_animation,
     draw_texture(surface, brickTexture, x, y, false);
 }
 
-void draw_vaus(SDL_Surface *surface, VAUS vaus) {
+void draw_vaus(SDL_Surface *surface, VAUS vaus, int vaus_index) {
     Textures normalizedVausTexture = vaus.expand_size + VausSize1 - 1;
     draw_texture(surface, normalizedVausTexture, (int) vaus.hit_box.origin.x,
                  (int) vaus.hit_box.origin.y, false);
+    if (vaus_index == 0) {
+        vaus_blink_animation_timer -= get_delta_time() * 1000;
+    }
+    if (vaus_blink_animation_timer < 0) {
+        vaus_blink_animation_timer = 1000;
+    }
+    if (vaus_blink_animation_timer > 500) {
+        draw_texture(surface, VausBlinkingLeft, (int) vaus.hit_box.origin.x,
+                     (int) vaus.hit_box.origin.y, false);
+        draw_texture(surface, VausBlinkingRight,
+                     (int) vaus.hit_box.origin.x + vaus.hit_box.width - 4,
+                     (int) vaus.hit_box.origin.y, false);
+    }
 }
 
 void draw_entity(SDL_Surface *surface, AnimatedEntity entity) {
