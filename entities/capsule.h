@@ -2,6 +2,7 @@
 #define CAPSULE_H
 
 #include "../config.h"
+#include "../textures.h"
 #include "ball.h"
 #include "entities_structures.h"
 #include <SDL.h>

@@ -100,15 +100,17 @@ void shoot_ball(int vaus_index) {
 }
 
 void shoot_laser(const Point shoot_origin, const int vaus_index) {
+    int mock, laser_width;
+    get_texture_dimensions(EntityLaser_1, &mock, &mock, &laser_width, &mock);
     AnimatedEntity left_laser = create_entity(LASER_TYPE, shoot_origin);
     left_laser.velocity = 15.0;
     left_laser.direction = 90;
-    left_laser.hit_box.origin.x -= 15;
+    left_laser.hit_box.origin.x -= laser_width * 1.5;
     add_entity(left_laser);
     AnimatedEntity right_laser = create_entity(LASER_TYPE, shoot_origin);
     right_laser.velocity = 15.0;
     right_laser.direction = 90;
-    right_laser.hit_box.origin.x += 15;
+    right_laser.hit_box.origin.x += laser_width * 0.5;
     add_entity(right_laser);
     shoot_cooldown[vaus_index] = SHOOT_RELOAD_TIME_MS;
 }
