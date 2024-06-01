@@ -148,6 +148,9 @@ bool update_entities(SDL_Surface *win_surf, bool multiplayer_mode) {
             entity->hit_box.origin.y -= entity_movement.y;
         } else {
             if (entity->type == LASER) {
+                Point new_position = entity->hit_box.origin;
+                new_position.y = GAME_BORDER_TOP;
+                add_entity(create_entity(LASER_EXPLOSION, new_position));
                 remove_entity(i);
                 continue;
             }
