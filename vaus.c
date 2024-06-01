@@ -4,8 +4,7 @@ VAUS vaus[2];
 
 SDL_Surface *win_surf_vaus = NULL;
 
-void init_vaus(SDL_Surface *win_surf)
-{
+void init_vaus(SDL_Surface *win_surf) {
     win_surf_vaus = win_surf;
     reset_vaus();
 }
@@ -20,7 +19,8 @@ void move_VAUS(double distance, int vaus_index) {
     vaus[vaus_index].hit_box.origin.x += distance * get_delta_time_target();
     if (vaus[vaus_index].hit_box.origin.x < GAME_BORDER_X) {
         vaus[vaus_index].hit_box.origin.x = GAME_BORDER_X;
-    } else if (vaus[vaus_index].hit_box.origin.x + vaus[vaus_index].hit_box.width >
+    } else if (vaus[vaus_index].hit_box.origin.x +
+                   vaus[vaus_index].hit_box.width >
                win_surf_vaus->w - GAME_BORDER_X) {
         vaus[vaus_index].hit_box.origin.x =
             win_surf_vaus->w - GAME_BORDER_X - vaus[vaus_index].hit_box.width;
@@ -34,9 +34,10 @@ void move_VAUS(double distance, int vaus_index) {
             if (get_active_capsule() == CAPSULE_CATCH) {
                 catch_ball(ball, vaus[vaus_index].hit_box, vaus_index);
             }
-            if ((ball->hit_box.origin.x < ball->hit_box.radius + GAME_BORDER_X) ||
-           (ball->hit_box.origin.x >
-            (win_surf_vaus->w - GAME_BORDER_X - ball->hit_box.radius))) {
+            if ((ball->hit_box.origin.x <
+                 ball->hit_box.radius + GAME_BORDER_X) ||
+                (ball->hit_box.origin.x >
+                 (win_surf_vaus->w - GAME_BORDER_X - ball->hit_box.radius))) {
                 ball->hit_box.origin.x -= distance * get_delta_time_target();
                 ball->hit_box.origin.y =
                     vaus[vaus_index].hit_box.origin.y - ball->hit_box.radius;

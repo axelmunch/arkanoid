@@ -1,12 +1,12 @@
 #ifndef ARKANOID_GRAPHICS_H
 #define ARKANOID_GRAPHICS_H
 
-#include "vaus.h"
+#include "config.h"
 #include "entities/ball.h"
 #include "entities/entities_spawner.h"
-#include "text.h"
-#include "config.h"
 #include "levels.h"
+#include "text.h"
+#include "vaus.h"
 #include <SDL.h>
 
 void draw_background(SDL_Surface *win_surf);
@@ -17,4 +17,4 @@ void draw_entities(SDL_Surface *win_surf);
 void draw_score(SDL_Surface *win_surf);
 void draw(SDL_Surface *win_surf, bool multiplayer_mode, bool dead);
 
-#endif //ARKANOID_GRAPHICS_H
+#endif // ARKANOID_GRAPHICS_H

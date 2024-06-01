@@ -1,6 +1,5 @@
 #include "graphics.h"
 
-
 int dead_text_width = 0;
 int high_score_text_width = 0;
 int high_score_value_text_width = 0;
@@ -169,8 +168,7 @@ void draw(SDL_Surface *win_surf, bool multiplayer_mode, bool dead) {
 
     draw_score(win_surf);
 
-    if(DEBUG_MODE)
-    {
+    if (DEBUG_MODE) {
         draw_text(win_surf, "FPS", 10, win_surf->h - 74);
         draw_integer(win_surf, (int) get_current_fps(), 10, win_surf->h - 42);
     }

@@ -1,7 +1,5 @@
 #include "ball.h"
 
-#include <stddef.h>
-
 Balls balls;
 
 void add_ball(const Ball ball) {
@@ -25,7 +23,8 @@ bool ball_collides_with_horizontal_border(const Ball *ball) {
     return ball->hit_box.origin.y < ball->hit_box.radius + GAME_BORDER_TOP;
 }
 
-bool ball_collides_with_vertical_border(SDL_Surface *win_surf, const Ball *ball) {
+bool ball_collides_with_vertical_border(SDL_Surface *win_surf,
+                                        const Ball *ball) {
     return (ball->hit_box.origin.x < ball->hit_box.radius + GAME_BORDER_X) ||
            (ball->hit_box.origin.x >
             (win_surf->w - GAME_BORDER_X - ball->hit_box.radius));
@@ -127,8 +126,11 @@ bool update_balls(SDL_Surface *win_surf, bool multiplayer_mode) {
             rect_circle_collision(vaus[0].hit_box, ball->hit_box);
         const bool collide_with_vaus_2_x =
             rect_circle_collision(vaus[1].hit_box, ball->hit_box);
-        if (ball_collides_with_vertical_border(win_surf, ball) || collide_with_vaus_1_x || (collide_with_vaus_2_x && multiplayer_mode) ||
-            ball_collides_with_brick(win_surf, ball) || ball_collides_with_entity(ball)) {
+        if (ball_collides_with_vertical_border(win_surf, ball) ||
+            collide_with_vaus_1_x ||
+            (collide_with_vaus_2_x && multiplayer_mode) ||
+            ball_collides_with_brick(win_surf, ball) ||
+            ball_collides_with_entity(ball)) {
             ball->direction = fmod(180 - ball->direction, 360);
             ball->hit_box.origin.x -= ball_movement.x;
         }
@@ -138,8 +140,11 @@ bool update_balls(SDL_Surface *win_surf, bool multiplayer_mode) {
             rect_circle_collision(vaus[0].hit_box, ball->hit_box);
         const bool collide_with_vaus_2_y =
             rect_circle_collision(vaus[1].hit_box, ball->hit_box);
-        if (ball_collides_with_horizontal_border(ball) || collide_with_vaus_1_y || (collide_with_vaus_2_y && multiplayer_mode) ||
-            ball_collides_with_brick(win_surf, ball) || ball_collides_with_entity(ball)) {
+        if (ball_collides_with_horizontal_border(ball) ||
+            collide_with_vaus_1_y ||
+            (collide_with_vaus_2_y && multiplayer_mode) ||
+            ball_collides_with_brick(win_surf, ball) ||
+            ball_collides_with_entity(ball)) {
             ball->direction = fmod(360 - ball->direction, 360);
             ball->hit_box.origin.y += ball_movement.y;
         }
@@ -157,7 +162,8 @@ bool update_balls(SDL_Surface *win_surf, bool multiplayer_mode) {
                 catch_ball(ball, vaus[0].hit_box, 0);
             }
         }
-        if ((collide_with_vaus_2_x || collide_with_vaus_2_y) && multiplayer_mode) {
+        if ((collide_with_vaus_2_x || collide_with_vaus_2_y) &&
+            multiplayer_mode) {
             if (vaus[1].moving_direction == LEFT) {
                 if (apply_ball_effect(ball->direction, true)) {
                     ball->direction = fmod(ball->direction + BALL_EFFECT, 360);

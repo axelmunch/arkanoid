@@ -1,7 +1,8 @@
 #ifndef CAPSULE_H
 #define CAPSULE_H
-#include "ball.h"
+
 #include "../config.h"
+#include "ball.h"
 #include "entities_structures.h"
 #include <SDL.h>
 

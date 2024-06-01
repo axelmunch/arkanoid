@@ -54,7 +54,8 @@ void explode_entity(int index) {
     spawned_entities.current_entities_count++;
 }
 
-bool laser_collides_with_brick(const AnimatedEntity *entity, SDL_Surface *win_surf) {
+bool laser_collides_with_brick(const AnimatedEntity *entity,
+                               SDL_Surface *win_surf) {
     Level *level = get_level();
     const int offset_x = (win_surf->w - LEVEL_WIDTH * 32) / 2;
     for (int y = level->offset; y < level->height + level->offset; y++) {
@@ -161,7 +162,8 @@ bool update_entities(SDL_Surface *win_surf) {
         // Collision
         VAUS *vaus = get_vaus();
         if (entity->type == HARMFUL &&
-            (rect_rect_collision(entity->hit_box, vaus[0].hit_box)||rect_rect_collision(entity->hit_box, vaus[1].hit_box))) {
+            (rect_rect_collision(entity->hit_box, vaus[0].hit_box) ||
+             rect_rect_collision(entity->hit_box, vaus[1].hit_box))) {
             explode_entity(i);
             add_score(150);
         }
@@ -174,14 +176,14 @@ bool update_entities(SDL_Surface *win_surf) {
         }
 
         // Capsules
-        if (entity->type == CAPSULE && (rect_rect_collision(entity->hit_box, vaus[0].hit_box) || rect_rect_collision(entity->hit_box, vaus[1].hit_box))) {
+        if (entity->type == CAPSULE &&
+            (rect_rect_collision(entity->hit_box, vaus[0].hit_box) ||
+             rect_rect_collision(entity->hit_box, vaus[1].hit_box))) {
             switch (entity->specific_type) {
             case CAPSULE_EXPAND:
-                if(rect_rect_collision(entity->hit_box, vaus[0].hit_box))
-                {
+                if (rect_rect_collision(entity->hit_box, vaus[0].hit_box)) {
                     apply_expand_capsule(win_surf, &vaus[0], 0);
-                }
-                else {
+                } else {
                     apply_expand_capsule(win_surf, &vaus[1], 1);
                 }
                 break;

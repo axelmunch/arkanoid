@@ -14,7 +14,7 @@ void apply_expand_capsule(SDL_Surface *win_surf, VAUS *vaus, int vaus_index) {
     update_VAUS_size(vaus, vaus->expand_size + 1);
 
     if (vaus->hit_box.origin.x + vaus->hit_box.width >
-               win_surf->w - GAME_BORDER_X) {
+        win_surf->w - GAME_BORDER_X) {
         vaus->hit_box.origin.x =
             win_surf->w - GAME_BORDER_X - vaus->hit_box.width;
     }

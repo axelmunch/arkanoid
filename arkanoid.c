@@ -4,17 +4,15 @@
 #include "entities/capsule.h"
 #include "entities/entities_spawner.h"
 #include "entities/entity.h"
+#include "graphics.h"
 #include "levels.h"
-#include "math/collisions.h"
 #include "score.h"
 #include "text.h"
 #include "textures.h"
 #include "vaus.h"
-#include "graphics.h"
 #include <SDL.h>
 #include <stdbool.h>
 #include <stdio.h>
-#include <stdlib.h>
 
 SDL_Window *pWindow = NULL;
 SDL_Surface *win_surf = NULL;
@@ -52,16 +50,14 @@ void init() {
 
 void update() {
     update_cooldowns();
-    if(update_balls(win_surf, multiplayer_mode))
-    {
+    if (update_balls(win_surf, multiplayer_mode)) {
         dead = true;
     }
     update_spawner();
-    if(update_entities(win_surf)){
+    if (update_entities(win_surf)) {
         load_next();
     }
-    if(update_level())
-    {
+    if (update_level()) {
         load_next();
     }
 }
