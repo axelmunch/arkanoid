@@ -99,8 +99,8 @@ int main(int argc, char **argv) {
                 get_texture_dimensions(EntityLaser_1, &mock, &mock, &mock,
                                        &laser_height);
                 const Point shooting_origin = {
-                        vaus[0].hit_box.origin.x + vaus[0].hit_box.width / 2,
-                        vaus[0].hit_box.origin.y - laser_height};
+                    vaus[0].hit_box.origin.x + vaus[0].hit_box.width / 2,
+                    vaus[0].hit_box.origin.y - laser_height};
                 shoot(shooting_origin, 0);
             } else {
                 reset_score();
@@ -108,59 +108,51 @@ int main(int argc, char **argv) {
                 load_next();
             }
         }
-        
+
         if (keys[SDL_SCANCODE_1]) {
             if (!cheat_key_press && DEBUG_MODE) {
                 cheat_key_press = true;
                 apply_slow_capsule();
             }
-        }
-        else if(keys[SDL_SCANCODE_2]) {
+        } else if (keys[SDL_SCANCODE_2]) {
             if (!cheat_key_press && DEBUG_MODE) {
                 cheat_key_press = true;
                 apply_catch_capsule();
             }
-        }
-        else if(keys[SDL_SCANCODE_3]) {
+        } else if (keys[SDL_SCANCODE_3]) {
             if (!cheat_key_press && DEBUG_MODE) {
                 cheat_key_press = true;
                 apply_laser_capsule();
             }
-        }
-        else if(keys[SDL_SCANCODE_4]) {
+        } else if (keys[SDL_SCANCODE_4]) {
             if (!cheat_key_press && DEBUG_MODE) {
                 cheat_key_press = true;
                 apply_expand_capsule(win_surf, &vaus[0], 0);
                 apply_expand_capsule(win_surf, &vaus[1], 1);
             }
-        }
-        else if(keys[SDL_SCANCODE_5]) {
+        } else if (keys[SDL_SCANCODE_5]) {
             if (!cheat_key_press && DEBUG_MODE) {
                 cheat_key_press = true;
                 apply_divide_capsule();
             }
-        }
-        else if(keys[SDL_SCANCODE_6]) {
+        } else if (keys[SDL_SCANCODE_6]) {
             if (!cheat_key_press && DEBUG_MODE) {
                 cheat_key_press = true;
                 load_next();
             }
-        }
-        else if(keys[SDL_SCANCODE_7]) {
+        } else if (keys[SDL_SCANCODE_7]) {
             if (!cheat_key_press && DEBUG_MODE) {
                 cheat_key_press = true;
                 apply_addition_capsule();
             }
-        }
-        else if(keys[SDL_SCANCODE_8]) {
+        } else if (keys[SDL_SCANCODE_8]) {
             if (!cheat_key_press && DEBUG_MODE) {
                 cheat_key_press = true;
                 reset_score();
                 restart_level_1();
                 load_next();
             }
-        }
-        else {
+        } else {
             cheat_key_press = false;
         }
 
@@ -175,14 +167,14 @@ int main(int argc, char **argv) {
             move_VAUS(10, 1);
         }
         if (keys[SDL_SCANCODE_LCTRL]) {
-            if(multiplayer_mode) {
+            if (multiplayer_mode) {
                 if (!dead) {
                     int mock, laser_height;
                     get_texture_dimensions(EntityLaser_1, &mock, &mock, &mock,
                                            &laser_height);
                     const Point shooting_origin = {
-                            vaus[1].hit_box.origin.x + vaus[1].hit_box.width / 2,
-                            vaus[1].hit_box.origin.y - laser_height};
+                        vaus[1].hit_box.origin.x + vaus[1].hit_box.width / 2,
+                        vaus[1].hit_box.origin.y - laser_height};
                     shoot(shooting_origin, 1);
                 } else {
                     reset_score();
@@ -191,7 +183,7 @@ int main(int argc, char **argv) {
                 }
             }
         }
-        
+
         SDL_Event event;
         while (SDL_PollEvent(&event)) {
             switch (event.type) {

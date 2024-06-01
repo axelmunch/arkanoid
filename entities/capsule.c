@@ -78,8 +78,8 @@ void apply_catch_capsule() {
 
 void catch_ball(Ball *ball, const Rectangle vaus_hit_box, int vaus_index) {
     if (!catched_ball[vaus_index].catched && catch_cooldown[vaus_index] <= 0) {
-        if(catched_ball[1-vaus_index].catched && catched_ball[1-vaus_index].ball == ball)
-        {
+        if (catched_ball[1 - vaus_index].catched &&
+            catched_ball[1 - vaus_index].ball == ball) {
             return;
         }
         ball->velocity = 0.0;
@@ -99,11 +99,17 @@ void shoot_ball(int vaus_index) {
     }
 }
 
-void shoot_laser(const Point shoot_origin, int vaus_index) {
-    AnimatedEntity laser = create_entity(LASER_TYPE, shoot_origin);
-    laser.velocity = 15.0;
-    laser.direction = 90;
-    add_entity(laser);
+void shoot_laser(const Point shoot_origin, const int vaus_index) {
+    AnimatedEntity left_laser = create_entity(LASER_TYPE, shoot_origin);
+    left_laser.velocity = 15.0;
+    left_laser.direction = 90;
+    left_laser.hit_box.origin.x -= 15;
+    add_entity(left_laser);
+    AnimatedEntity right_laser = create_entity(LASER_TYPE, shoot_origin);
+    right_laser.velocity = 15.0;
+    right_laser.direction = 90;
+    right_laser.hit_box.origin.x += 15;
+    add_entity(right_laser);
     shoot_cooldown[vaus_index] = SHOOT_RELOAD_TIME_MS;
 }
 
@@ -133,8 +139,8 @@ void update_attached_ball(const Rectangle vaus_hitbox, int vaus_index) {
     if (catched_ball[vaus_index].catched) {
         Point ball_position;
         ball_position.x = vaus_hitbox.origin.x + vaus_hitbox.width / 2;
-        ball_position.y =
-            vaus_hitbox.origin.y - catched_ball[vaus_index].ball->hit_box.radius;
+        ball_position.y = vaus_hitbox.origin.y -
+                          catched_ball[vaus_index].ball->hit_box.radius;
         catched_ball[vaus_index].ball->hit_box.origin = ball_position;
     }
 }

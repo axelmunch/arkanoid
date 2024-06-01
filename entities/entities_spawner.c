@@ -75,10 +75,7 @@ bool laser_collides_with_brick(const AnimatedEntity *entity, SDL_Surface *win_su
                     }
 
                     if (brick.type != GOLD) {
-                        brick.durability--;
-                    }
-
-                    if (brick.durability == 0) {
+                        brick.durability = 0;
                         if (brick.capsule_reward != CAPSULE_EMPTY) {
                             add_entity(create_entity(brick.capsule_reward,
                                                      brick_hitbox.origin));
@@ -86,8 +83,6 @@ bool laser_collides_with_brick(const AnimatedEntity *entity, SDL_Surface *win_su
                         break_brick(brick.type);
                         level->bricks[y][x] =
                             create_brick(EMPTY, CAPSULE_EMPTY);
-                    } else {
-                        level->bricks[y][x] = brick;
                     }
 
                     return true;
