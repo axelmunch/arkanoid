@@ -170,12 +170,37 @@ bool update_entities(SDL_Surface *win_surf, bool multiplayer_mode) {
               multiplayer_mode))) {
             explode_entity(i);
             add_score(150);
+            continue;
         }
         if (entity->type == LASER) {
+            bool laser_collides_with_entity = false;
+            int entity_to_kill_index = -1;
+            for (int j = 0; j < entities->current_entities_count; j++) {
+                if (entities->entities[j].type == HARMFUL &&
+                    rect_rect_collision(entity->hit_box,
+                                        entities->entities[j].hit_box)) {
+                    laser_collides_with_entity = true;
+                    entity_to_kill_index = j;
+                    break;
+                }
+            }
             if (laser_collides_with_brick(entity, win_surf)) {
                 add_entity(
                     create_entity(LASER_EXPLOSION, entity->hit_box.origin));
                 remove_entity(i);
+                continue;
+            } else if (laser_collides_with_entity) {
+                // Kill the entities in order
+                if (entity_to_kill_index > i) {
+                    explode_entity(entity_to_kill_index);
+                    remove_entity(i);
+                } else {
+                    remove_entity(i);
+                    explode_entity(entity_to_kill_index);
+                }
+                add_score(150);
+                add_entity(
+                    create_entity(LASER_EXPLOSION, entity->hit_box.origin));
             }
         }
 
