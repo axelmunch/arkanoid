@@ -101,9 +101,6 @@ bool laser_collides_with_brick(const AnimatedEntity *entity) {
 
                     if (brick.type != GOLD) {
                         brick.durability--;
-                    }
-
-                    if (brick.durability == 0) {
                         if (brick.capsule_reward != CAPSULE_EMPTY) {
                             add_entity(create_entity(brick.capsule_reward,
                                                      brick_hitbox.origin));
@@ -111,10 +108,7 @@ bool laser_collides_with_brick(const AnimatedEntity *entity) {
                         break_brick(brick.type);
                         level->bricks[y][x] =
                             create_brick(EMPTY, CAPSULE_EMPTY);
-                    } else {
-                        level->bricks[y][x] = brick;
                     }
-
                     return true;
                 }
             }
@@ -145,7 +139,8 @@ void move_VAUS(double distance, int vaus_index) {
     vaus[vaus_index].hit_box.origin.x += distance * get_delta_time_target();
     if (vaus[vaus_index].hit_box.origin.x < GAME_BORDER_X) {
         vaus[vaus_index].hit_box.origin.x = GAME_BORDER_X;
-    } else if (vaus[vaus_index].hit_box.origin.x + vaus[vaus_index].hit_box.width >
+    } else if (vaus[vaus_index].hit_box.origin.x +
+                   vaus[vaus_index].hit_box.width >
                win_surf->w - GAME_BORDER_X) {
         vaus[vaus_index].hit_box.origin.x =
             win_surf->w - GAME_BORDER_X - vaus[vaus_index].hit_box.width;
@@ -359,8 +354,7 @@ void draw() {
 
     draw_score();
 
-    if(DEBUG_MODE)
-    {
+    if (DEBUG_MODE) {
         draw_text(win_surf, "FPS", 10, win_surf->h - 74);
         draw_integer(win_surf, (int) get_current_fps(), 10, win_surf->h - 42);
     }
@@ -407,8 +401,9 @@ void update_balls() {
             rect_circle_collision(vaus[0].hit_box, ball->hit_box);
         const bool collide_with_vaus_2_x =
             rect_circle_collision(vaus[1].hit_box, ball->hit_box);
-        if (ball_collides_with_vertical_border(ball) || collide_with_vaus_1_x || collide_with_vaus_2_x ||
-            ball_collides_with_brick(ball) || ball_collides_with_entity(ball)) {
+        if (ball_collides_with_vertical_border(ball) || collide_with_vaus_1_x ||
+            collide_with_vaus_2_x || ball_collides_with_brick(ball) ||
+            ball_collides_with_entity(ball)) {
             ball->direction = fmod(180 - ball->direction, 360);
             ball->hit_box.origin.x -= ball_movement.x;
         }
@@ -418,7 +413,8 @@ void update_balls() {
             rect_circle_collision(vaus[0].hit_box, ball->hit_box);
         const bool collide_with_vaus_2_y =
             rect_circle_collision(vaus[1].hit_box, ball->hit_box);
-        if (ball_collides_with_horizontal_border(ball) || collide_with_vaus_1_y || collide_with_vaus_2_y ||
+        if (ball_collides_with_horizontal_border(ball) ||
+            collide_with_vaus_1_y || collide_with_vaus_2_y ||
             ball_collides_with_brick(ball) || ball_collides_with_entity(ball)) {
             ball->direction = fmod(360 - ball->direction, 360);
             ball->hit_box.origin.y += ball_movement.y;
@@ -526,7 +522,8 @@ void update_entities() {
 
         // Collision
         if (entity->type == HARMFUL &&
-            (rect_rect_collision(entity->hit_box, vaus[0].hit_box)||rect_rect_collision(entity->hit_box, vaus[1].hit_box))) {
+            (rect_rect_collision(entity->hit_box, vaus[0].hit_box) ||
+             rect_rect_collision(entity->hit_box, vaus[1].hit_box))) {
             explode_entity(i);
             add_score(150);
         }
@@ -539,14 +536,14 @@ void update_entities() {
         }
 
         // Capsules
-        if (entity->type == CAPSULE && (rect_rect_collision(entity->hit_box, vaus[0].hit_box) || rect_rect_collision(entity->hit_box, vaus[1].hit_box))) {
+        if (entity->type == CAPSULE &&
+            (rect_rect_collision(entity->hit_box, vaus[0].hit_box) ||
+             rect_rect_collision(entity->hit_box, vaus[1].hit_box))) {
             switch (entity->specific_type) {
             case CAPSULE_EXPAND:
-                if(rect_rect_collision(entity->hit_box, vaus[0].hit_box))
-                {
+                if (rect_rect_collision(entity->hit_box, vaus[0].hit_box)) {
                     apply_expand_capsule(&vaus[0]);
-                }
-                else {
+                } else {
                     apply_expand_capsule(&vaus[1]);
                 }
                 break;
@@ -641,8 +638,8 @@ int main(int argc, char **argv) {
                 get_texture_dimensions(EntityLaser_1, &mock, &mock, &mock,
                                        &laser_height);
                 const Point shooting_origin = {
-                        vaus[0].hit_box.origin.x + vaus[0].hit_box.width / 2,
-                        vaus[0].hit_box.origin.y - laser_height};
+                    vaus[0].hit_box.origin.x + vaus[0].hit_box.width / 2,
+                    vaus[0].hit_box.origin.y - laser_height};
                 shoot(shooting_origin, 0);
             } else {
                 reset_score();
@@ -650,60 +647,52 @@ int main(int argc, char **argv) {
                 load_next();
             }
         }
-        
+
         if (keys[SDL_SCANCODE_1]) {
             if (!cheat_key_press && DEBUG_MODE) {
                 cheat_key_press = true;
                 apply_slow_capsule();
             }
-        }
-        else if(keys[SDL_SCANCODE_2]) {
+        } else if (keys[SDL_SCANCODE_2]) {
             if (!cheat_key_press && DEBUG_MODE) {
                 cheat_key_press = true;
                 apply_catch_capsule();
             }
-        }
-        else if(keys[SDL_SCANCODE_3]) {
+        } else if (keys[SDL_SCANCODE_3]) {
             if (!cheat_key_press && DEBUG_MODE) {
                 cheat_key_press = true;
                 apply_laser_capsule();
             }
-        }
-        else if(keys[SDL_SCANCODE_4]) {
+        } else if (keys[SDL_SCANCODE_4]) {
             if (!cheat_key_press && DEBUG_MODE) {
                 cheat_key_press = true;
                 // TODO Change for 2 vaus
                 apply_expand_capsule(&vaus);
                 // apply_expand_capsule(&vaus);
             }
-        }
-        else if(keys[SDL_SCANCODE_5]) {
+        } else if (keys[SDL_SCANCODE_5]) {
             if (!cheat_key_press && DEBUG_MODE) {
                 cheat_key_press = true;
                 apply_divide_capsule();
             }
-        }
-        else if(keys[SDL_SCANCODE_6]) {
+        } else if (keys[SDL_SCANCODE_6]) {
             if (!cheat_key_press && DEBUG_MODE) {
                 cheat_key_press = true;
                 load_next();
             }
-        }
-        else if(keys[SDL_SCANCODE_7]) {
+        } else if (keys[SDL_SCANCODE_7]) {
             if (!cheat_key_press && DEBUG_MODE) {
                 cheat_key_press = true;
                 apply_addition_capsule();
             }
-        }
-        else if(keys[SDL_SCANCODE_8]) {
+        } else if (keys[SDL_SCANCODE_8]) {
             if (!cheat_key_press && DEBUG_MODE) {
                 cheat_key_press = true;
                 reset_score();
                 restart_level_1();
                 load_next();
             }
-        }
-        else {
+        } else {
             cheat_key_press = false;
         }
 
@@ -718,14 +707,14 @@ int main(int argc, char **argv) {
             move_VAUS(10, 1);
         }
         if (keys[SDL_SCANCODE_LCTRL]) {
-            if(multiplayer_mode) {
+            if (multiplayer_mode) {
                 if (!dead) {
                     int mock, laser_height;
                     get_texture_dimensions(EntityLaser_1, &mock, &mock, &mock,
                                            &laser_height);
                     const Point shooting_origin = {
-                            vaus[1].hit_box.origin.x + vaus[1].hit_box.width / 2,
-                            vaus[1].hit_box.origin.y - laser_height};
+                        vaus[1].hit_box.origin.x + vaus[1].hit_box.width / 2,
+                        vaus[1].hit_box.origin.y - laser_height};
                     shoot(shooting_origin, 1);
                 } else {
                     reset_score();
@@ -734,7 +723,7 @@ int main(int argc, char **argv) {
                 }
             }
         }
-        
+
         SDL_Event event;
         while (SDL_PollEvent(&event)) {
             switch (event.type) {
