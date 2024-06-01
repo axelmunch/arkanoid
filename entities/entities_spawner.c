@@ -80,7 +80,7 @@ bool laser_collides_with_brick(const AnimatedEntity *entity, SDL_Surface *win_su
                             add_entity(create_entity(brick.capsule_reward,
                                                      brick_hitbox.origin));
                         }
-                        break_brick(brick.type);
+                        score_break_brick(brick.type);
                         level->bricks[y][x] =
                             create_brick(EMPTY, CAPSULE_EMPTY);
                     }

@@ -11,7 +11,7 @@ void add_score(int score);
 
 void update_score();
 
-void break_brick(BrickType brick_type);
+void score_break_brick(BrickType brick_type);
 
 int get_score();
 

@@ -60,7 +60,7 @@ bool ball_collides_with_brick(SDL_Surface *win_surf, const Ball *ball) {
                             add_entity(create_entity(brick.capsule_reward,
                                                      brick_hitbox.origin));
                         }
-                        break_brick(brick.type);
+                        score_break_brick(brick.type);
                         level->bricks[y][x] =
                             create_brick(EMPTY, CAPSULE_EMPTY);
                     } else {
