@@ -136,7 +136,21 @@ void draw_score(SDL_Surface *win_surf) {
                      win_surf->w - 10 - high_score_value_text_width, 5);
 }
 
-void draw(SDL_Surface *win_surf, bool multiplayer_mode, bool dead) {
+void draw_lives(SDL_Surface *win_surf, int lives) {
+    int mock, ball_width, ball_height, border_width;
+    get_texture_dimensions(BallTexture, &mock, &mock, &ball_width,
+                           &ball_height);
+    get_texture_dimensions(BorderSide, &mock, &mock, &border_width, &mock);
+
+    for (int i = 0; i < lives - 1; i++) {
+        draw_texture(win_surf, BallTexture,
+                     win_surf->w - GAME_BORDER_X / 2 - ball_width / 2 +
+                         border_width / 2,
+                     GAME_BORDER_TOP - 10 + ball_height * 1.5 * i, false);
+    }
+}
+
+void draw(SDL_Surface *win_surf, bool multiplayer_mode, int lives) {
     draw_background(win_surf);
 
     draw_borders_1(win_surf);
@@ -166,18 +180,20 @@ void draw(SDL_Surface *win_surf, bool multiplayer_mode, bool dead) {
 
     draw_borders_2(win_surf);
 
+    draw_lives(win_surf, lives);
+
     draw_score(win_surf);
 
     if (DEBUG_MODE) {
         draw_text(win_surf, "FPS", 10, win_surf->h - 74);
         draw_integer(win_surf, (int) get_current_fps(), 10, win_surf->h - 42);
     }
-    Point active_capsule_point = {GAME_BORDER_X / 2 - 20, 40};
+    Point active_capsule_point = {GAME_BORDER_X / 2 - 20, GAME_BORDER_TOP - 10};
     AnimatedEntity active_capsule_display =
         create_entity(get_active_capsule(), active_capsule_point);
     draw_entity(win_surf, active_capsule_display);
 
-    if (dead) {
+    if (lives == 0) {
         dead_text_width =
             draw_text(win_surf, "Press SPACE to restart",
                       win_surf->w / 2 - dead_text_width / 2, win_surf->h / 2);

@@ -36,4 +36,6 @@
 #define DISPLAY_SHADOWS true
 #define SHADOW_OFFSET   5
 
+#define DEFAULT_LIVES 2
+
 #endif // ARKANOID_CONFIG_H

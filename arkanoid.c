@@ -19,21 +19,24 @@ SDL_Surface *win_surf = NULL;
 
 bool cheat_key_press = false;
 bool multiplayer_mode = false;
-bool dead = false;
+int lives = DEFAULT_LIVES;
 
-void load_next() {
-    dead = false;
-    load_next_level();
-    reset_spawner();
-    reset_balls();
-    reset_capsules();
-    reset_vaus();
+void init_ball_shoot() {
     Point ballPosition = {win_surf->w / 2, win_surf->h / 2};
     add_ball(create_ball(ballPosition));
     Balls *balls = get_balls();
     VAUS *vaus = get_vaus();
     catch_ball(&balls->spawned_balls[balls->current_balls_count - 1],
                vaus[0].hit_box, 0);
+}
+
+void load_next() {
+    load_next_level();
+    reset_spawner();
+    reset_balls();
+    reset_capsules();
+    reset_vaus();
+    init_ball_shoot();
 }
 
 void init() {
@@ -51,7 +54,10 @@ void init() {
 void update() {
     update_cooldowns();
     if (update_balls(win_surf, multiplayer_mode)) {
-        dead = true;
+        lives--;
+        if (lives > 0) {
+            init_ball_shoot();
+        }
     }
     update_spawner();
     if (update_entities(win_surf, multiplayer_mode)) {
@@ -90,7 +96,7 @@ int main(int argc, char **argv) {
             move_VAUS(10, 0);
         }
         if (keys[SDL_SCANCODE_SPACE]) {
-            if (!dead) {
+            if (lives > 0) {
                 int mock, laser_height;
                 get_texture_dimensions(EntityLaser_1, &mock, &mock, &mock,
                                        &laser_height);
@@ -101,6 +107,7 @@ int main(int argc, char **argv) {
             } else {
                 reset_score();
                 restart_level_1();
+                lives = DEFAULT_LIVES;
                 load_next();
             }
         }
@@ -164,7 +171,7 @@ int main(int argc, char **argv) {
         }
         if (keys[SDL_SCANCODE_LCTRL]) {
             if (multiplayer_mode) {
-                if (!dead) {
+                if (lives > 0) {
                     int mock, laser_height;
                     get_texture_dimensions(EntityLaser_1, &mock, &mock, &mock,
                                            &laser_height);
@@ -172,10 +179,6 @@ int main(int argc, char **argv) {
                         vaus[1].hit_box.origin.x + vaus[1].hit_box.width / 2,
                         vaus[1].hit_box.origin.y - laser_height};
                     shoot(shooting_origin, 1);
-                } else {
-                    reset_score();
-                    restart_level_1();
-                    load_next();
                 }
             }
         }
@@ -190,7 +193,7 @@ int main(int argc, char **argv) {
         }
 
         update();
-        draw(win_surf, multiplayer_mode, dead);
+        draw(win_surf, multiplayer_mode, lives);
         SDL_UpdateWindowSurface(pWindow);
 
         SDL_Delay((Uint32) GAME_FPS_MS);

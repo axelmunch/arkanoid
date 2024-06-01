@@ -112,7 +112,7 @@ bool apply_ball_effect(double ball_direction, bool add_effect) {
 }
 
 bool update_balls(SDL_Surface *win_surf, bool multiplayer_mode) {
-    // Return true if player is dead
+    // Return true if no balls left
 
     Balls *balls = get_balls();
     VAUS *vaus = get_vaus();
