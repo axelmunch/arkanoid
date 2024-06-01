@@ -10,8 +10,16 @@ float catch_cooldown[2];
 float balls_velocity = DEFAULT_BALL_VELOCITY;
 struct CatchedBall catched_ball[2];
 
-void apply_expand_capsule(VAUS *vaus) {
+void apply_expand_capsule(SDL_Surface *win_surf, VAUS *vaus, int vaus_index) {
     update_VAUS_size(vaus, vaus->expand_size + 1);
+
+    if (vaus->hit_box.origin.x + vaus->hit_box.width >
+        win_surf->w - GAME_BORDER_X) {
+        vaus->hit_box.origin.x =
+            win_surf->w - GAME_BORDER_X - vaus->hit_box.width;
+    }
+
+    update_attached_ball(vaus->hit_box, vaus_index);
 }
 
 void update_balls_velocity(float velocity) {
@@ -92,15 +100,17 @@ void shoot_ball(int vaus_index) {
 }
 
 void shoot_laser(const Point shoot_origin, const int vaus_index) {
+    int mock, laser_width;
+    get_texture_dimensions(EntityLaser_1, &mock, &mock, &laser_width, &mock);
     AnimatedEntity left_laser = create_entity(LASER_TYPE, shoot_origin);
     left_laser.velocity = 15.0;
     left_laser.direction = 90;
-    left_laser.hit_box.origin.x -= 15;
+    left_laser.hit_box.origin.x -= laser_width * 1.5;
     add_entity(left_laser);
     AnimatedEntity right_laser = create_entity(LASER_TYPE, shoot_origin);
     right_laser.velocity = 15.0;
     right_laser.direction = 90;
-    right_laser.hit_box.origin.x += 15;
+    right_laser.hit_box.origin.x += laser_width * 0.5;
     add_entity(right_laser);
     shoot_cooldown[vaus_index] = SHOOT_RELOAD_TIME_MS;
 }
@@ -126,6 +136,7 @@ void update_active_capsule(SpecificType capsule_type) {
     }
     active_capsule = capsule_type;
 }
+
 void update_attached_ball(const Rectangle vaus_hitbox, int vaus_index) {
     if (catched_ball[vaus_index].catched) {
         Point ball_position;

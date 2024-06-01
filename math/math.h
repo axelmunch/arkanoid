@@ -1,5 +1,6 @@
 #ifndef ARKANOID_MATH_H
 #define ARKANOID_MATH_H
+
 #include <math.h>
 
 typedef struct Point Point;
