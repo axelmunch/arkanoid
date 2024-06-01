@@ -94,7 +94,7 @@ bool laser_collides_with_brick(const AnimatedEntity *entity,
     return false;
 }
 
-bool update_entities(SDL_Surface *win_surf) {
+bool update_entities(SDL_Surface *win_surf, bool multiplayer_mode) {
     // Return true if should change level (capsule break)
 
     SpawnedEntities *entities = get_entities();
@@ -163,7 +163,8 @@ bool update_entities(SDL_Surface *win_surf) {
         VAUS *vaus = get_vaus();
         if (entity->type == HARMFUL &&
             (rect_rect_collision(entity->hit_box, vaus[0].hit_box) ||
-             rect_rect_collision(entity->hit_box, vaus[1].hit_box))) {
+             (rect_rect_collision(entity->hit_box, vaus[1].hit_box) &&
+              multiplayer_mode))) {
             explode_entity(i);
             add_score(150);
         }
@@ -178,7 +179,8 @@ bool update_entities(SDL_Surface *win_surf) {
         // Capsules
         if (entity->type == CAPSULE &&
             (rect_rect_collision(entity->hit_box, vaus[0].hit_box) ||
-             rect_rect_collision(entity->hit_box, vaus[1].hit_box))) {
+             (rect_rect_collision(entity->hit_box, vaus[1].hit_box) &&
+              multiplayer_mode))) {
             switch (entity->specific_type) {
             case CAPSULE_EXPAND:
                 if (rect_rect_collision(entity->hit_box, vaus[0].hit_box)) {

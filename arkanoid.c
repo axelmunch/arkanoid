@@ -54,7 +54,7 @@ void update() {
         dead = true;
     }
     update_spawner();
-    if (update_entities(win_surf)) {
+    if (update_entities(win_surf, multiplayer_mode)) {
         load_next();
     }
     if (update_level()) {

@@ -26,7 +26,7 @@ void remove_entity(int index);
 void explode_entity(int index);
 bool laser_collides_with_brick(const AnimatedEntity *entity,
                                SDL_Surface *win_surf);
-bool update_entities(SDL_Surface *win_surf);
+bool update_entities(SDL_Surface *win_surf, bool multiplayer_mode);
 SpawnedEntities *get_entities();
 
 #endif // ARKANOID_ENTITIES_SPAWNER_H
