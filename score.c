@@ -28,7 +28,7 @@ void update_score() {
     }
 }
 
-void break_brick(BrickType brick_type) {
+void score_break_brick(BrickType brick_type) {
     switch (brick_type) {
     case ORANGE:
     case YELLOW:

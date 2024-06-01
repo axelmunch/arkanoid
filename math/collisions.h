@@ -1,5 +1,6 @@
 #ifndef ARKANOID_COLLISIONS_H
 #define ARKANOID_COLLISIONS_H
+
 #include "math.h"
 #include "stdbool.h"
 
