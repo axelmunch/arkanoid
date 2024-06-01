@@ -43,6 +43,13 @@ void move_VAUS(double distance, int vaus_index) {
                     vaus[vaus_index].hit_box.origin.y - ball->hit_box.radius;
             }
         }
+
+        // If double collision, get ball above vaus
+        if (rect_circle_collision(vaus[1 - vaus_index].hit_box,
+                                  ball->hit_box)) {
+            ball->hit_box.origin.y =
+                vaus[vaus_index].hit_box.origin.y - ball->hit_box.radius;
+        }
     }
     update_attached_ball(vaus[0].hit_box, 0);
     update_attached_ball(vaus[1].hit_box, 1);
