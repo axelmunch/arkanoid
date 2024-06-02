@@ -97,6 +97,42 @@ bool laser_collides_with_brick(const AnimatedEntity *entity,
     return false;
 }
 
+bool handle_laser_entities_collision(AnimatedEntity *laser_entity,
+                                     int laser_index) {
+    // Return true if an entity was killed by the laser
+
+    // Test collision
+    SpawnedEntities *entities = get_entities();
+    bool laser_collides_with_entity = false;
+    int entity_to_kill_index = -1;
+    for (int j = 0; j < entities->current_entities_count; j++) {
+        if (entities->entities[j].type == HARMFUL &&
+            rect_rect_collision(laser_entity->hit_box,
+                                entities->entities[j].hit_box)) {
+            laser_collides_with_entity = true;
+            entity_to_kill_index = j;
+            break;
+        }
+    }
+
+    if (!laser_collides_with_entity) {
+        return false;
+    }
+
+    // Kill the entities in order (should remove highest index first)
+    if (entity_to_kill_index > laser_index) {
+        explode_entity(entity_to_kill_index);
+        remove_entity(laser_index);
+    } else {
+        remove_entity(laser_index);
+        explode_entity(entity_to_kill_index);
+    }
+    add_score(150);
+    add_entity(create_entity(LASER_EXPLOSION, laser_entity->hit_box.origin));
+
+    return true;
+}
+
 bool update_entities(SDL_Surface *win_surf, bool multiplayer_mode) {
     // Return true if should change level (capsule break)
 
@@ -151,12 +187,16 @@ bool update_entities(SDL_Surface *win_surf, bool multiplayer_mode) {
             entity->hit_box.origin.y -= entity_movement.y;
         } else {
             if (entity->type == LASER) {
+                Point new_position = entity->hit_box.origin;
+                new_position.y = GAME_BORDER_TOP;
+                add_entity(create_entity(LASER_EXPLOSION, new_position));
                 remove_entity(i);
                 continue;
             }
             entity->direction = fmod(entity->direction + 180, 360);
         }
 
+        // Out of bounds
         if (entity->hit_box.origin.y > win_surf->h) {
             remove_entity(i);
             continue;
@@ -170,12 +210,16 @@ bool update_entities(SDL_Surface *win_surf, bool multiplayer_mode) {
               multiplayer_mode))) {
             explode_entity(i);
             add_score(150);
+            continue;
         }
         if (entity->type == LASER) {
             if (laser_collides_with_brick(entity, win_surf)) {
                 add_entity(
                     create_entity(LASER_EXPLOSION, entity->hit_box.origin));
                 remove_entity(i);
+                continue;
+            } else if (handle_laser_entities_collision(entity, i)) {
+                continue;
             }
         }
 

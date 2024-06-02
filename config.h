@@ -36,6 +36,8 @@
 #define DISPLAY_SHADOWS true
 #define SHADOW_OFFSET   5
 
+#define DEFAULT_LIVES 2
+
 #define CHUNK_COUNT   12
 #define CHUNK_VOLUME  8
 #define MUSIC_VOLUME  16
