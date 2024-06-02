@@ -53,7 +53,7 @@ void init() {
 
 void update() {
     update_cooldowns();
-    if (update_balls(win_surf, multiplayer_mode)) {
+    if (!update_balls(win_surf, multiplayer_mode)) {
         lives--;
         if (lives > 0) {
             init_ball_shoot();

@@ -112,7 +112,7 @@ bool apply_ball_effect(double ball_direction, bool add_effect) {
 }
 
 bool update_balls(SDL_Surface *win_surf, bool multiplayer_mode) {
-    // Return true if no balls left
+    // Return false if no balls left
 
     Balls *balls = get_balls();
     VAUS *vaus = get_vaus();
@@ -181,12 +181,12 @@ bool update_balls(SDL_Surface *win_surf, bool multiplayer_mode) {
         if (ball->hit_box.origin.y - ball->hit_box.radius > win_surf->h) {
             remove_ball(i);
             if (balls->current_balls_count == 0) {
-                return true;
+                return false;
             }
         }
     }
 
-    return false;
+    return true;
 }
 
 Balls *get_balls() { return &balls; }
