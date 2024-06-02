@@ -1,7 +1,13 @@
 #ifndef CAPSULE_H
 #define CAPSULE_H
+
+#include "../config.h"
+#include "../textures.h"
 #include "ball.h"
+#include "entities_spawner.h"
 #include "entities_structures.h"
+#include "entity.h"
+#include <SDL.h>
 
 struct CatchedBall {
     Ball *ball;
@@ -10,7 +16,7 @@ struct CatchedBall {
 
 void apply_addition_capsule();
 void apply_catch_capsule();
-void apply_expand_capsule(VAUS *vaus);
+void apply_expand_capsule(SDL_Surface *win_surf, VAUS *vaus, int vaus_index);
 void apply_slow_capsule();
 void apply_divide_capsule();
 void apply_laser_capsule();

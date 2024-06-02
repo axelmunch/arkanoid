@@ -4,6 +4,7 @@
 #include "audio.h"
 #include "config.h"
 #include "entities/entities_structures.h"
+#include "delta_time.h"
 #include <stdbool.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -60,6 +61,7 @@ void reset_level();
 void load_next_level();
 void load_level(const char *filename);
 bool is_level_completed();
+bool update_level();
 Level *get_level();
 
 #endif // ARKANOID_LEVELS_H

@@ -30,7 +30,11 @@ add_executable(${PROJECT_NAME}
         score.c
         score.h
         audio.c
-        audio.h)
+        audio.h
+        vaus.c
+        vaus.h
+        graphics.c
+        graphics.h)
 target_sources(${PROJECT_NAME} PRIVATE arkanoid.c)
 
 target_link_libraries(${PROJECT_NAME} PRIVATE m)
