@@ -94,6 +94,42 @@ bool laser_collides_with_brick(const AnimatedEntity *entity,
     return false;
 }
 
+bool handle_laser_entities_collision(AnimatedEntity *laser_entity,
+                                     int laser_index) {
+    // Return true if an entity was killed by the laser
+
+    // Test collision
+    SpawnedEntities *entities = get_entities();
+    bool laser_collides_with_entity = false;
+    int entity_to_kill_index = -1;
+    for (int j = 0; j < entities->current_entities_count; j++) {
+        if (entities->entities[j].type == HARMFUL &&
+            rect_rect_collision(laser_entity->hit_box,
+                                entities->entities[j].hit_box)) {
+            laser_collides_with_entity = true;
+            entity_to_kill_index = j;
+            break;
+        }
+    }
+
+    if (!laser_collides_with_entity) {
+        return false;
+    }
+
+    // Kill the entities in order (should remove highest index first)
+    if (entity_to_kill_index > laser_index) {
+        explode_entity(entity_to_kill_index);
+        remove_entity(laser_index);
+    } else {
+        remove_entity(laser_index);
+        explode_entity(entity_to_kill_index);
+    }
+    add_score(150);
+    add_entity(create_entity(LASER_EXPLOSION, laser_entity->hit_box.origin));
+
+    return true;
+}
+
 bool update_entities(SDL_Surface *win_surf, bool multiplayer_mode) {
     // Return true if should change level (capsule break)
 
@@ -157,6 +193,7 @@ bool update_entities(SDL_Surface *win_surf, bool multiplayer_mode) {
             entity->direction = fmod(entity->direction + 180, 360);
         }
 
+        // Out of bounds
         if (entity->hit_box.origin.y > win_surf->h) {
             remove_entity(i);
             continue;
@@ -173,34 +210,13 @@ bool update_entities(SDL_Surface *win_surf, bool multiplayer_mode) {
             continue;
         }
         if (entity->type == LASER) {
-            bool laser_collides_with_entity = false;
-            int entity_to_kill_index = -1;
-            for (int j = 0; j < entities->current_entities_count; j++) {
-                if (entities->entities[j].type == HARMFUL &&
-                    rect_rect_collision(entity->hit_box,
-                                        entities->entities[j].hit_box)) {
-                    laser_collides_with_entity = true;
-                    entity_to_kill_index = j;
-                    break;
-                }
-            }
             if (laser_collides_with_brick(entity, win_surf)) {
                 add_entity(
                     create_entity(LASER_EXPLOSION, entity->hit_box.origin));
                 remove_entity(i);
                 continue;
-            } else if (laser_collides_with_entity) {
-                // Kill the entities in order
-                if (entity_to_kill_index > i) {
-                    explode_entity(entity_to_kill_index);
-                    remove_entity(i);
-                } else {
-                    remove_entity(i);
-                    explode_entity(entity_to_kill_index);
-                }
-                add_score(150);
-                add_entity(
-                    create_entity(LASER_EXPLOSION, entity->hit_box.origin));
+            } else if (handle_laser_entities_collision(entity, i)) {
+                continue;
             }
         }
 
