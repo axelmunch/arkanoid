@@ -2,6 +2,7 @@
 #define ARKANOID_TEXTURES_H
 
 #include "config.h"
+#include "delta_time.h"
 #include "entities/entities_structures.h"
 #include "levels.h"
 #include "math/math.h"
@@ -24,6 +25,8 @@ typedef enum {
     VausSize6,
     VausSize7,
     VausSize8,
+    VausBlinkingLeft,
+    VausBlinkingRight,
     BrickWhite,
     BrickOrange,
     BrickCyan,
@@ -181,7 +184,7 @@ void draw_texture(SDL_Surface *surface, Textures texture, int x, int y,
 void draw_brick(SDL_Surface *surface, BrickType type, int brick_animation,
                 int x, int y);
 
-void draw_vaus(SDL_Surface *surface, VAUS vaus);
+void draw_vaus(SDL_Surface *surface, VAUS vaus, int vaus_index);
 
 void draw_entity(SDL_Surface *surface, AnimatedEntity entity);
 

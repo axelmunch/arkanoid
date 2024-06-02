@@ -105,10 +105,34 @@ int main(int argc, char **argv) {
                     vaus[0].hit_box.origin.y - laser_height};
                 shoot(shooting_origin, 0);
             } else {
+                multiplayer_mode = false;
                 reset_score();
                 restart_level_1();
                 lives = DEFAULT_LIVES;
                 load_next();
+            }
+        }
+        if (keys[SDL_SCANCODE_A] || keys[SDL_SCANCODE_Q]) {
+            multiplayer_mode = true;
+            vaus[1].moving_direction = LEFT;
+            move_VAUS(-10, 1);
+        }
+        if (keys[SDL_SCANCODE_D]) {
+            multiplayer_mode = true;
+            vaus[1].moving_direction = RIGHT;
+            move_VAUS(10, 1);
+        }
+        if (keys[SDL_SCANCODE_LCTRL]) {
+            if (multiplayer_mode) {
+                if (lives > 0) {
+                    int mock, laser_height;
+                    get_texture_dimensions(EntityLaser_1, &mock, &mock, &mock,
+                                           &laser_height);
+                    const Point shooting_origin = {
+                        vaus[1].hit_box.origin.x + vaus[1].hit_box.width / 2,
+                        vaus[1].hit_box.origin.y - laser_height};
+                    shoot(shooting_origin, 1);
+                }
             }
         }
 
@@ -157,30 +181,6 @@ int main(int argc, char **argv) {
             }
         } else {
             cheat_key_press = false;
-        }
-
-        if (keys[SDL_SCANCODE_A] || keys[SDL_SCANCODE_Q]) {
-            multiplayer_mode = true;
-            vaus[1].moving_direction = LEFT;
-            move_VAUS(-10, 1);
-        }
-        if (keys[SDL_SCANCODE_D]) {
-            multiplayer_mode = true;
-            vaus[1].moving_direction = RIGHT;
-            move_VAUS(10, 1);
-        }
-        if (keys[SDL_SCANCODE_LCTRL]) {
-            if (multiplayer_mode) {
-                if (lives > 0) {
-                    int mock, laser_height;
-                    get_texture_dimensions(EntityLaser_1, &mock, &mock, &mock,
-                                           &laser_height);
-                    const Point shooting_origin = {
-                        vaus[1].hit_box.origin.x + vaus[1].hit_box.width / 2,
-                        vaus[1].hit_box.origin.y - laser_height};
-                    shoot(shooting_origin, 1);
-                }
-            }
         }
 
         SDL_Event event;
