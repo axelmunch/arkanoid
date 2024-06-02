@@ -13,6 +13,18 @@
 apt install libsdl2-dev libsdl2-mixer-dev
 ````
 
+## Contorls
+
+Player 1:
+
+- Move with left and right arrows
+- Shoot with space
+
+Player 2:
+
+- Move with A/Q and D
+- Shoot with left control
+
 ## Custom music
 
 ### URL
