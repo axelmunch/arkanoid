@@ -2,7 +2,7 @@ from enum import Enum
 
 import pygame
 
-SPRITE_SHEET = "Arkanoid_sprites.bmp"
+SPRITE_SHEET = "assets/Arkanoid_sprites.bmp"
 
 BRICK_WIDTH = 32
 BRICK_HEIGHT = 16
