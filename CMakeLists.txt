@@ -4,7 +4,6 @@ project(Arkanoid LANGUAGES C)
 
 find_package(SDL2 CONFIG REQUIRED)
 
-
 add_executable(${PROJECT_NAME}
         config.h
         delta_time.c
@@ -30,6 +29,8 @@ add_executable(${PROJECT_NAME}
         entities/ball.h
         score.c
         score.h
+        audio.c
+        audio.h
         vaus.c
         vaus.h
         graphics.c
@@ -38,19 +39,23 @@ target_sources(${PROJECT_NAME} PRIVATE arkanoid.c)
 
 target_link_libraries(${PROJECT_NAME} PRIVATE m)
 
-if (TARGET SDL2::SDL2)
-    target_link_libraries(${PROJECT_NAME} PRIVATE SDL2::SDL2 SDL2::SDL2main)
+set(MusicsArchiveFilename "musics.zip")
+if (MUSICS_ARCHIVE_URL)
+    message(STATUS "Downloading custom music archive")
+    file(DOWNLOAD ${MUSICS_ARCHIVE_URL} ${MusicsArchiveFilename})
+    file(ARCHIVE_EXTRACT INPUT ${MusicsArchiveFilename} DESTINATION assets)
+    file(REMOVE ${MusicsArchiveFilename})
+endif ()
+
+if (TARGET SDL2::SDL2 AND TARGET SDL2::SDL2 AND TARGET SDL2_mixer::SDL2_mixer)
+    target_link_libraries(${PROJECT_NAME} PRIVATE SDL2::SDL2 SDL2_mixer::SDL2_mixer)
 else ()
-    target_include_directories(${PROJECT_NAME} PRIVATE ${SDL2_INCLUDE_DIRS})
-    target_link_libraries(${PROJECT_NAME} PRIVATE SDL2 SDL2main)
+    target_include_directories(${PROJECT_NAME} PRIVATE ${SDL2_INCLUDE_DIRS} ${SDL2_mixer_INCLUDE_DIRS})
+    target_link_libraries(${PROJECT_NAME} PRIVATE SDL2 SDL2 SDL2_mixer)
 endif ()
 
 
 file(COPY ${CMAKE_CURRENT_SOURCE_DIR}/assets
         DESTINATION ${CMAKE_CURRENT_BINARY_DIR}/)
-file(COPY ${CMAKE_CURRENT_SOURCE_DIR}/Arkanoid_ascii.bmp
-    DESTINATION ${CMAKE_CURRENT_BINARY_DIR}/)
-file(COPY ${CMAKE_CURRENT_SOURCE_DIR}/Arkanoid_sprites.bmp
-    DESTINATION ${CMAKE_CURRENT_BINARY_DIR}/)
 file(COPY ${CMAKE_CURRENT_SOURCE_DIR}/levels
-    DESTINATION ${CMAKE_CURRENT_BINARY_DIR}/)
+        DESTINATION ${CMAKE_CURRENT_BINARY_DIR}/)

@@ -1,7 +1,7 @@
 #include "textures.h"
 #include <stdbool.h>
 
-char *texture_file = "Arkanoid_sprites.bmp";
+char *texture_file = "assets/Arkanoid_sprites.bmp";
 
 float vaus_blink_animation_timer = 0;
 

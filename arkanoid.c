@@ -44,11 +44,14 @@ void init() {
                                SDL_WINDOWPOS_UNDEFINED, SCREEN_WIDTH,
                                SCREEN_HEIGHT, SDL_WINDOW_SHOWN);
     win_surf = SDL_GetWindowSurface(pWindow);
-
+    init_mixer();
     init_spawner();
     init_vaus(win_surf);
     init_score();
     load_next();
+    init_delta_time();
+    init_text();
+    init_texture();
 }
 
 void update() {
@@ -74,9 +77,6 @@ int main(int argc, char **argv) {
     }
 
     init();
-    init_delta_time();
-    init_text();
-    init_texture();
 
     bool quit = false;
     while (!quit) {
@@ -166,6 +166,7 @@ int main(int argc, char **argv) {
             if (!cheat_key_press && DEBUG_MODE) {
                 cheat_key_press = true;
                 load_next();
+                play_chunk(BREAK);
             }
         } else if (keys[SDL_SCANCODE_7]) {
             if (!cheat_key_press && DEBUG_MODE) {
@@ -198,7 +199,7 @@ int main(int argc, char **argv) {
 
         SDL_Delay((Uint32) GAME_FPS_MS);
     }
-
+    free_mixer();
     SDL_Quit();
     return 0;
 }

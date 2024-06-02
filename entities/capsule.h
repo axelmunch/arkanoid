@@ -4,7 +4,9 @@
 #include "../config.h"
 #include "../textures.h"
 #include "ball.h"
+#include "entities_spawner.h"
 #include "entities_structures.h"
+#include "entity.h"
 #include <SDL.h>
 
 struct CatchedBall {

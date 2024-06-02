@@ -44,6 +44,7 @@ void load_next_level() {
         char filename[20];
         sprintf(filename, "levels/%d.level", current_level);
         load_level(filename);
+        load_music(current_level);
     }
 }
 
