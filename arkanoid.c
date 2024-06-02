@@ -59,6 +59,7 @@ void update() {
     if (!update_balls(win_surf, multiplayer_mode)) {
         lives--;
         if (lives > 0) {
+            reset_capsules();
             init_ball_shoot();
         }
     }
