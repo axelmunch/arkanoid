@@ -99,6 +99,7 @@ int main(int argc, char **argv) {
                     vaus[0].hit_box.origin.y - laser_height};
                 shoot(shooting_origin, 0);
             } else {
+                multiplayer_mode = false;
                 reset_score();
                 restart_level_1();
                 load_next();
