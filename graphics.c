@@ -125,15 +125,15 @@ void draw_entities(SDL_Surface *win_surf) {
 }
 
 void draw_score(SDL_Surface *win_surf) {
-    int score_text_width = draw_red_text(win_surf, "SCORE ", 10, 5);
-    draw_integer(win_surf, get_score(), 10 + score_text_width, 5);
+    int score_text_width = draw_red_text(win_surf, "SCORE ", 10, 7);
+    draw_integer(win_surf, get_score(), 10 + score_text_width, 7);
     high_score_text_width = draw_red_text(
         win_surf, "HIGH SCORE ",
         win_surf->w - 10 - high_score_value_text_width - high_score_text_width,
-        5);
+        7);
     high_score_value_text_width =
         draw_integer(win_surf, get_high_score(),
-                     win_surf->w - 10 - high_score_value_text_width, 5);
+                     win_surf->w - 10 - high_score_value_text_width, 7);
 }
 
 void draw_lives(SDL_Surface *win_surf, int lives) {
