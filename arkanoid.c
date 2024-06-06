@@ -189,8 +189,16 @@ int main(int argc, char **argv) {
         while (SDL_PollEvent(&event)) {
             switch (event.type) {
             case SDL_QUIT:
+                reset_score();
                 quit = true;
                 break;
+            case SDL_KEYUP:
+                int key = event.key.keysym.sym;
+                if (key == SDLK_ESCAPE) {
+                    reset_score();
+                    quit = true;
+                    break;
+                }
             }
         }
 
