@@ -58,9 +58,10 @@ struct Level {
 Brick create_brick(BrickType type, SpecificType capsule_reward);
 void restart_level_1(SDL_Surface *win_surf);
 void reset_level();
-void load_next_level(SDL_Surface *win_surf);
+void load_next_level(const SDL_Surface *win_surf);
 bool load_next_level_file();
 void load_level(const char *filename);
+int get_metal_brick_durability();
 bool is_level_completed();
 bool update_level();
 bool is_end_game();

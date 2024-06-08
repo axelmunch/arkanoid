@@ -8,6 +8,11 @@ bool end_game = false;
 
 bool is_end_game() { return end_game; }
 
+int get_metal_brick_durability() {
+    return 2 + (current_level > 8) + (current_level > 16) +
+           (current_level > 24);
+}
+
 Brick create_brick(BrickType type, SpecificType capsule_reward) {
     Brick brick;
     brick.type = type;
@@ -16,7 +21,7 @@ Brick create_brick(BrickType type, SpecificType capsule_reward) {
     brick.time_before_next_animation = 0;
 
     if (type == METAL) {
-        brick.durability = 8;
+        brick.durability = get_metal_brick_durability();
         brick.max_animation = 6;
 
     } else if (type == GOLD) {
@@ -58,7 +63,7 @@ bool load_next_level_file() {
     return false;
 }
 
-void load_next_level(SDL_Surface *win_surf) {
+void load_next_level(const SDL_Surface *win_surf) {
     end_game = !load_next_level_file();
     reset_spawner();
     reset_balls();
