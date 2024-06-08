@@ -166,11 +166,10 @@ void draw_lives(SDL_Surface *win_surf, int lives) {
     }
 }
 
-void draw(SDL_Surface *win_surf, bool multiplayer_mode, int lives,
-          bool end_game) {
+void draw(SDL_Surface *win_surf, bool multiplayer_mode, int lives) {
     draw_background(win_surf);
 
-    if (end_game) {
+    if (is_end_game()) {
         draw_end_game(win_surf);
 
     } else {

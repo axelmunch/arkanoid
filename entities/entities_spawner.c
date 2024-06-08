@@ -133,9 +133,7 @@ bool handle_laser_entities_collision(AnimatedEntity *laser_entity,
     return true;
 }
 
-bool update_entities(SDL_Surface *win_surf, bool multiplayer_mode) {
-    // Return true if should change level (capsule break)
-
+void update_entities(SDL_Surface *win_surf, bool multiplayer_mode) {
     SpawnedEntities *entities = get_entities();
     for (int i = 0; i < entities->current_entities_count; i++) {
         AnimatedEntity *entity = &entities->entities[i];
@@ -240,8 +238,8 @@ bool update_entities(SDL_Surface *win_surf, bool multiplayer_mode) {
                 apply_slow_capsule();
                 break;
             case CAPSULE_BREAK:
-                play_chunk(BREAK);
-                return true;
+                apply_break_capsule(win_surf);
+                break;
             case CAPSULE_DIVIDE:
                 apply_divide_capsule();
                 break;
@@ -260,8 +258,6 @@ bool update_entities(SDL_Surface *win_surf, bool multiplayer_mode) {
             remove_entity(i);
         }
     }
-
-    return false;
 }
 
 SpawnedEntities *get_entities() { return &spawned_entities; }

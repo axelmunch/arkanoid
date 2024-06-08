@@ -28,7 +28,7 @@ bool laser_collides_with_brick(const AnimatedEntity *entity,
                                SDL_Surface *win_surf);
 bool handle_laser_entities_collision(AnimatedEntity *laser_entity,
                                      int laser_index);
-bool update_entities(SDL_Surface *win_surf, bool multiplayer_mode);
+void update_entities(SDL_Surface *win_surf, bool multiplayer_mode);
 SpawnedEntities *get_entities();
 
 #endif // ARKANOID_ENTITIES_SPAWNER_H

@@ -22,6 +22,7 @@ void reset_balls();
 bool ball_collides_with_horizontal_border(const Ball *ball);
 bool ball_collides_with_vertical_border(SDL_Surface *win_surf,
                                         const Ball *ball);
+void init_ball_shoot(const SDL_Surface *win_surf);
 bool ball_collides_with_brick(SDL_Surface *win_surf, const Ball *ball);
 bool ball_collides_with_entity(Ball *ball);
 bool apply_ball_effect(double ball_direction, bool add_effect);

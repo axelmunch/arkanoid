@@ -1,7 +1,12 @@
 #include "levels.h"
 
+#include "entities/entities_spawner.h"
+
 Level level;
 int current_level = 0;
+bool end_game = false;
+
+bool is_end_game() { return end_game; }
 
 Brick create_brick(BrickType type, SpecificType capsule_reward) {
     Brick brick;
@@ -25,7 +30,11 @@ Brick create_brick(BrickType type, SpecificType capsule_reward) {
     return brick;
 }
 
-void restart_level_1() { current_level = 0; }
+void restart_level_1(SDL_Surface *win_surf) {
+    current_level = 0;
+    end_game = false;
+    load_next_level(win_surf);
+}
 
 void reset_level() {
     level.theme = THEME_1;
@@ -38,16 +47,29 @@ void reset_level() {
     }
 }
 
-bool load_next_level() {
+bool load_next_level_file() {
     if (current_level + 1 <= MAX_LEVELS) {
         current_level++;
         char filename[20];
         sprintf(filename, "levels/%d.level", current_level);
         load_level(filename);
-        load_music(current_level);
         return true;
     }
     return false;
+}
+
+void load_next_level(SDL_Surface *win_surf) {
+    end_game = !load_next_level_file();
+    reset_spawner();
+    reset_balls();
+    reset_capsules();
+    reset_vaus();
+    if (!end_game) {
+        load_music(current_level);
+        init_ball_shoot(win_surf);
+    } else {
+        pause_music();
+    }
 }
 
 void load_level(const char *filename) {
