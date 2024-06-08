@@ -22,6 +22,7 @@ void load_assets();
 void load_music(int level);
 void play_music();
 void free_mixer();
+void pause_music();
 void load_chunk(const char *filename, const AUDIO_CHUNKS chunk_name);
 void play_chunk(AUDIO_CHUNKS chunk_name);
 void play_laser_chunk();

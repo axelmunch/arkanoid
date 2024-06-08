@@ -19,6 +19,7 @@ SDL_Surface *win_surf = NULL;
 
 bool cheat_key_press = false;
 bool multiplayer_mode = false;
+bool end_game = false;
 int lives = DEFAULT_LIVES;
 
 void init_ball_shoot() {
@@ -31,12 +32,17 @@ void init_ball_shoot() {
 }
 
 void load_next() {
-    load_next_level();
+    end_game = load_next_level();
     reset_spawner();
     reset_balls();
     reset_capsules();
     reset_vaus();
-    init_ball_shoot();
+    if (end_game) {
+        init_ball_shoot();
+    } else {
+        pause_music();
+        lives = 0;
+    }
 }
 
 void init() {
@@ -110,6 +116,7 @@ int main(int argc, char **argv) {
                 reset_score();
                 restart_level_1();
                 lives = DEFAULT_LIVES;
+                end_game = false;
                 load_next();
             }
         }

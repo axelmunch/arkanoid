@@ -42,6 +42,8 @@ void load_music(const int level) {
     }
 }
 
+void pause_music() { Mix_HaltMusic(); }
+
 void load_chunk(const char *filename, const AUDIO_CHUNKS chunk_name) {
     char chunk_path[50];
     snprintf(chunk_path, sizeof(chunk_path), "%s/%s.ogg", assets_path,

@@ -38,14 +38,17 @@ void reset_level() {
     }
 }
 
-void load_next_level() {
+bool load_next_level() {
     current_level++;
+    printf("%d\n", current_level);
     if (current_level <= MAX_LEVELS) {
         char filename[20];
         sprintf(filename, "levels/%d.level", current_level);
         load_level(filename);
         load_music(current_level);
+        return true;
     }
+    return false;
 }
 
 void load_level(const char *filename) {
