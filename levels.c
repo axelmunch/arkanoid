@@ -39,9 +39,8 @@ void reset_level() {
 }
 
 bool load_next_level() {
-    current_level++;
-    printf("%d\n", current_level);
-    if (current_level <= MAX_LEVELS) {
+    if (current_level + 1 <= MAX_LEVELS) {
+        current_level++;
         char filename[20];
         sprintf(filename, "levels/%d.level", current_level);
         load_level(filename);

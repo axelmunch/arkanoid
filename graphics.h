@@ -16,6 +16,7 @@ void draw_level(SDL_Surface *win_surf);
 void draw_entities(SDL_Surface *win_surf);
 void draw_score(SDL_Surface *win_surf);
 void draw_lives(SDL_Surface *win_surf, int lives);
-void draw(SDL_Surface *win_surf, bool multiplayer_mode, int lives);
+void draw(SDL_Surface *win_surf, bool multiplayer_mode, int lives,
+          bool end_game);
 
 #endif // ARKANOID_GRAPHICS_H

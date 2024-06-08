@@ -150,7 +150,8 @@ void draw_lives(SDL_Surface *win_surf, int lives) {
     }
 }
 
-void draw(SDL_Surface *win_surf, bool multiplayer_mode, int lives) {
+void draw(SDL_Surface *win_surf, bool multiplayer_mode, int lives,
+          bool end_game) {
     draw_background(win_surf);
 
     draw_borders_1(win_surf);
@@ -193,7 +194,11 @@ void draw(SDL_Surface *win_surf, bool multiplayer_mode, int lives) {
         create_entity(get_active_capsule(), active_capsule_point);
     draw_entity(win_surf, active_capsule_display);
 
-    if (lives == 0) {
+    if (end_game) {
+        dead_text_width =
+            draw_text(win_surf, "END GAME: Press SPACE to restart",
+                      win_surf->w / 2 - dead_text_width / 2, win_surf->h / 2);
+    } else if (lives == 0) {
         dead_text_width =
             draw_text(win_surf, "Press SPACE to restart",
                       win_surf->w / 2 - dead_text_width / 2, win_surf->h / 2);

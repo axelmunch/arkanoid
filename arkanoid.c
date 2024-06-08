@@ -32,16 +32,15 @@ void init_ball_shoot() {
 }
 
 void load_next() {
-    end_game = load_next_level();
+    end_game = !load_next_level();
     reset_spawner();
     reset_balls();
     reset_capsules();
     reset_vaus();
-    if (end_game) {
+    if (!end_game) {
         init_ball_shoot();
     } else {
         pause_music();
-        lives = 0;
     }
 }
 
@@ -103,7 +102,7 @@ int main(int argc, char **argv) {
             move_VAUS(10, 0);
         }
         if (keys[SDL_SCANCODE_SPACE]) {
-            if (lives > 0) {
+            if (lives > 0 && !end_game) {
                 int mock, laser_height;
                 get_texture_dimensions(EntityLaser_1, &mock, &mock, &mock,
                                        &laser_height);
@@ -185,7 +184,6 @@ int main(int argc, char **argv) {
             if (!cheat_key_press && DEBUG_MODE) {
                 cheat_key_press = true;
                 reset_score();
-                restart_level_1();
                 load_next();
             }
         } else {
@@ -210,7 +208,7 @@ int main(int argc, char **argv) {
         }
 
         update();
-        draw(win_surf, multiplayer_mode, lives);
+        draw(win_surf, multiplayer_mode, lives, end_game);
         SDL_UpdateWindowSurface(pWindow);
 
         SDL_Delay((Uint32) GAME_FPS_MS);
