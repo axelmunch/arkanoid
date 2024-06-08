@@ -207,7 +207,9 @@ int main(int argc, char **argv) {
             }
         }
 
-        update();
+        if (!end_game) {
+            update();
+        }
         draw(win_surf, multiplayer_mode, lives, end_game);
         SDL_UpdateWindowSurface(pWindow);
 
