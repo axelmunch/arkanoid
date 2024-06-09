@@ -65,9 +65,21 @@ void apply_addition_capsule() {
         const Point mini_vaus_position = {existing_mini_vaus_total_width,
                                           SCREEN_HEIGHT -
                                               mini_vaus_height * 2.5};
-        add_entity(create_entity(MINI_VAUS_TYPE, mini_vaus_position));
+        AnimatedEntity mini_vaus =
+            create_entity(MINI_VAUS_TYPE, mini_vaus_position);
+        add_entity(mini_vaus);
         spawned_mini_vaus++;
         play_chunk(ADDITION);
+
+        // Check if spawn in a ball
+        Balls *balls = get_balls();
+        for (int i = 0; i < balls->current_balls_count; i++) {
+            Ball *ball = &balls->spawned_balls[i];
+            if (rect_circle_collision(mini_vaus.hit_box, ball->hit_box)) {
+                ball->hit_box.origin.y =
+                    mini_vaus_position.y - ball->hit_box.radius;
+            }
+        }
     }
 }
 void apply_catch_capsule() {
