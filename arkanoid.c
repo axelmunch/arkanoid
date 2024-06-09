@@ -180,7 +180,7 @@ int main(int argc, char **argv) {
             }
         }
 
-        if (!is_end_game()) {
+        if (!is_end_game() && lives > 0) {
             update();
         }
         draw(win_surf, multiplayer_mode, lives);
