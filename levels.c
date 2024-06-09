@@ -72,6 +72,9 @@ void load_next_level(const SDL_Surface *win_surf) {
     if (!end_game) {
         load_music(current_level);
         init_ball_shoot(win_surf);
+        if (current_level > 1 && current_level <= MAX_LEVELS) {
+            play_chunk(LEVEL_CHANGE);
+        }
     } else {
         pause_music();
     }

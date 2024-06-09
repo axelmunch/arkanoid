@@ -27,7 +27,7 @@ void load_assets() {
     load_chunk("expand", EXPAND);
     load_chunk("addition", ADDITION);
     load_chunk("slow_ball", SLOW_BALL);
-    load_chunk("break", BREAK);
+    load_chunk("break", LEVEL_CHANGE);
 }
 
 void load_music(const int level) {

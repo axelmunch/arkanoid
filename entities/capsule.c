@@ -52,10 +52,7 @@ void apply_divide_capsule() {
         play_chunk(DIVIDE);
     }
 }
-void apply_break_capsule(SDL_Surface *win_surf) {
-    load_next_level(win_surf);
-    play_chunk(BREAK);
-}
+void apply_break_capsule(SDL_Surface *win_surf) { load_next_level(win_surf); }
 
 void apply_addition_capsule() {
     int mock, mini_vaus_width, mini_vaus_height;

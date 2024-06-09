@@ -105,7 +105,7 @@ int main(int argc, char **argv) {
         }
         if (keys[SDL_SCANCODE_LCTRL]) {
             if (multiplayer_mode) {
-                if (lives > 0) {
+                if (lives > 0 && !is_end_game()) {
                     int mock, laser_height;
                     get_texture_dimensions(EntityLaser_1, &mock, &mock, &mock,
                                            &laser_height);

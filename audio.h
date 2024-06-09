@@ -14,7 +14,7 @@ typedef enum {
     EXPAND,
     ADDITION,
     DIVIDE,
-    BREAK,
+    LEVEL_CHANGE,
 } AUDIO_CHUNKS;
 
 void init_mixer();

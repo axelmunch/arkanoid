@@ -49,6 +49,7 @@ void draw_end_game(SDL_Surface *win_surf) {
     dead_text_width =
         draw_text(win_surf, "VICTORY ! Press SPACE to restart",
                   win_surf->w / 2 - dead_text_width / 2, win_surf->h / 2);
+    draw_score(win_surf);
 }
 
 void draw_borders_1(SDL_Surface *win_surf) {
@@ -198,11 +199,6 @@ void draw(SDL_Surface *win_surf, bool multiplayer_mode, int lives) {
 
         draw_score(win_surf);
 
-        if (DEBUG_MODE) {
-            draw_text(win_surf, "FPS", 10, win_surf->h - 74);
-            draw_integer(win_surf, (int) get_current_fps(), 10,
-                         win_surf->h - 42);
-        }
         Point active_capsule_point = {GAME_BORDER_X / 2 - 20,
                                       GAME_BORDER_TOP - 10};
         AnimatedEntity active_capsule_display =
@@ -214,5 +210,9 @@ void draw(SDL_Surface *win_surf, bool multiplayer_mode, int lives) {
                                         win_surf->w / 2 - dead_text_width / 2,
                                         win_surf->h / 2);
         }
+    }
+    if (DEBUG_MODE) {
+        draw_text(win_surf, "FPS", 10, win_surf->h - 74);
+        draw_integer(win_surf, (int) get_current_fps(), 10, win_surf->h - 42);
     }
 }
