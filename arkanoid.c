@@ -1,3 +1,4 @@
+#include "audio.h"
 #include "config.h"
 #include "delta_time.h"
 #include "entities/ball.h"
@@ -43,6 +44,9 @@ void update() {
         if (lives > 0) {
             reset_capsules();
             init_ball_shoot(win_surf);
+        } else {
+            pause_music();
+            play_chunk(DEATH);
         }
     }
     update_spawner();
