@@ -1,7 +1,7 @@
 #ifndef ARKANOID_CONFIG_H
 #define ARKANOID_CONFIG_H
 
-#define DEBUG_MODE true
+#define DEBUG_MODE false
 
 #define GAME_FPS    60
 #define GAME_FPS_MS (1000 / GAME_FPS)
