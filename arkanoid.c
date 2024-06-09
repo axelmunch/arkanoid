@@ -153,6 +153,12 @@ int main(int argc, char **argv) {
                 cheat_key_press = true;
                 apply_addition_capsule();
             }
+        } else if (keys[SDL_SCANCODE_8]) {
+            if (!cheat_key_press && DEBUG_MODE) {
+                cheat_key_press = true;
+                reset_score();
+                restart_level_1(win_surf);
+            }
         } else {
             cheat_key_press = false;
         }
