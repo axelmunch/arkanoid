@@ -17,6 +17,15 @@ void remove_ball(int index) {
     }
 }
 
+void init_ball_shoot(const SDL_Surface *win_surf) {
+    const Point ballPosition = {win_surf->w / 2, win_surf->h / 2};
+    add_ball(create_ball(ballPosition));
+    Balls *balls = get_balls();
+    const VAUS *vaus = get_vaus();
+    catch_ball(&balls->spawned_balls[balls->current_balls_count - 1],
+               vaus[0].hit_box, 0);
+}
+
 void reset_balls() { balls.current_balls_count = 0; }
 
 bool ball_collides_with_horizontal_border(const Ball *ball) {

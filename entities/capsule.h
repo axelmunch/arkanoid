@@ -19,6 +19,7 @@ void apply_catch_capsule();
 void apply_expand_capsule(SDL_Surface *win_surf, VAUS *vaus, int vaus_index);
 void apply_slow_capsule();
 void apply_divide_capsule();
+void apply_break_capsule(SDL_Surface *win_surf);
 void apply_laser_capsule();
 void catch_ball(Ball *ball, Rectangle vaus_hit_box, int vaus_index);
 void explode_mini_vaus();

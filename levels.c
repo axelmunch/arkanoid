@@ -1,7 +1,17 @@
 #include "levels.h"
 
+#include "entities/entities_spawner.h"
+
 Level level;
 int current_level = 0;
+bool end_game = false;
+
+bool is_end_game() { return end_game; }
+
+int get_metal_brick_durability() {
+    return 2 + (current_level > 8) + (current_level > 16) +
+           (current_level > 24);
+}
 
 Brick create_brick(BrickType type, SpecificType capsule_reward) {
     Brick brick;
@@ -11,7 +21,7 @@ Brick create_brick(BrickType type, SpecificType capsule_reward) {
     brick.time_before_next_animation = 0;
 
     if (type == METAL) {
-        brick.durability = 8;
+        brick.durability = get_metal_brick_durability();
         brick.max_animation = 6;
 
     } else if (type == GOLD) {
@@ -25,7 +35,11 @@ Brick create_brick(BrickType type, SpecificType capsule_reward) {
     return brick;
 }
 
-void restart_level_1() { current_level = 0; }
+void restart_level_1(SDL_Surface *win_surf) {
+    current_level = 0;
+    end_game = false;
+    load_next_level(win_surf);
+}
 
 void reset_level() {
     level.theme = THEME_1;
@@ -38,13 +52,32 @@ void reset_level() {
     }
 }
 
-void load_next_level() {
-    current_level++;
-    if (current_level <= MAX_LEVELS) {
+bool load_next_level_file() {
+    if (current_level + 1 <= MAX_LEVELS) {
+        current_level++;
         char filename[20];
         sprintf(filename, "levels/%d.level", current_level);
         load_level(filename);
+        return true;
+    }
+    return false;
+}
+
+void load_next_level(const SDL_Surface *win_surf) {
+    end_game = !load_next_level_file();
+    reset_spawner();
+    reset_balls();
+    reset_capsules();
+    reset_vaus();
+    if (!end_game) {
         load_music(current_level);
+        init_ball_shoot(win_surf);
+        if (current_level > 1 && current_level <= MAX_LEVELS) {
+            play_chunk(LEVEL_CHANGE);
+        }
+    } else {
+        play_chunk(VICTORY);
+        pause_music();
     }
 }
 

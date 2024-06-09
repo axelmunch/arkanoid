@@ -43,6 +43,15 @@ void draw_background(SDL_Surface *win_surf) {
     }
 }
 
+void draw_end_game(SDL_Surface *win_surf) {
+    SDL_FillRect(win_surf, NULL, SDL_MapRGB(win_surf->format, 0, 0, 0));
+
+    dead_text_width =
+        draw_text(win_surf, "VICTORY ! Press SPACE to restart",
+                  win_surf->w / 2 - dead_text_width / 2, win_surf->h / 2);
+    draw_score(win_surf);
+}
+
 void draw_borders_1(SDL_Surface *win_surf) {
     // Top
     int mock, border_top_width, border_top_height;
@@ -153,49 +162,57 @@ void draw_lives(SDL_Surface *win_surf, int lives) {
 void draw(SDL_Surface *win_surf, bool multiplayer_mode, int lives) {
     draw_background(win_surf);
 
-    draw_borders_1(win_surf);
+    if (is_end_game()) {
+        draw_end_game(win_surf);
 
-    draw_level(win_surf);
+    } else {
+        draw_borders_1(win_surf);
 
-    draw_entities(win_surf);
+        draw_level(win_surf);
 
-    Balls *balls = get_balls();
-    for (int i = 0; i < balls->current_balls_count; i++) {
-        Ball *ball = &balls->spawned_balls[i];
-        draw_texture(win_surf, BallTexture, ball->hit_box.origin.x,
-                     ball->hit_box.origin.y, true);
+        draw_entities(win_surf);
+
+        Balls *balls = get_balls();
+        for (int i = 0; i < balls->current_balls_count; i++) {
+            Ball *ball = &balls->spawned_balls[i];
+            draw_texture(win_surf, BallTexture, ball->hit_box.origin.x,
+                         ball->hit_box.origin.y, true);
+        }
+
+        VAUS *vaus = get_vaus();
+        draw_vaus(win_surf, vaus[0], 0);
+        if (multiplayer_mode) {
+            draw_vaus(win_surf, vaus[1], 1);
+            draw_integer(win_surf, 1,
+                         vaus[0].hit_box.origin.x + vaus[0].hit_box.width / 2 -
+                             8,
+                         vaus[0].hit_box.origin.y);
+            draw_integer(win_surf, 2,
+                         vaus[1].hit_box.origin.x + vaus[1].hit_box.width / 2 -
+                             8,
+                         vaus[1].hit_box.origin.y);
+        }
+
+        draw_borders_2(win_surf);
+
+        draw_lives(win_surf, lives);
+
+        draw_score(win_surf);
+
+        Point active_capsule_point = {GAME_BORDER_X / 2 - 20,
+                                      GAME_BORDER_TOP - 10};
+        AnimatedEntity active_capsule_display =
+            create_entity(get_active_capsule(), active_capsule_point);
+        draw_entity(win_surf, active_capsule_display);
+
+        if (lives == 0) {
+            dead_text_width = draw_text(win_surf, "Press SPACE to restart",
+                                        win_surf->w / 2 - dead_text_width / 2,
+                                        win_surf->h / 2);
+        }
     }
-
-    VAUS *vaus = get_vaus();
-    draw_vaus(win_surf, vaus[0], 0);
-    if (multiplayer_mode) {
-        draw_vaus(win_surf, vaus[1], 1);
-        draw_integer(win_surf, 1,
-                     vaus[0].hit_box.origin.x + vaus[0].hit_box.width / 2 - 8,
-                     vaus[0].hit_box.origin.y);
-        draw_integer(win_surf, 2,
-                     vaus[1].hit_box.origin.x + vaus[1].hit_box.width / 2 - 8,
-                     vaus[1].hit_box.origin.y);
-    }
-
-    draw_borders_2(win_surf);
-
-    draw_lives(win_surf, lives);
-
-    draw_score(win_surf);
-
     if (DEBUG_MODE) {
         draw_text(win_surf, "FPS", 10, win_surf->h - 74);
         draw_integer(win_surf, (int) get_current_fps(), 10, win_surf->h - 42);
-    }
-    Point active_capsule_point = {GAME_BORDER_X / 2 - 20, GAME_BORDER_TOP - 10};
-    AnimatedEntity active_capsule_display =
-        create_entity(get_active_capsule(), active_capsule_point);
-    draw_entity(win_surf, active_capsule_display);
-
-    if (lives == 0) {
-        dead_text_width =
-            draw_text(win_surf, "Press SPACE to restart",
-                      win_surf->w / 2 - dead_text_width / 2, win_surf->h / 2);
     }
 }

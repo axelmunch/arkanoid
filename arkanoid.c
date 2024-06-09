@@ -21,24 +21,6 @@ bool cheat_key_press = false;
 bool multiplayer_mode = false;
 int lives = DEFAULT_LIVES;
 
-void init_ball_shoot() {
-    Point ballPosition = {win_surf->w / 2, win_surf->h / 2};
-    add_ball(create_ball(ballPosition));
-    Balls *balls = get_balls();
-    VAUS *vaus = get_vaus();
-    catch_ball(&balls->spawned_balls[balls->current_balls_count - 1],
-               vaus[0].hit_box, 0);
-}
-
-void load_next() {
-    load_next_level();
-    reset_spawner();
-    reset_balls();
-    reset_capsules();
-    reset_vaus();
-    init_ball_shoot();
-}
-
 void init() {
     pWindow = SDL_CreateWindow("Arkanoid", SDL_WINDOWPOS_UNDEFINED,
                                SDL_WINDOWPOS_UNDEFINED, SCREEN_WIDTH,
@@ -48,7 +30,7 @@ void init() {
     init_spawner();
     init_vaus(win_surf);
     init_score();
-    load_next();
+    load_next_level(win_surf);
     init_delta_time();
     init_text();
     init_texture();
@@ -60,15 +42,14 @@ void update() {
         lives--;
         if (lives > 0) {
             reset_capsules();
-            init_ball_shoot();
+            init_ball_shoot(win_surf);
         }
     }
     update_spawner();
-    if (update_entities(win_surf, multiplayer_mode)) {
-        load_next();
-    }
-    if (update_level()) {
-        load_next();
+    update_entities(win_surf, multiplayer_mode);
+    const bool level_complete = update_level();
+    if (level_complete) {
+        load_next_level(win_surf);
     }
 }
 
@@ -97,7 +78,7 @@ int main(int argc, char **argv) {
             move_VAUS(10, 0);
         }
         if (keys[SDL_SCANCODE_SPACE]) {
-            if (lives > 0) {
+            if (lives > 0 && !is_end_game()) {
                 int mock, laser_height;
                 get_texture_dimensions(EntityLaser_1, &mock, &mock, &mock,
                                        &laser_height);
@@ -108,9 +89,8 @@ int main(int argc, char **argv) {
             } else {
                 multiplayer_mode = false;
                 reset_score();
-                restart_level_1();
+                restart_level_1(win_surf);
                 lives = DEFAULT_LIVES;
-                load_next();
             }
         }
         if (keys[SDL_SCANCODE_A] || keys[SDL_SCANCODE_Q]) {
@@ -125,7 +105,7 @@ int main(int argc, char **argv) {
         }
         if (keys[SDL_SCANCODE_LCTRL]) {
             if (multiplayer_mode) {
-                if (lives > 0) {
+                if (lives > 0 && !is_end_game()) {
                     int mock, laser_height;
                     get_texture_dimensions(EntityLaser_1, &mock, &mock, &mock,
                                            &laser_height);
@@ -166,8 +146,7 @@ int main(int argc, char **argv) {
         } else if (keys[SDL_SCANCODE_6]) {
             if (!cheat_key_press && DEBUG_MODE) {
                 cheat_key_press = true;
-                load_next();
-                play_chunk(BREAK);
+                apply_break_capsule(win_surf);
             }
         } else if (keys[SDL_SCANCODE_7]) {
             if (!cheat_key_press && DEBUG_MODE) {
@@ -178,8 +157,7 @@ int main(int argc, char **argv) {
             if (!cheat_key_press && DEBUG_MODE) {
                 cheat_key_press = true;
                 reset_score();
-                restart_level_1();
-                load_next();
+                restart_level_1(win_surf);
             }
         } else {
             cheat_key_press = false;
@@ -202,7 +180,9 @@ int main(int argc, char **argv) {
             }
         }
 
-        update();
+        if (!is_end_game()) {
+            update();
+        }
         draw(win_surf, multiplayer_mode, lives);
         SDL_UpdateWindowSurface(pWindow);
 
