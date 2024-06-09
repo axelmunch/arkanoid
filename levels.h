@@ -36,7 +36,7 @@ typedef enum {
     THEME_3,
     THEME_4,
     THEME_5,
-    THEME_6,
+    THEME_6
 } LevelTheme;
 
 struct Brick {

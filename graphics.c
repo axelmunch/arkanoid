@@ -47,7 +47,7 @@ void draw_end_game(SDL_Surface *win_surf) {
     SDL_FillRect(win_surf, NULL, SDL_MapRGB(win_surf->format, 0, 0, 0));
 
     dead_text_width =
-        draw_text(win_surf, "VICTORY ! Press SPACE to restart",
+        draw_text(win_surf, "VICTORY! Press SPACE to restart",
                   win_surf->w / 2 - dead_text_width / 2, win_surf->h / 2);
     draw_score(win_surf);
 }

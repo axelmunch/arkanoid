@@ -124,6 +124,7 @@ bool apply_ball_effect(double ball_direction, bool add_effect) {
 bool update_balls(SDL_Surface *win_surf, bool multiplayer_mode) {
     // Return false if no balls left
 
+    float precision = 0.000001;
     Balls *balls = get_balls();
     VAUS *vaus = get_vaus();
     for (int i = 0; i < balls->current_balls_count; i++) {
@@ -140,7 +141,8 @@ bool update_balls(SDL_Surface *win_surf, bool multiplayer_mode) {
             collide_with_vaus_1_x ||
             (collide_with_vaus_2_x && multiplayer_mode) ||
             ball_collides_with_brick(win_surf, ball) ||
-            ball_collides_with_entity(ball)) {
+            ((ball_movement.x < -precision || ball_movement.x > precision) &&
+             ball_collides_with_entity(ball))) {
             ball->direction = fmod(180 - ball->direction, 360);
             ball->hit_box.origin.x -= ball_movement.x;
         }
@@ -154,7 +156,8 @@ bool update_balls(SDL_Surface *win_surf, bool multiplayer_mode) {
             collide_with_vaus_1_y ||
             (collide_with_vaus_2_y && multiplayer_mode) ||
             ball_collides_with_brick(win_surf, ball) ||
-            ball_collides_with_entity(ball)) {
+            ((ball_movement.y < -precision || ball_movement.y > precision) &&
+             ball_collides_with_entity(ball))) {
             ball->direction = fmod(360 - ball->direction, 360);
             ball->hit_box.origin.y += ball_movement.y;
         }
@@ -190,6 +193,7 @@ bool update_balls(SDL_Surface *win_surf, bool multiplayer_mode) {
 
         if (ball->hit_box.origin.y - ball->hit_box.radius > win_surf->h) {
             remove_ball(i);
+            i--;
             if (balls->current_balls_count == 0) {
                 return false;
             }
