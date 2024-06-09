@@ -239,7 +239,7 @@ void update_entities(SDL_Surface *win_surf, bool multiplayer_mode) {
                 break;
             case CAPSULE_BREAK:
                 apply_break_capsule(win_surf);
-                break;
+                return;
             case CAPSULE_DIVIDE:
                 apply_divide_capsule();
                 break;
