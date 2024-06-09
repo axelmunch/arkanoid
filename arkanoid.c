@@ -75,11 +75,11 @@ int main(int argc, char **argv) {
         vaus[1].moving_direction = NONE;
         if (keys[SDL_SCANCODE_LEFT]) {
             vaus[0].moving_direction = LEFT;
-            move_VAUS(-10, 0);
+            move_VAUS(-10, 0, multiplayer_mode);
         }
         if (keys[SDL_SCANCODE_RIGHT]) {
             vaus[0].moving_direction = RIGHT;
-            move_VAUS(10, 0);
+            move_VAUS(10, 0, multiplayer_mode);
         }
         if (keys[SDL_SCANCODE_SPACE]) {
             if (lives > 0 && !is_end_game()) {
@@ -100,12 +100,12 @@ int main(int argc, char **argv) {
         if (keys[SDL_SCANCODE_A] || keys[SDL_SCANCODE_Q]) {
             multiplayer_mode = true;
             vaus[1].moving_direction = LEFT;
-            move_VAUS(-10, 1);
+            move_VAUS(-10, 1, multiplayer_mode);
         }
         if (keys[SDL_SCANCODE_D]) {
             multiplayer_mode = true;
             vaus[1].moving_direction = RIGHT;
-            move_VAUS(10, 1);
+            move_VAUS(10, 1, multiplayer_mode);
         }
         if (keys[SDL_SCANCODE_LCTRL]) {
             if (multiplayer_mode) {

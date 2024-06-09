@@ -12,7 +12,7 @@
 
 void init_vaus(SDL_Surface *win_surf);
 void reset_vaus();
-void move_VAUS(double distance, int vaus_index);
+void move_VAUS(double distance, int vaus_index, bool multiplayer_mode);
 VAUS *get_vaus();
 
 #endif // ARKANOID_VAUS_H
