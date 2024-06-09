@@ -1,5 +1,7 @@
 # Arkanoid
 
+By Maël EHRHARD & Axel MUNCH
+
 ## Requirements
 
 - SDL2
