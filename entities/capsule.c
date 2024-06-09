@@ -41,12 +41,25 @@ void apply_divide_capsule() {
     Balls *balls = get_balls();
     if (balls->current_balls_count > 0) {
         Ball originBall = balls->spawned_balls[0];
+        float direction = originBall.direction;
+
+        // Shoot vertially if the ball is catched
+        for (int i = 0; i < 2; i++) {
+            if (catched_ball[i].catched &&
+                catched_ball[i].ball->hit_box.origin.x ==
+                    originBall.hit_box.origin.x &&
+                catched_ball[i].ball->hit_box.origin.y ==
+                    originBall.hit_box.origin.y) {
+                direction = 90;
+            }
+        }
+
         Ball ball_one = create_ball(originBall.hit_box.origin);
-        ball_one.direction = originBall.direction + 5;
+        ball_one.direction = direction + 5;
         ball_one.velocity = balls_velocity;
         add_ball(ball_one);
         Ball ball_two = create_ball(originBall.hit_box.origin);
-        ball_two.direction = originBall.direction - 5;
+        ball_two.direction = direction - 5;
         ball_two.velocity = balls_velocity;
         add_ball(ball_two);
         play_chunk(DIVIDE);
