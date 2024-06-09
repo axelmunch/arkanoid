@@ -76,6 +76,7 @@ void load_next_level(const SDL_Surface *win_surf) {
             play_chunk(LEVEL_CHANGE);
         }
     } else {
+        play_chunk(VICTORY);
         pause_music();
     }
 }
