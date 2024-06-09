@@ -19,6 +19,9 @@ void reset_spawner() {
 }
 
 void add_entity(const AnimatedEntity entity) {
+    if (spawned_entities.current_entities_count >= MAX_ENTITIES) {
+        return;
+    }
     spawned_entities.entities[spawned_entities.current_entities_count] = entity;
     spawned_entities.current_entities_count++;
 }
