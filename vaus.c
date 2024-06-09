@@ -44,7 +44,7 @@ void move_VAUS(double distance, int vaus_index, bool multiplayer_mode) {
             }
         }
 
-        // If double collision, get ball above vaus
+        // If double collision, move ball above vaus
         if (multiplayer_mode &&
             rect_circle_collision(vaus[1 - vaus_index].hit_box,
                                   ball->hit_box)) {

@@ -190,6 +190,7 @@ bool update_balls(SDL_Surface *win_surf, bool multiplayer_mode) {
 
         if (ball->hit_box.origin.y - ball->hit_box.radius > win_surf->h) {
             remove_ball(i);
+            i--;
             if (balls->current_balls_count == 0) {
                 return false;
             }
