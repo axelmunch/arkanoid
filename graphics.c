@@ -44,16 +44,8 @@ void draw_background(SDL_Surface *win_surf) {
 }
 
 void draw_end_game(SDL_Surface *win_surf) {
-    int mock;
-    int black_background_width, black_background_height;
-    get_texture_dimensions(BlackBackground, &mock, &mock,
-                           &black_background_width, &black_background_height);
-    for (int i = SCREEN_WIDTH - black_background_width;
-         i > -black_background_width; i -= 32) {
-        for (int j = 0; j < win_surf->h; j += black_background_height) {
-            draw_texture(win_surf, BlackBackground, i, j, false);
-        }
-    }
+    SDL_FillRect(win_surf, NULL, SDL_MapRGB(win_surf->format, 0, 0, 0));
+
     dead_text_width =
         draw_text(win_surf, "VICTORY ! Press SPACE to restart",
                   win_surf->w / 2 - dead_text_width / 2, win_surf->h / 2);
