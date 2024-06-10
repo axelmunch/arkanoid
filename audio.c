@@ -29,6 +29,7 @@ void load_assets() {
     load_chunk("slow_ball", SLOW_BALL);
     load_chunk("break", LEVEL_CHANGE);
     load_chunk("victory", VICTORY);
+    load_chunk("death", DEATH);
 }
 
 void load_music(const int level) {
@@ -61,6 +62,7 @@ void play_chunk(const AUDIO_CHUNKS chunk_name) {
     }
     used_channel = (used_channel + 1) % CHANNEL_COUNT;
 }
+
 void play_laser_chunk() {
     const uint8_t random_value = rand() % 2;
     if (random_value == 0) {
@@ -69,6 +71,7 @@ void play_laser_chunk() {
         play_chunk(LASER_2);
     }
 }
+
 void play_explosion_chunk() {
     const uint8_t random_value = rand() % 2;
     if (random_value == 0) {

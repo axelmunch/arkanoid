@@ -41,12 +41,25 @@ void apply_divide_capsule() {
     Balls *balls = get_balls();
     if (balls->current_balls_count > 0) {
         Ball originBall = balls->spawned_balls[0];
+        float direction = originBall.direction;
+
+        // Shoot vertially if the ball is catched
+        for (int i = 0; i < 2; i++) {
+            if (catched_ball[i].catched &&
+                catched_ball[i].ball->hit_box.origin.x ==
+                    originBall.hit_box.origin.x &&
+                catched_ball[i].ball->hit_box.origin.y ==
+                    originBall.hit_box.origin.y) {
+                direction = 90;
+            }
+        }
+
         Ball ball_one = create_ball(originBall.hit_box.origin);
-        ball_one.direction = originBall.direction + 5;
+        ball_one.direction = direction + 5;
         ball_one.velocity = balls_velocity;
         add_ball(ball_one);
         Ball ball_two = create_ball(originBall.hit_box.origin);
-        ball_two.direction = originBall.direction - 5;
+        ball_two.direction = direction - 5;
         ball_two.velocity = balls_velocity;
         add_ball(ball_two);
         play_chunk(DIVIDE);
@@ -65,9 +78,21 @@ void apply_addition_capsule() {
         const Point mini_vaus_position = {existing_mini_vaus_total_width,
                                           SCREEN_HEIGHT -
                                               mini_vaus_height * 2.5};
-        add_entity(create_entity(MINI_VAUS_TYPE, mini_vaus_position));
+        AnimatedEntity mini_vaus =
+            create_entity(MINI_VAUS_TYPE, mini_vaus_position);
+        add_entity(mini_vaus);
         spawned_mini_vaus++;
         play_chunk(ADDITION);
+
+        // Check if spawn in a ball
+        Balls *balls = get_balls();
+        for (int i = 0; i < balls->current_balls_count; i++) {
+            Ball *ball = &balls->spawned_balls[i];
+            if (rect_circle_collision(mini_vaus.hit_box, ball->hit_box)) {
+                ball->hit_box.origin.y =
+                    mini_vaus_position.y - ball->hit_box.radius;
+            }
+        }
     }
 }
 void apply_catch_capsule() {

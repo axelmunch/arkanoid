@@ -16,6 +16,7 @@ typedef enum {
     DIVIDE,
     LEVEL_CHANGE,
     VICTORY,
+    DEATH
 } AUDIO_CHUNKS;
 
 void init_mixer();

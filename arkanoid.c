@@ -1,4 +1,5 @@
 #define SDL_MAIN_HANDLED
+#include "audio.h"
 #include "config.h"
 #include "delta_time.h"
 #include "entities/ball.h"
@@ -44,6 +45,9 @@ void update() {
         if (lives > 0) {
             reset_capsules();
             init_ball_shoot(win_surf);
+        } else {
+            pause_music();
+            play_chunk(DEATH);
         }
     }
     update_spawner();
@@ -70,13 +74,13 @@ int main(int argc, char *argv[]) {
         VAUS *vaus = get_vaus();
         vaus[0].moving_direction = NONE;
         vaus[1].moving_direction = NONE;
-        if (keys[SDL_SCANCODE_LEFT]) {
+        if (keys[SDL_SCANCODE_LEFT] && !is_end_game() && lives > 0) {
             vaus[0].moving_direction = LEFT;
-            move_VAUS(-10, 0);
+            move_VAUS(-10, 0, multiplayer_mode);
         }
-        if (keys[SDL_SCANCODE_RIGHT]) {
+        if (keys[SDL_SCANCODE_RIGHT] && !is_end_game() && lives > 0) {
             vaus[0].moving_direction = RIGHT;
-            move_VAUS(10, 0);
+            move_VAUS(10, 0, multiplayer_mode);
         }
         if (keys[SDL_SCANCODE_SPACE]) {
             if (lives > 0 && !is_end_game()) {
@@ -94,15 +98,16 @@ int main(int argc, char *argv[]) {
                 lives = DEFAULT_LIVES;
             }
         }
-        if (keys[SDL_SCANCODE_A] || keys[SDL_SCANCODE_Q]) {
+        if ((keys[SDL_SCANCODE_A] || keys[SDL_SCANCODE_Q]) && !is_end_game() &&
+            lives > 0) {
             multiplayer_mode = true;
             vaus[1].moving_direction = LEFT;
-            move_VAUS(-10, 1);
+            move_VAUS(-10, 1, multiplayer_mode);
         }
-        if (keys[SDL_SCANCODE_D]) {
+        if (keys[SDL_SCANCODE_D] && !is_end_game() && lives > 0) {
             multiplayer_mode = true;
             vaus[1].moving_direction = RIGHT;
-            move_VAUS(10, 1);
+            move_VAUS(10, 1, multiplayer_mode);
         }
         if (keys[SDL_SCANCODE_LCTRL]) {
             if (multiplayer_mode) {
@@ -181,7 +186,7 @@ int main(int argc, char *argv[]) {
             }
         }
 
-        if (!is_end_game()) {
+        if (!is_end_game() && lives > 0) {
             update();
         }
         draw(win_surf, multiplayer_mode, lives);

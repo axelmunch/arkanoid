@@ -19,6 +19,9 @@ void reset_spawner() {
 }
 
 void add_entity(const AnimatedEntity entity) {
+    if (spawned_entities.current_entities_count >= MAX_ENTITIES) {
+        return;
+    }
     spawned_entities.entities[spawned_entities.current_entities_count] = entity;
     spawned_entities.current_entities_count++;
 }
@@ -239,7 +242,7 @@ void update_entities(SDL_Surface *win_surf, bool multiplayer_mode) {
                 break;
             case CAPSULE_BREAK:
                 apply_break_capsule(win_surf);
-                break;
+                return;
             case CAPSULE_DIVIDE:
                 apply_divide_capsule();
                 break;

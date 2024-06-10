@@ -15,7 +15,7 @@ void reset_vaus() {
     vaus[1] = create_VAUS(vausPosition);
 }
 
-void move_VAUS(double distance, int vaus_index) {
+void move_VAUS(double distance, int vaus_index, bool multiplayer_mode) {
     vaus[vaus_index].hit_box.origin.x += distance * get_delta_time_target();
     if (vaus[vaus_index].hit_box.origin.x < GAME_BORDER_X) {
         vaus[vaus_index].hit_box.origin.x = GAME_BORDER_X;
@@ -44,8 +44,9 @@ void move_VAUS(double distance, int vaus_index) {
             }
         }
 
-        // If double collision, get ball above vaus
-        if (rect_circle_collision(vaus[1 - vaus_index].hit_box,
+        // If double collision, move ball above vaus
+        if (multiplayer_mode &&
+            rect_circle_collision(vaus[1 - vaus_index].hit_box,
                                   ball->hit_box)) {
             ball->hit_box.origin.y =
                 vaus[vaus_index].hit_box.origin.y - ball->hit_box.radius;

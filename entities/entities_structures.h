@@ -26,11 +26,7 @@ typedef enum {
     EXPLOSION_TYPE,
     MINI_VAUS_TYPE
 } SpecificType;
-typedef enum {
-    LEFT,
-    RIGHT,
-    NONE,
-} HMovingDirection;
+typedef enum { LEFT, RIGHT, NONE } HMovingDirection;
 
 struct AnimatedEntity {
     int max_animation;
