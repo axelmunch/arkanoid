@@ -53,7 +53,7 @@ bool ball_collides_with_brick(SDL_Surface *win_surf, const Ball *ball) {
                 brick_hitbox.width = BRICK_WIDTH;
                 if (rect_circle_collision(brick_hitbox, ball->hit_box)) {
                     // Animation
-                    play_chunk(BOUNCE);
+                    play_bounce_chunk();
                     if (brick.type == METAL || brick.type == GOLD) {
                         brick.current_animation = 1;
                         brick.time_before_next_animation = ANIMATION_TIMER_MS;

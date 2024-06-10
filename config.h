@@ -38,9 +38,9 @@
 
 #define DEFAULT_LIVES 2
 
-#define CHUNK_COUNT   13
+#define CHUNK_COUNT   14
 #define CHUNK_VOLUME  8
 #define MUSIC_VOLUME  16
-#define CHANNEL_COUNT 10
+#define CHANNEL_COUNT 16
 
 #endif // ARKANOID_CONFIG_H
