@@ -73,7 +73,7 @@ void load_high_score() {
         high_score = 0;
         return;
     }
-    fscanf(file, "%d", &high_score);
+    int return_code = fscanf(file, "%d", &high_score);
     fclose(file);
 }
 

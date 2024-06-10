@@ -17,7 +17,8 @@ void init_mixer() {
 }
 
 void load_assets() {
-    load_chunk("bounce", BOUNCE);
+    load_chunk("bounce1", BOUNCE_1);
+    load_chunk("bounce2", BOUNCE_2);
     load_chunk("divide", DIVIDE);
     load_chunk("laser1", LASER_1);
     load_chunk("laser2", LASER_2);
@@ -61,6 +62,15 @@ void play_chunk(const AUDIO_CHUNKS chunk_name) {
         printf("%s\n", Mix_GetError());
     }
     used_channel = (used_channel + 1) % CHANNEL_COUNT;
+}
+
+void play_bounce_chunk() {
+    const uint8_t random_value = rand() % 2;
+    if (random_value == 0) {
+        play_chunk(BOUNCE_1);
+    } else {
+        play_chunk(BOUNCE_2);
+    }
 }
 
 void play_laser_chunk() {

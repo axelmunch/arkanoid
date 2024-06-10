@@ -1,7 +1,5 @@
 #include "entities_spawner.h"
 
-#include "../audio.h"
-
 SpawnedEntities spawned_entities;
 int x_spawn_position = 200;
 int y_spawn_position = 50;
