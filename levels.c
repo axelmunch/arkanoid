@@ -91,26 +91,27 @@ void load_level(const char *filename) {
     }
 
     char line[8];
+    char *return_code;
 
     // Theme
-    fgets(line, sizeof(line), file);
+    return_code = fgets(line, sizeof(line), file);
     level.theme = atoi(line);
 
     // Offset
-    fgets(line, sizeof(line), file);
+    return_code = fgets(line, sizeof(line), file);
     level.offset = atoi(line);
 
     // Height
-    fgets(line, sizeof(line), file);
+    return_code = fgets(line, sizeof(line), file);
     level.height = atoi(line);
 
     // Bricks
     int x = 0;
     int y = level.offset;
     for (int i = 0; i < level.height * LEVEL_WIDTH; i++) {
-        fgets(line, sizeof(line), file);
+        return_code = fgets(line, sizeof(line), file);
         BrickType type = atoi(line);
-        fgets(line, sizeof(line), file);
+        return_code = fgets(line, sizeof(line), file);
         SpecificType capsule = atoi(line);
         level.bricks[y][x] = create_brick(type, capsule);
         x++;
