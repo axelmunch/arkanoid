@@ -1,0 +1,105 @@
+name: Cross-compile
+
+on:
+  push:
+    tags:
+      - '**'
+
+permissions:
+  contents: write
+
+jobs:
+  linux:
+    name: Linux
+    runs-on: ubuntu-22.04
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          submodules: true
+
+      - name: Install dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install ninja-build libsdl2-dev libsdl2-mixer-dev
+
+      - name: CMake configure (Release)
+        run: cmake -B release -G Ninja . -DCMAKE_BUILD_TYPE=Release
+
+      - name: Build (Release)
+        run: ninja -C release
+
+      - name: Zip release
+        run: zip -r release/linux.zip release/Arkanoid release/levels release/assets
+
+      - name: Release
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: >-
+          gh release create ${{ github.ref_name }} \
+            --generate-notes \
+            --draft=false \
+            --title "Version ${{ github.ref_name }}" \
+            release/linux.zip
+
+  windows-mingw:
+    name: Windows
+    runs-on: windows-2022
+    defaults:
+      run:
+        shell: msys2 {0}
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          submodules: true
+
+      - name: Set up MSYS2
+        uses: msys2/setup-msys2@v2
+        with:
+          msystem: mingw64
+          install: >-
+            mingw-w64-x86_64-gcc
+            mingw-w64-x86_64-cmake
+            mingw-w64-x86_64-ninja
+            mingw-w64-x86_64-pkg-config
+            mingw-w64-x86_64-SDL2
+            mingw-w64-x86_64-SDL2_mixer
+            mingw-w64-x86_64-mpg123
+            mingw-w64-x86_64-opus
+            mingw-w64-x86_64-opusfile
+            mingw-w64-x86_64-libogg
+            git
+            mingw-w64-x86_64-github-cli
+
+      - name: Cache MSYS2 packages
+        uses: actions/cache@v2
+        with:
+          path: /mingw64
+          key: ${{ runner.os }}-msys2-${{ hashFiles('**/*.txt') }}
+          restore-keys: |
+            ${{ runner.os }}-msys2-
+
+
+      - name: CMake configure (Release)
+        run: cmake -B release -G Ninja . -DCMAKE_BUILD_TYPE=Release
+
+      - name: Build (Release)
+        run: cmake --build release
+
+      - name: Directory
+        run: dir ..
+
+      - name: Zip release
+        run: |
+          cp /mingw64/bin/SDL2.dll release
+          cp /mingw64/bin/SDL2_mixer.dll release
+          cp /mingw64/bin/libmpg123-0.dll release
+          cp /mingw64/bin/libopusfile-0.dll release
+          cp /mingw64/bin/libopus-0.dll release
+          cp /mingw64/bin/libogg-0.dll release
+          powershell -c "Compress-Archive -Path release\Arkanoid.exe, release/*.dll, release\levels, release\assets -DestinationPath windows.zip"
+
+      - name: Release
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: >-
+          gh release upload ${{ github.ref_name }} "windows.zip"

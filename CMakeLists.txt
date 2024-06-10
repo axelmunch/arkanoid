@@ -2,6 +2,13 @@ cmake_minimum_required(VERSION 3.7)
 
 project(Arkanoid LANGUAGES C)
 
+if (WIN32)
+    set(FETCHCONTENT_BASE_DIR "C:/Users/$ENV{USERNAME}/AppData/Local/Temp")
+    set(CMAKE_WINDOWS_EXPORT_ALL_SYMBOLS TRUE)
+    set(BUILD_SHARED_LIBS TRUE)
+    set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} -mconsole")
+endif ()
+
 find_package(SDL2 CONFIG REQUIRED)
 
 add_executable(${PROJECT_NAME}

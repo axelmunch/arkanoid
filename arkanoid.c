@@ -1,3 +1,4 @@
+#define SDL_MAIN_HANDLED
 #include "audio.h"
 #include "config.h"
 #include "delta_time.h"
@@ -11,7 +12,7 @@
 #include "text.h"
 #include "textures.h"
 #include "vaus.h"
-#include <SDL.h>
+#include <SDL2/SDL.h>
 #include <stdbool.h>
 #include <stdio.h>
 
@@ -57,7 +58,7 @@ void update() {
     }
 }
 
-int main(int argc, char **argv) {
+int main(int argc, char *argv[]) {
     if (SDL_Init(SDL_INIT_VIDEO | SDL_INIT_AUDIO) != 0) {
         return 1;
     }
