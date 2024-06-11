@@ -12,7 +12,7 @@
 #include "text.h"
 #include "textures.h"
 #include "vaus.h"
-#include <SDL2/SDL.h>
+#include <SDL.h>
 #include <stdbool.h>
 #include <stdio.h>
 

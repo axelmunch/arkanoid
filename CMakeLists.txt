@@ -2,12 +2,19 @@ cmake_minimum_required(VERSION 3.7)
 
 project(Arkanoid LANGUAGES C)
 
+set(SDL2_DIR "" CACHE PATH "Path to SDL2 cmake files")
+set(SDL2_MIXER_DIR "" CACHE PATH "Path to SDL2_mixer cmake files")
+
 if (WIN32)
     set(FETCHCONTENT_BASE_DIR "C:/Users/$ENV{USERNAME}/AppData/Local/Temp")
     set(CMAKE_WINDOWS_EXPORT_ALL_SYMBOLS TRUE)
     set(BUILD_SHARED_LIBS TRUE)
     set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} -mconsole")
+    list(APPEND CMAKE_PREFIX_PATH "${SDL2_DIR}")
+    list(APPEND CMAKE_PREFIX_PATH "${SDL2_MIXER_DIR}")
+    find_package(SDL2_MIXER CONFIG REQUIRED)
 endif ()
+
 
 find_package(SDL2 CONFIG REQUIRED)
 
@@ -66,3 +73,12 @@ file(COPY ${CMAKE_CURRENT_SOURCE_DIR}/assets
         DESTINATION ${CMAKE_CURRENT_BINARY_DIR}/)
 file(COPY ${CMAKE_CURRENT_SOURCE_DIR}/levels
         DESTINATION ${CMAKE_CURRENT_BINARY_DIR}/)
+
+if (WIN32)
+    add_custom_command(
+            TARGET ${PROJECT_NAME} POST_BUILD
+            COMMAND "${CMAKE_COMMAND}" -E copy_if_different "$<TARGET_FILE:SDL2::SDL2>" "$<TARGET_FILE_DIR:${PROJECT_NAME}>"
+            COMMAND "${CMAKE_COMMAND}" -E copy_if_different "$<TARGET_FILE:SDL2_mixer::SDL2_mixer>" "$<TARGET_FILE_DIR:${PROJECT_NAME}>"
+            VERBATIM
+    )
+endif ()
