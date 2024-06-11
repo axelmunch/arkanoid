@@ -8,6 +8,8 @@ from .visuals import BRICK_HEIGHT, BRICK_WIDTH, Bricks, Capsules, Theme, draw_br
 LEVEL_WIDTH = 13
 LEVEL_HEIGHT = 16
 
+LEVEL_OFFSET_Y = 150
+
 GAME_BOARD_WIDTH = 600
 GAME_BOARD_HEIGHT = 600
 GAME_BOARD_MARGIN_TOP = 50
@@ -206,10 +208,7 @@ def draw_game_board(level, frame_count):
         GAME_BOARD_MARGIN_LEFT
         + (GAME_BOARD_WIDTH - GAME_BOARD_MARGIN_LEFT - GAME_BOARD_MARGIN_RIGHT) // 2
     )
-    y_center = (
-        GAME_BOARD_MARGIN_TOP
-        + (GAME_BOARD_HEIGHT - GAME_BOARD_MARGIN_TOP - GAME_BOARD_MARGIN_BOTTOM) // 2
-    )
+    y_center = LEVEL_OFFSET_Y + LEVEL_HEIGHT * BRICK_HEIGHT / 2
     for x in range(LEVEL_WIDTH):
         pygame.draw.line(
             game_board,
