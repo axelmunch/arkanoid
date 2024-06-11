@@ -13,6 +13,15 @@ By Maël EHRHARD & Axel MUNCH
 
 ````shell
 apt install libsdl2-dev libsdl2-mixer-dev
+cmake -S . -B build
+````
+
+### Windows
+
+- Install dependencies where you like
+
+````shell
+cmake -S . -B build -DSDL2_DIR="PATH_TO_SDL2" -DSDL2_MIXER_DIR="PATH_TO_SDL2_MIXER"
 ````
 
 ## Controls

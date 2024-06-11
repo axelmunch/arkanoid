@@ -1,7 +1,7 @@
 #ifndef AUDIO_H
 #define AUDIO_H
 #include "config.h"
-#include <SDL2/SDL_mixer.h>
+#include <SDL_mixer.h>
 #include <stdio.h>
 #include <stdlib.h>
 
