@@ -76,16 +76,62 @@ int main(int argc, char *argv[]) {
         VAUS *vaus = get_vaus();
         vaus[0].moving_direction = NONE;
         vaus[1].moving_direction = NONE;
-        if (keys[SDL_SCANCODE_LEFT] && !is_end_game() && lives > 0 &&
-            !game_paused) {
-            vaus[0].moving_direction = LEFT;
-            move_VAUS(-10, 0, multiplayer_mode);
+        if (!is_end_game() && !game_paused && lives > 0) {
+            if (keys[SDL_SCANCODE_LEFT]) {
+                vaus[0].moving_direction = LEFT;
+                move_VAUS(-10, 0, multiplayer_mode);
+            }
+            if (keys[SDL_SCANCODE_RIGHT]) {
+                vaus[0].moving_direction = RIGHT;
+                move_VAUS(10, 0, multiplayer_mode);
+            }
+            if ((keys[SDL_SCANCODE_A] || keys[SDL_SCANCODE_Q])) {
+                multiplayer_mode = true;
+                vaus[1].moving_direction = LEFT;
+                move_VAUS(-10, 1, multiplayer_mode);
+            }
+            if (keys[SDL_SCANCODE_D]) {
+                multiplayer_mode = true;
+                vaus[1].moving_direction = RIGHT;
+                move_VAUS(10, 1, multiplayer_mode);
+            }
+            if (!cheat_key_press && DEBUG_MODE) {
+            }
+            if (keys[SDL_SCANCODE_1]) {
+                cheat_key_press = true;
+                apply_slow_capsule();
+
+            } else if (keys[SDL_SCANCODE_2]) {
+                cheat_key_press = true;
+                apply_catch_capsule();
+            } else if (keys[SDL_SCANCODE_3]) {
+                cheat_key_press = true;
+                apply_laser_capsule();
+            } else if (keys[SDL_SCANCODE_4]) {
+                cheat_key_press = true;
+                apply_expand_capsule(win_surf, &vaus[0], 0);
+                apply_expand_capsule(win_surf, &vaus[1], 1);
+            } else if (keys[SDL_SCANCODE_5]) {
+                cheat_key_press = true;
+                apply_divide_capsule();
+            } else if (keys[SDL_SCANCODE_6]) {
+                cheat_key_press = true;
+                apply_break_capsule(win_surf);
+            } else if (keys[SDL_SCANCODE_7]) {
+                cheat_key_press = true;
+                apply_addition_capsule();
+            } else if (keys[SDL_SCANCODE_8]) {
+                cheat_key_press = true;
+                multiplayer_mode = false;
+                reset_score();
+                restart_level_1(win_surf);
+                lives = DEFAULT_LIVES;
+                game_paused = false;
+            } else {
+                cheat_key_press = false;
+            }
         }
-        if (keys[SDL_SCANCODE_RIGHT] && !is_end_game() && lives > 0 &&
-            !game_paused) {
-            vaus[0].moving_direction = RIGHT;
-            move_VAUS(10, 0, multiplayer_mode);
-        }
+
         if (keys[SDL_SCANCODE_SPACE]) {
             if (lives > 0 && !is_end_game()) {
                 if (!game_paused) {
@@ -104,18 +150,6 @@ int main(int argc, char *argv[]) {
                 lives = DEFAULT_LIVES;
                 game_paused = false;
             }
-        }
-        if ((keys[SDL_SCANCODE_A] || keys[SDL_SCANCODE_Q]) && !is_end_game() &&
-            lives > 0 && !game_paused) {
-            multiplayer_mode = true;
-            vaus[1].moving_direction = LEFT;
-            move_VAUS(-10, 1, multiplayer_mode);
-        }
-        if (keys[SDL_SCANCODE_D] && !is_end_game() && lives > 0 &&
-            !game_paused) {
-            multiplayer_mode = true;
-            vaus[1].moving_direction = RIGHT;
-            move_VAUS(10, 1, multiplayer_mode);
         }
         if (keys[SDL_SCANCODE_LCTRL]) {
             if (multiplayer_mode) {
@@ -138,57 +172,6 @@ int main(int argc, char *argv[]) {
             }
         } else {
             game_paused_press = false;
-        }
-
-        if (lives > 0 && !is_end_game() && !game_paused) {
-            if (keys[SDL_SCANCODE_1]) {
-                if (!cheat_key_press && DEBUG_MODE) {
-                    cheat_key_press = true;
-                    apply_slow_capsule();
-                }
-            } else if (keys[SDL_SCANCODE_2]) {
-                if (!cheat_key_press && DEBUG_MODE) {
-                    cheat_key_press = true;
-                    apply_catch_capsule();
-                }
-            } else if (keys[SDL_SCANCODE_3]) {
-                if (!cheat_key_press && DEBUG_MODE) {
-                    cheat_key_press = true;
-                    apply_laser_capsule();
-                }
-            } else if (keys[SDL_SCANCODE_4]) {
-                if (!cheat_key_press && DEBUG_MODE) {
-                    cheat_key_press = true;
-                    apply_expand_capsule(win_surf, &vaus[0], 0);
-                    apply_expand_capsule(win_surf, &vaus[1], 1);
-                }
-            } else if (keys[SDL_SCANCODE_5]) {
-                if (!cheat_key_press && DEBUG_MODE) {
-                    cheat_key_press = true;
-                    apply_divide_capsule();
-                }
-            } else if (keys[SDL_SCANCODE_6]) {
-                if (!cheat_key_press && DEBUG_MODE) {
-                    cheat_key_press = true;
-                    apply_break_capsule(win_surf);
-                }
-            } else if (keys[SDL_SCANCODE_7]) {
-                if (!cheat_key_press && DEBUG_MODE) {
-                    cheat_key_press = true;
-                    apply_addition_capsule();
-                }
-            } else if (keys[SDL_SCANCODE_8]) {
-                if (!cheat_key_press && DEBUG_MODE) {
-                    cheat_key_press = true;
-                    multiplayer_mode = false;
-                    reset_score();
-                    restart_level_1(win_surf);
-                    lives = DEFAULT_LIVES;
-                    game_paused = false;
-                }
-            } else {
-                cheat_key_press = false;
-            }
         }
 
         SDL_Event event;
