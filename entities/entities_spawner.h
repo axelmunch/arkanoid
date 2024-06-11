@@ -1,6 +1,7 @@
 #ifndef ARKANOID_ENTITIES_SPAWNER_H
 #define ARKANOID_ENTITIES_SPAWNER_H
 
+#include "../audio.h"
 #include "../config.h"
 #include "../delta_time.h"
 #include "../math/math.h"
