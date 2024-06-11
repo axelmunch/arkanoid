@@ -18,38 +18,9 @@ endif ()
 
 find_package(SDL2 CONFIG REQUIRED)
 
-add_executable(${PROJECT_NAME}
-        config.h
-        delta_time.c
-        delta_time.h
-        math/collisions.c
-        math/collisions.h
-        math/math.c
-        math/math.h
-        text.c
-        text.h
-        entities/entity.h
-        entities/entity.c
-        entities/entities_structures.h
-        textures.c
-        textures.h
-        levels.c
-        levels.h
-        entities/entities_spawner.c
-        entities/entities_spawner.h
-        entities/capsule.c
-        entities/capsule.h
-        entities/ball.c
-        entities/ball.h
-        score.c
-        score.h
-        audio.c
-        audio.h
-        vaus.c
-        vaus.h
-        graphics.c
-        graphics.h)
-target_sources(${PROJECT_NAME} PRIVATE arkanoid.c)
+file(GLOB_RECURSE PROJECT_SOURCES "src/*.c" "src/*.h")
+add_executable(${PROJECT_NAME} ${PROJECT_SOURCES})
+target_sources(${PROJECT_NAME} PRIVATE src/arkanoid.c)
 
 target_link_libraries(${PROJECT_NAME} PRIVATE m)
 

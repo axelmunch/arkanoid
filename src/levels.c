@@ -56,7 +56,7 @@ bool load_next_level_file() {
     if (current_level + 1 <= MAX_LEVELS) {
         current_level++;
         char filename[20];
-        sprintf(filename, "levels/%d.level", current_level);
+        sprintf(filename, "%s/%d.level", LEVELS_PATH, current_level);
         load_level(filename);
         return true;
     }

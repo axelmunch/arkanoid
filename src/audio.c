@@ -1,6 +1,5 @@
 #include "audio.h"
 
-const char *assets_path = "assets";
 Mix_Music *music;
 Mix_Chunk *chunks[CHUNK_COUNT];
 int used_channel = 0;
@@ -36,7 +35,7 @@ void load_assets() {
 void load_music(const int level) {
     Mix_FreeMusic(music);
     char path[50];
-    snprintf(path, sizeof(path), "%s/music%d.ogg", assets_path, level);
+    snprintf(path, sizeof(path), "%s/music%d.ogg", ASSETS_PATH, level);
     music = Mix_LoadMUS(path);
     if (music == NULL) {
         printf("Failed to load music: %s\n", Mix_GetError());
@@ -49,7 +48,7 @@ void pause_music() { Mix_HaltMusic(); }
 
 void load_chunk(const char *filename, const AUDIO_CHUNKS chunk_name) {
     char chunk_path[50];
-    snprintf(chunk_path, sizeof(chunk_path), "%s/%s.ogg", assets_path,
+    snprintf(chunk_path, sizeof(chunk_path), "%s/%s.ogg", ASSETS_PATH,
              filename);
     chunks[chunk_name] = Mix_LoadWAV(chunk_path);
     if (chunks[chunk_name] == NULL) {
