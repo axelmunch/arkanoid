@@ -29,6 +29,20 @@ class Level:
 
         self.clear()
 
+    def move(self, dx, dy):
+        bricks_copy = [
+            [(Bricks.EMPTY, Capsules.EMPTY) for _ in range(LEVEL_WIDTH)]
+            for _ in range(LEVEL_HEIGHT)
+        ]
+        for y in range(LEVEL_HEIGHT):
+            for x in range(LEVEL_WIDTH):
+                bricks_copy[(y + dy) % LEVEL_HEIGHT][(x + dx) % LEVEL_WIDTH] = (
+                    self.bricks[y][x]
+                )
+        self.bricks = bricks_copy
+
+        self.update()
+
     def place(self, brick: tuple[Bricks, Capsules], x, y):
         self.bricks[y][x] = brick
         self.update()

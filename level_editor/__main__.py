@@ -50,6 +50,14 @@ while running:
         if event.type == pygame.KEYDOWN:
             if event.key == pygame.K_ESCAPE:
                 running = False
+            elif event.key == pygame.K_LEFT:
+                level.move(-1, 0)
+            elif event.key == pygame.K_RIGHT:
+                level.move(1, 0)
+            elif event.key == pygame.K_UP:
+                level.move(0, -1)
+            elif event.key == pygame.K_DOWN:
+                level.move(0, 1)
 
         if event.type == pygame.MOUSEBUTTONDOWN:
             if event.button == 1:
