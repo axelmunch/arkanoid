@@ -8,6 +8,8 @@ from .visuals import BRICK_HEIGHT, BRICK_WIDTH, Bricks, Capsules, Theme, draw_br
 LEVEL_WIDTH = 13
 LEVEL_HEIGHT = 16
 
+LEVEL_OFFSET_Y = 150
+
 GAME_BOARD_WIDTH = 600
 GAME_BOARD_HEIGHT = 600
 GAME_BOARD_MARGIN_TOP = 50
@@ -28,6 +30,20 @@ class Level:
         self.bricks = []
 
         self.clear()
+
+    def move(self, dx, dy):
+        bricks_copy = [
+            [(Bricks.EMPTY, Capsules.EMPTY) for _ in range(LEVEL_WIDTH)]
+            for _ in range(LEVEL_HEIGHT)
+        ]
+        for y in range(LEVEL_HEIGHT):
+            for x in range(LEVEL_WIDTH):
+                bricks_copy[(y + dy) % LEVEL_HEIGHT][(x + dx) % LEVEL_WIDTH] = (
+                    self.bricks[y][x]
+                )
+        self.bricks = bricks_copy
+
+        self.update()
 
     def place(self, brick: tuple[Bricks, Capsules], x, y):
         self.bricks[y][x] = brick
@@ -145,11 +161,7 @@ def update_game_board(
             GAME_BOARD_MARGIN_LEFT
             + (GAME_BOARD_WIDTH - GAME_BOARD_MARGIN_LEFT - GAME_BOARD_MARGIN_RIGHT) // 2
         )
-        y_center = (
-            GAME_BOARD_MARGIN_TOP
-            + (GAME_BOARD_HEIGHT - GAME_BOARD_MARGIN_TOP - GAME_BOARD_MARGIN_BOTTOM)
-            // 2
-        )
+        y_center = LEVEL_OFFSET_Y + LEVEL_HEIGHT * BRICK_HEIGHT / 2
         x = int(
             (mouse_position[0] - x_center + LEVEL_WIDTH * BRICK_WIDTH // 2)
             / BRICK_WIDTH
@@ -192,10 +204,7 @@ def draw_game_board(level, frame_count):
         GAME_BOARD_MARGIN_LEFT
         + (GAME_BOARD_WIDTH - GAME_BOARD_MARGIN_LEFT - GAME_BOARD_MARGIN_RIGHT) // 2
     )
-    y_center = (
-        GAME_BOARD_MARGIN_TOP
-        + (GAME_BOARD_HEIGHT - GAME_BOARD_MARGIN_TOP - GAME_BOARD_MARGIN_BOTTOM) // 2
-    )
+    y_center = LEVEL_OFFSET_Y + LEVEL_HEIGHT * BRICK_HEIGHT / 2
     for x in range(LEVEL_WIDTH):
         pygame.draw.line(
             game_board,

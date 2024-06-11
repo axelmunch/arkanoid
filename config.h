@@ -19,7 +19,7 @@
 #define BALL_EFFECT           25
 #define DEFAULT_BALL_VELOCITY 7.0
 
-#define MAX_LEVELS 5
+#define MAX_LEVELS 15
 
 #define LEVEL_OFFSET_Y 150
 #define LEVEL_WIDTH    13
