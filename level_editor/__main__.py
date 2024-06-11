@@ -11,7 +11,7 @@ from .game_board import (
 )
 from .text import text
 from .toolbar import TOOLBAR_HEIGHT, TOOLBAR_WIDTH, toolbar, update_toolbar
-from .visuals import Bricks, Capsules, Theme, draw_brick, draw_capsule, load_visuals
+from .visuals import Bricks, Capsules, Theme, load_visuals
 
 WINDOW_WIDTH = TOOLBAR_WIDTH + GAME_BOARD_WIDTH
 WINDOW_HEIGHT = max(TOOLBAR_HEIGHT, GAME_BOARD_HEIGHT)
