@@ -149,7 +149,7 @@ int main(int argc, char *argv[]) {
                 cheat_key_press = true;
                 apply_divide_capsule();
             }
-        } else if (keys[SDL_SCANCODE_6]) {
+        } else if (keys[SDL_SCANCODE_6] && lives > 0 && !is_end_game()) {
             if (!cheat_key_press && DEBUG_MODE) {
                 cheat_key_press = true;
                 apply_break_capsule(win_surf);
@@ -162,8 +162,10 @@ int main(int argc, char *argv[]) {
         } else if (keys[SDL_SCANCODE_8]) {
             if (!cheat_key_press && DEBUG_MODE) {
                 cheat_key_press = true;
+                multiplayer_mode = false;
                 reset_score();
                 restart_level_1(win_surf);
+                lives = DEFAULT_LIVES;
             }
         } else {
             cheat_key_press = false;
