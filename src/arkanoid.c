@@ -29,6 +29,7 @@ void init_icon(void) {
     char icon_path[20];
     sprintf(icon_path, "%s/icon.bmp", ASSETS_PATH);
     SDL_Surface *icon = SDL_LoadBMP(icon_path);
+    SDL_SetColorKey(icon, true, 0);
     SDL_SetWindowIcon(pWindow, icon);
     SDL_FreeSurface(icon);
 }
