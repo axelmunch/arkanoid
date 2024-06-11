@@ -23,4 +23,6 @@ double get_delta_time_target();
 
 double get_current_fps();
 
+void set_time_scale(float scale);
+
 #endif // ARKANOID_DELTA_TIME_H
