@@ -88,6 +88,7 @@ bool laser_collides_with_brick(const AnimatedEntity *entity,
                         score_break_brick(brick.type);
                         level->bricks[y][x] =
                             create_brick(EMPTY, CAPSULE_EMPTY);
+                        play_explosion_chunk();
                     }
 
                     return true;
