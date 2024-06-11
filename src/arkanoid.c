@@ -25,11 +25,20 @@ bool cheat_key_press = false;
 bool multiplayer_mode = false;
 int lives = DEFAULT_LIVES;
 
+void init_icon(void) {
+    char icon_path[20];
+    sprintf(icon_path, "%s/icon.bmp", ASSETS_PATH);
+    SDL_Surface *icon = SDL_LoadBMP(icon_path);
+    SDL_SetWindowIcon(pWindow, icon);
+    SDL_FreeSurface(icon);
+}
+
 void init() {
     pWindow = SDL_CreateWindow("Arkanoid", SDL_WINDOWPOS_UNDEFINED,
                                SDL_WINDOWPOS_UNDEFINED, SCREEN_WIDTH,
                                SCREEN_HEIGHT, SDL_WINDOW_SHOWN);
     win_surf = SDL_GetWindowSurface(pWindow);
+    init_icon();
     init_mixer();
     init_spawner();
     init_vaus(win_surf);
