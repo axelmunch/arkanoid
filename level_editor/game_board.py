@@ -161,11 +161,7 @@ def update_game_board(
             GAME_BOARD_MARGIN_LEFT
             + (GAME_BOARD_WIDTH - GAME_BOARD_MARGIN_LEFT - GAME_BOARD_MARGIN_RIGHT) // 2
         )
-        y_center = (
-            GAME_BOARD_MARGIN_TOP
-            + (GAME_BOARD_HEIGHT - GAME_BOARD_MARGIN_TOP - GAME_BOARD_MARGIN_BOTTOM)
-            // 2
-        )
+        y_center = LEVEL_OFFSET_Y + LEVEL_HEIGHT * BRICK_HEIGHT / 2
         x = int(
             (mouse_position[0] - x_center + LEVEL_WIDTH * BRICK_WIDTH // 2)
             / BRICK_WIDTH
