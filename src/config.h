@@ -39,8 +39,8 @@
 
 #define DEFAULT_LIVES 2
 
-#define ASSETS_PATH "../assets"
-#define LEVELS_PATH "../levels"
+#define ASSETS_PATH "assets"
+#define LEVELS_PATH "levels"
 
 #define CHUNK_COUNT   14
 #define CHUNK_VOLUME  8
