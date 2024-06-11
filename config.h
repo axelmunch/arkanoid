@@ -35,6 +35,7 @@
 
 #define DISPLAY_SHADOWS true
 #define SHADOW_OFFSET   5
+#define SHADOW_ALPHA    128
 
 #define DEFAULT_LIVES 2
 
