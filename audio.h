@@ -2,6 +2,8 @@
 #define AUDIO_H
 #include "config.h"
 #include <SDL2/SDL_mixer.h>
+#include <stdio.h>
+#include <stdlib.h>
 
 typedef enum {
     BOUNCE_1,
